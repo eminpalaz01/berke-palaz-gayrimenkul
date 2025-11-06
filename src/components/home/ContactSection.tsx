@@ -128,7 +128,7 @@ export function ContactSection() {
             className="bg-slate-800 p-8 rounded-lg"
           >
             <h3 className="text-2xl font-bold mb-6">{t('contact.getInTouch')}</h3>
-            <form className="space-y-6">
+            <div className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-2">
                   {t('contact.form.name')}
@@ -182,12 +182,31 @@ export function ContactSection() {
               </div>
 
               <Button
-                type="submit"
+                type="button"
+                onClick={() => {
+                  const name = (document.getElementById('name') as HTMLInputElement)?.value || ''
+                  const email = (document.getElementById('email') as HTMLInputElement)?.value || ''
+                  const phone = (document.getElementById('phone') as HTMLInputElement)?.value || ''
+                  const message = (document.getElementById('message') as HTMLTextAreaElement)?.value || ''
+                  
+                  const subject = encodeURIComponent('İletişim Talebi - ' + (name || 'Ziyaretçi'))
+                  const body = encodeURIComponent(
+                    `Merhaba,\n\n` +
+                    `Ad Soyad: ${name}\n` +
+                    `E-posta: ${email}\n` +
+                    `Telefon: ${phone}\n\n` +
+                    `Mesaj:\n${message}\n\n` +
+                    `İyi günler dilerim.`
+                  )
+                  
+                  const mailtoLink = `mailto:${config?.company?.email || 'berke.palaz@cb.com.tr'}?subject=${subject}&body=${body}`
+                  window.open(mailtoLink, '_blank', 'noopener,noreferrer')
+                }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 font-semibold"
               >
                 {t('contact.form.submit')}
               </Button>
-            </form>
+            </div>
           </motion.div>
         </div>
 

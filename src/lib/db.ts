@@ -3,6 +3,94 @@
 
 import { Listing, BlogPost } from '@/types/api'
 
+// Admin user credentials (in production, use hashed passwords and database)
+interface AdminUser {
+  username: string
+  password: string // In production, this should be hashed
+}
+
+const adminUser: AdminUser = {
+  username: 'admin',
+  password: '123' // In production, use bcrypt or similar
+}
+
+// Session management (in-memory for development)
+interface Session {
+  token: string
+  username: string
+  createdAt: number
+  expiresAt: number
+}
+
+const sessions = new Map<string, Session>()
+
+// Session configuration
+const SESSION_DURATION = 24 * 60 * 60 * 1000 // 24 hours
+
+// Helper function to generate session token
+const generateToken = (): string => {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36)
+}
+
+// Auth operations
+export const authDb = {
+  // Verify credentials and create session
+  login: async (username: string, password: string): Promise<{ success: boolean; token?: string; error?: string }> => {
+    if (username === adminUser.username && password === adminUser.password) {
+      const token = generateToken()
+      const now = Date.now()
+      
+      sessions.set(token, {
+        token,
+        username,
+        createdAt: now,
+        expiresAt: now + SESSION_DURATION
+      })
+      
+      return { success: true, token }
+    }
+    
+    return { success: false, error: 'Geçersiz kullanıcı adı veya şifre' }
+  },
+  
+  // Verify session token
+  verifySession: async (token: string): Promise<{ valid: boolean; username?: string }> => {
+    const session = sessions.get(token)
+    
+    if (!session) {
+      return { valid: false }
+    }
+    
+    // Check if session expired
+    if (Date.now() > session.expiresAt) {
+      sessions.delete(token)
+      return { valid: false }
+    }
+    
+    return { valid: true, username: session.username }
+  },
+  
+  // Logout and destroy session
+  logout: async (token: string): Promise<boolean> => {
+    return sessions.delete(token)
+  },
+  
+  // Clean up expired sessions periodically
+  cleanupExpiredSessions: () => {
+    const now = Date.now()
+    for (const [token, session] of sessions.entries()) {
+      if (now > session.expiresAt) {
+        sessions.delete(token)
+      }
+    }
+  }
+}
+
+// Cleanup expired sessions every hour
+setInterval(() => {
+  authDb.cleanupExpiredSessions()
+}, 60 * 60 * 1000)
+
 // Mock data storage
 const listings: Listing[] = [
   {
@@ -136,6 +224,91 @@ export const generateId = (type: 'listing' | 'blog'): string => {
   return String(blogIdCounter++)
 }
 
+// Rate limiting for listings and blog posts only
+interface ViewTracker {
+  [key: string]: number[] // key: "listing-{id}-{ip}" or "blog-{id}-{ip}", value: array of timestamps
+}
+
+const viewTracking: ViewTracker = {}
+
+// Simple page views storage with timestamps - use global to persist across module reloads
+const globalForPageViews = global as typeof globalThis & {
+  pageViewTimestamps: number[]
+}
+
+if (!globalForPageViews.pageViewTimestamps) {
+  globalForPageViews.pageViewTimestamps = []
+}
+
+const pageViewTimestamps = globalForPageViews.pageViewTimestamps
+
+// Rate limiting configuration (only for listings and blog posts)
+const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute in milliseconds
+const MAX_VIEWS_PER_WINDOW = 3 // Maximum 3 views per minute per IP
+
+// Helper function to check and update rate limit (only for listings and blog posts)
+export const canIncrementView = (type: 'listing' | 'blog', id: string, identifier: string): boolean => {
+  const key = `${type}-${id}-${identifier}`
+  const now = Date.now()
+  
+  // Initialize if not exists
+  if (!viewTracking[key]) {
+    viewTracking[key] = []
+  }
+  
+  // Remove old timestamps outside the window
+  viewTracking[key] = viewTracking[key].filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW)
+  
+  // Check if limit exceeded
+  if (viewTracking[key].length >= MAX_VIEWS_PER_WINDOW) {
+    return false
+  }
+  
+  // Add current timestamp
+  viewTracking[key].push(now)
+  return true
+}
+
+// Page view operations (no rate limiting)
+export const pageViewsDb = {
+  incrementView: (): void => {
+    const now = Date.now()
+    pageViewTimestamps.push(now)
+  },
+  
+  getTotalViews: (): number => {
+    return pageViewTimestamps.length
+  },
+  
+  getViewsInTimeRange: (startTime: number, endTime: number): number => {
+    return pageViewTimestamps.filter(
+      timestamp => timestamp >= startTime && timestamp <= endTime
+    ).length
+  },
+  
+  getWeeklyViews: (): number => {
+    const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
+    return pageViewsDb.getViewsInTimeRange(oneWeekAgo, Date.now())
+  },
+  
+  getMonthlyViews: (): number => {
+    const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000)
+    return pageViewsDb.getViewsInTimeRange(oneMonthAgo, Date.now())
+  }
+}
+
+// Cleanup old tracking data periodically (every 5 minutes) - only for listings/blog rate limiting
+setInterval(() => {
+  const now = Date.now()
+  Object.keys(viewTracking).forEach(key => {
+    viewTracking[key] = viewTracking[key].filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW)
+    // Remove empty arrays
+    if (viewTracking[key].length === 0) {
+      delete viewTracking[key]
+    }
+  })
+}, 5 * 60 * 1000)
+
 // Listing operations
 export const db = {
   listings: {
@@ -205,11 +378,18 @@ export const db = {
       return true
     },
 
-    incrementViews: async (id: string): Promise<void> => {
+    incrementViews: async (id: string, identifier: string = 'anonymous'): Promise<boolean> => {
+      // Check rate limit
+      if (!canIncrementView('listing', id, identifier)) {
+        return false
+      }
+      
       const listing = listings.find(l => l.id === id)
       if (listing) {
         listing.views++
+        return true
       }
+      return false
     }
   },
 
@@ -286,11 +466,18 @@ export const db = {
       return true
     },
 
-    incrementViews: async (id: string): Promise<void> => {
+    incrementViews: async (id: string, identifier: string = 'anonymous'): Promise<boolean> => {
+      // Check rate limit
+      if (!canIncrementView('blog', id, identifier)) {
+        return false
+      }
+      
       const post = blogPosts.find(p => p.id === id)
       if (post) {
         post.views++
+        return true
       }
+      return false
     }
   }
 }

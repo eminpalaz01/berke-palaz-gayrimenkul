@@ -19,63 +19,23 @@ export const routes: Record<string, RouteConfig> = {
         changefreq: 'monthly', 
         priority: 0.8 
       },
-      '/projects': { 
-        en: '/projects', 
-        tr: '/projeler', 
-        changefreq: 'weekly', 
-        priority: 0.9 
-      },
       '/contact': { 
         en: '/contact', 
         tr: '/iletisim', 
         changefreq: 'monthly', 
+        priority: 0.8 
+      },
+      '/blog': { 
+        en: '/blog', 
+        tr: '/blog', 
+        changefreq: 'weekly', 
         priority: 0.7 
       },
-      '/concrete-plant': { 
-        en: '/concrete-plant', 
-        tr: '/beton-santrali', 
-        changefreq: 'monthly', 
-        priority: 0.8 
-      },
-
-      // Nested routes for Services
-      '/services/ready-mix-concrete': { 
-        en: '/services/ready-mix-concrete', 
-        tr: '/hizmetler/hazir-beton', 
-        changefreq: 'monthly', 
+      '/listings': { 
+        en: '/listings', 
+        tr: '/ilanlar', 
+        changefreq: 'daily', 
         priority: 0.9 
-      },
-      '/services/construction': { 
-        en: '/services/construction', 
-        tr: '/hizmetler/insaat', 
-        changefreq: 'monthly', 
-        priority: 0.9 
-      },
-      '/services/quarry': { 
-        en: '/services/quarry', 
-        tr: '/hizmetler/tas-ocagi', 
-        changefreq: 'monthly', 
-        priority: 0.9 
-      },
-      '/services/construction-materials': { 
-        en: '/services/construction-materials', 
-        tr: '/hizmetler/yapi-malzemeleri', 
-        changefreq: 'monthly', 
-        priority: 0.9 
-      },
-      '/services/brands-we-represent': { 
-        en: '/services/brands-we-represent', 
-        tr: '/hizmetler/bayisi-oldugumuz-markalar', 
-        changefreq: 'monthly', 
-        priority: 0.8 
-      },
-
-      // Nested routes for Human Resources
-      '/human-resources/first-step': { 
-        en: '/human-resources/first-step', 
-        tr: '/insan-kaynaklari/ilk-adim', 
-        changefreq: 'monthly', 
-        priority: 0.6 
       },
 
       // Legal pages
@@ -103,15 +63,9 @@ export const routes: Record<string, RouteConfig> = {
 export const pathnames: Record<string, { en: string; tr: string }> = {
   '': { en: '', tr: '' },
   '/about': { en: '/about', tr: '/hakkimizda' },
-  '/projects': { en: '/projects', tr: '/projeler' },
   '/contact': { en: '/contact', tr: '/iletisim' },
-  '/concrete-plant': { en: '/concrete-plant', tr: '/beton-santrali' },
-  '/services/ready-mix-concrete': { en: '/services/ready-mix-concrete', tr: '/hizmetler/hazir-beton' },
-  '/services/construction': { en: '/services/construction', tr: '/hizmetler/insaat' },
-  '/services/quarry': { en: '/services/quarry', tr: '/hizmetler/tas-ocagi' },
-  '/services/construction-materials': { en: '/services/construction-materials', tr: '/hizmetler/yapi-malzemeleri' },
-  '/services/brands-we-represent': { en: '/services/brands-we-represent', tr: '/hizmetler/bayisi-oldugumuz-markalar' },
-  '/human-resources/first-step': { en: '/human-resources/first-step', tr: '/insan-kaynaklari/ilk-adim' },
+  '/blog': { en: '/blog', tr: '/blog' },
+  '/listings': { en: '/listings', tr: '/ilanlar' },
   '/privacy-policy': { en: '/privacy-policy', tr: '/gizlilik-politikasi' },
   '/terms-of-service': { en: '/terms-of-service', tr: '/kullanim-kosullari' },
   '/cookie-policy': { en: '/cookie-policy', tr: '/cerez-politikasi' }
@@ -120,17 +74,27 @@ export const pathnames: Record<string, { en: string; tr: string }> = {
 export const noLocaleRoutes = [
     '', // Home page
     '/about',
-    '/projects',
-    '/concrete-plant',
     '/contact',
+    '/blog',
+    '/listings',
     '/privacy-policy',
     '/terms-of-service',
     '/cookie-policy',
-    // Service sub-routes
-    '/services/construction-materials',
-    '/services/construction',
-    '/services/ready-mix-concrete',
-    '/services/quarry',
-    '/services/brands-we-represent',
-    '/human-resources/first-step'
   ];
+
+// Normalize path to English canonical form
+export function normalizePathToEnglish(path: string): string {
+  // Remove locale prefix (tr/en)
+  const withoutLocale = path.replace(/^\/(tr|en)/, '')
+  
+  // Remove trailing slash
+  const withoutTrailingSlash = withoutLocale.replace(/\/$/, '') || '/'
+  
+  // Check if path exists in pathnames mapping
+  const pathEntry = Object.entries(pathnames).find(([_, locales]) => 
+    locales.tr === withoutTrailingSlash || locales.en === withoutTrailingSlash
+  )
+  
+  // Return English version if found, otherwise return the path as-is
+  return pathEntry ? pathEntry[1].en : withoutTrailingSlash
+}

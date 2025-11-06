@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse, BlogPost, CreateBlogPostDto } from '@/types/api'
+import { verifyAdminAuth } from '@/lib/auth-helper'
 
 // GET /api/admin/blog - Get all blog posts with optional filters
 export async function GET(request: NextRequest) {
+  // Check authentication
+  const auth = await verifyAdminAuth(request)
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
   try {
     const searchParams = request.nextUrl.searchParams
     const status = searchParams.get('status') || undefined
@@ -33,6 +43,15 @@ export async function GET(request: NextRequest) {
 
 // POST /api/admin/blog - Create a new blog post
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const auth = await verifyAdminAuth(request)
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
   try {
     const body: CreateBlogPostDto = await request.json()
 

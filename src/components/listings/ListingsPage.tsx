@@ -4,9 +4,10 @@ import { useState, useEffect } from "react"
 import { useTranslation } from "@/hooks/useTranslation"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
-import { Bed, Bath, Square, MapPin, Search, Loader2 } from "lucide-react"
+import { Bed, Bath, Square, MapPin, Search, Loader2, Home } from "lucide-react"
 import { publicListingsApi } from "@/lib/api-client"
 import { Listing } from "@/types/api"
+import { ListingDetailModal } from "./ListingDetailModal"
 
 export function ListingsPage() {
   const { t } = useTranslation()
@@ -14,6 +15,7 @@ export function ListingsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null)
 
   // Fetch listings
   useEffect(() => {
@@ -73,7 +75,13 @@ export function ListingsPage() {
   }
 
   const formatPrice = (price: number, currency: string) => {
-    return `${currency} ${price.toLocaleString('tr-TR')}`
+    const currencySymbols: { [key: string]: string } = {
+      'TRY': '₺',
+      'USD': '$',
+      'EUR': '€'
+    }
+    const symbol = currencySymbols[currency] || currency
+    return `${symbol} ${price.toLocaleString('tr-TR')}`
   }
 
   return (
@@ -203,6 +211,12 @@ export function ListingsPage() {
                           <Square className="h-4 w-4 text-blue-600" />
                           <span>{listing.area} {t('listings.sqm')}</span>
                         </div>
+                        {listing.floor !== undefined && listing.floor !== null && (
+                          <div className="flex items-center gap-1">
+                            <Home className="h-4 w-4 text-blue-600" />
+                            <span>{listing.floor}. kat</span>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -226,6 +240,7 @@ export function ListingsPage() {
                       <Button
                         size="sm"
                         className="bg-blue-600 hover:bg-blue-700 text-white"
+                        onClick={() => setSelectedListing(listing)}
                       >
                         {t('common.viewDetails')}
                       </Button>
@@ -245,6 +260,13 @@ export function ListingsPage() {
           )}
         </div>
       </section>
+
+      {/* Detail Modal */}
+      <ListingDetailModal
+        listing={selectedListing}
+        isOpen={!!selectedListing}
+        onClose={() => setSelectedListing(null)}
+      />
     </div>
   )
 }

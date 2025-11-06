@@ -22,6 +22,7 @@ async function fetchApi<T>(
   try {
     const response = await fetch(`${baseUrl}${endpoint}`, {
       ...options,
+      credentials: 'include', // Include cookies in requests
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers,

@@ -78,11 +78,12 @@
     }
   },
   "social": {
-    "instagramUrl": "https://instagram.com/berkepalazgayrimenkul",
-    "youtubeUrl": "https://youtube.com/@berkepalazgayrimenkul",
-    "facebookUrl": "https://facebook.com/berkepalazgayrimenkul",
-    "twitterUrl": "https://twitter.com/berkepalaz",
-    "linkedinUrl": "https://linkedin.com/in/berkepalaz"
+    "instagramUrl": "https://instagram.com/me",
+    "youtubeUrl": "https://youtube.com/@me",
+    "facebookUrl": "https://facebook.com/me",
+    "twitterUrl": "https://twitter.com/me",
+    "linkedinUrl": "https://linkedin.com/in/me",
+    "whatsappNumber": "+905551234567"
   },
   "maps": {
     "googleMapsUrl": "https://maps.google.com/?q=40.9936,29.0218",

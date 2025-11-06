@@ -78,8 +78,12 @@ export interface RuntimeConfig {
     };
   };
   social: {
-    instagramUrl: string;
-    youtubeUrl: string;
+    instagramUrl?: string;
+    youtubeUrl?: string;
+    facebookUrl?: string;
+    twitterUrl?: string;
+    linkedinUrl?: string;
+    whatsappNumber?: string;
   };
   maps: {
     googleMapsUrl: string;

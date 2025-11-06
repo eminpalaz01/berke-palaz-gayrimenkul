@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { generatePageMetadata } from '@/hooks/server-metadata-utils'
-import { AdminPage } from '@/components/admin/AdminPage'
+import { AdminPageWrapper } from '@/components/admin/AdminPageWrapper'
 import { generateLocaleParams } from '@/utils/generatePagesForLocale'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -20,5 +20,6 @@ export async function generateStaticParams() {
 
 export default async function Admin({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return <AdminPage />
+  
+  return <AdminPageWrapper />
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse, Listing, UpdateListingDto } from '@/types/api'
+import { verifyAdminAuth } from '@/lib/auth-helper'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -10,6 +11,15 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Check authentication
+  const auth = await verifyAdminAuth(request)
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
   try {
     const { id } = await params
     const listing = await db.listings.findById(id)
@@ -42,6 +52,15 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Check authentication
+  const auth = await verifyAdminAuth(request)
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
   try {
     const { id } = await params
     const body: UpdateListingDto = await request.json()
@@ -77,6 +96,15 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Check authentication
+  const auth = await verifyAdminAuth(request)
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
   try {
     const { id } = await params
     const deleted = await db.listings.delete(id)

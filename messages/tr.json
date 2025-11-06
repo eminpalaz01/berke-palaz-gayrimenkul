@@ -149,6 +149,10 @@
     "cookiePolicy": "Çerez Politikası",
     "dataManagement": "Veri Yönetimi"
   },
+  "whatsapp": {
+    "chatWithUs": "WhatsApp ile Mesaj Gönderin",
+    "defaultMessage": "Merhaba, bilgi almak istiyorum."
+  },
   "common": {
     "loading": "Yükleniyor...",
     "error": "Bir hata oluştu",

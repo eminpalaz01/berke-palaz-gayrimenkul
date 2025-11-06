@@ -30,24 +30,21 @@ export function ContactPage() {
     }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    const subject = encodeURIComponent('İletişim Talebi - ' + (formData.name || 'Ziyaretçi'))
+    const body = encodeURIComponent(
+      `Merhaba,\n\n` +
+      `Ad Soyad: ${formData.name}\n` +
+      `E-posta: ${formData.email}\n` +
+      `Telefon: ${formData.phone}\n\n` +
+      `Mesaj:\n${formData.message}\n\n` +
+      `İyi günler dilerim.`
+    )
     
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: ''
-    })
-    setIsSubmitting(false)
-    
-    // Show success message (you can implement toast notification here)
-    alert(t('contact.form.success'))
+    const mailtoLink = `mailto:${config?.company?.email || 'berke@berkepalaz.com'}?subject=${subject}&body=${body}`
+    window.open(mailtoLink, '_blank', 'noopener,noreferrer')
   }
 
   return (

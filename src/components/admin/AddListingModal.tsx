@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { X, Upload, Loader2 } from "lucide-react"
 import { CreateListingDto } from "@/types/api"
@@ -18,7 +18,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
     title: "",
     description: "",
     price: 0,
-    currency: "₺",
+    currency: "TRY",
     location: "",
     type: "sale",
     propertyType: "apartment",
@@ -30,6 +30,25 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
     status: "active",
     locale: "tr"
   })
+
+  // Handle ESC key press and prevent body scroll
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen && !loading) {
+        onClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen, onClose, loading])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -59,14 +78,24 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
 
   if (!isOpen) return null
 
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget && !loading) {
+      onClose()
+    }
+  }
+
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div 
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      onClick={handleBackdropClick}
+    >
       <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white dark:bg-slate-800 border-b dark:border-slate-700 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold dark:text-white">Yeni İlan Ekle</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200"
+            disabled={loading}
+            className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X className="h-6 w-6" />
           </button>
@@ -177,7 +206,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
             </div>
 
             {/* Location */}
-            <div>
+            <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Konum *
               </label>
@@ -186,8 +215,12 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                 required
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                placeholder="Örn: İstanbul, Kadıköy, Fenerbahçe Mahallesi"
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                Şehir, İlçe, Mahalle bilgilerini virgülle ayırarak giriniz
+              </p>
             </div>
 
             {/* Price */}
@@ -198,12 +231,12 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
               <div className="flex gap-2">
                 <select
                   value={formData.currency}
-                  onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                  className="w-20 px-2 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setFormData({ ...formData, currency: e.target.value as 'TRY' | 'USD' | 'EUR' })}
+                  className="w-24 px-2 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="₺">₺</option>
-                  <option value="$">$</option>
-                  <option value="€">€</option>
+                  <option value="TRY">TRY (₺)</option>
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
                 </select>
                 <input
                   type="number"
@@ -255,6 +288,20 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                 min="0"
                 value={formData.bathrooms}
                 onChange={(e) => setFormData({ ...formData, bathrooms: Number(e.target.value) })}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Floor */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Kat
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={formData.floor || ''}
+                onChange={(e) => setFormData({ ...formData, floor: e.target.value ? Number(e.target.value) : undefined })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>

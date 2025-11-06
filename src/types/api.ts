@@ -90,12 +90,18 @@ export interface UpdateBlogPostDto extends Partial<CreateBlogPostDto> {
 }
 
 // Stats Types
+export interface ViewStats {
+  total: number
+  weekly: number
+  monthly: number
+}
+
 export interface DashboardStats {
   totalListings: number
   activeListings: number
   totalBlogPosts: number
   publishedBlogPosts: number
-  monthlyViews: number
+  views: ViewStats
   recentListings: Listing[]
   recentBlogPosts: BlogPost[]
 }

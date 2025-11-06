@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { 
@@ -15,7 +16,8 @@ import {
   Settings,
   Search,
   Filter,
-  Loader2
+  Loader2,
+  LogOut
 } from "lucide-react"
 import { listingsApi, blogApi, statsApi } from "@/lib/api-client"
 import { Listing, BlogPost, DashboardStats, UpdateListingDto, UpdateBlogPostDto, CreateListingDto, CreateBlogPostDto } from "@/types/api"
@@ -24,8 +26,15 @@ import { EditListingModal } from "./EditListingModal"
 import { EditBlogModal } from "./EditBlogModal"
 import { AddListingModal } from "./AddListingModal"
 import { AddBlogModal } from "./AddBlogModal"
+import { ViewListingModal } from "./ViewListingModal"
+import { ViewBlogModal } from "./ViewBlogModal"
 
-export function AdminPage() {
+interface AdminPageProps {
+  onLogout?: () => void
+}
+
+export function AdminPage({ onLogout }: AdminPageProps) {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState("dashboard")
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(false)
@@ -38,6 +47,8 @@ export function AdminPage() {
   // Modal states
   const [editingListing, setEditingListing] = useState<Listing | null>(null)
   const [editingBlogPost, setEditingBlogPost] = useState<BlogPost | null>(null)
+  const [viewingListing, setViewingListing] = useState<Listing | null>(null)
+  const [viewingBlogPost, setViewingBlogPost] = useState<BlogPost | null>(null)
   const [showAddListing, setShowAddListing] = useState(false)
   const [showAddBlog, setShowAddBlog] = useState(false)
 
@@ -235,6 +246,30 @@ export function AdminPage() {
     })
   }
 
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST'
+      })
+
+      if (response.ok) {
+        toast.success('Çıkış başarılı')
+        // Call the callback if provided, otherwise reload
+        if (onLogout) {
+          onLogout()
+        } else {
+          window.location.href = window.location.href
+        }
+      } else {
+        toast.error('Çıkış yapılamadı')
+      }
+    } catch (error) {
+      console.error('Logout error:', error)
+      toast.error('Bir hata oluştu')
+    }
+  }
+
   const renderDashboard = () => {
     if (loading || !stats) {
       return (
@@ -262,19 +297,13 @@ export function AdminPage() {
         value: stats.totalBlogPosts.toString(), 
         change: `${stats.publishedBlogPosts} yayında`, 
         color: "text-purple-600" 
-      },
-      { 
-        label: "Toplam Görüntüleme", 
-        value: stats.monthlyViews.toLocaleString('tr-TR'), 
-        change: "Tüm zamanlar", 
-        color: "text-orange-600" 
       }
     ]
 
     return (
       <div className="space-y-6">
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {statsData.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -295,6 +324,39 @@ export function AdminPage() {
             </motion.div>
           ))}
         </div>
+
+        {/* View Statistics */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-lg"
+        >
+          <h3 className="text-lg font-bold mb-4 dark:text-white">Görüntüleme İstatistikleri</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
+              <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Haftalık</p>
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                {stats.views.weekly.toLocaleString('tr-TR')}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">Son 7 gün</p>
+            </div>
+            <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg">
+              <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Aylık</p>
+              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                {stats.views.monthly.toLocaleString('tr-TR')}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">Son 30 gün</p>
+            </div>
+            <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg">
+              <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Toplam</p>
+              <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+                {stats.views.total.toLocaleString('tr-TR')}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">Tüm zamanlar</p>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -429,7 +491,11 @@ export function AdminPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => setViewingListing(listing)}
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button 
@@ -534,7 +600,11 @@ export function AdminPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => setViewingBlogPost(post)}
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button 
@@ -588,10 +658,20 @@ export function AdminPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8"
+          className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
         >
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Admin Panel</h1>
-          <p className="text-gray-600 dark:text-slate-400">Berke Palaz Gayrimenkul Danışmanlığı Yönetim Paneli</p>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Admin Panel</h1>
+            <p className="text-gray-600 dark:text-slate-400">Berke Palaz Gayrimenkul Danışmanlığı Yönetim Paneli</p>
+          </div>
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Çıkış Yap
+          </Button>
         </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -672,6 +752,22 @@ export function AdminPage() {
           isOpen={true}
           onClose={() => setEditingBlogPost(null)}
           onSave={handleEditBlogPost}
+        />
+      )}
+
+      {viewingListing && (
+        <ViewListingModal
+          listing={viewingListing}
+          isOpen={true}
+          onClose={() => setViewingListing(null)}
+        />
+      )}
+
+      {viewingBlogPost && (
+        <ViewBlogModal
+          post={viewingBlogPost}
+          isOpen={true}
+          onClose={() => setViewingBlogPost(null)}
         />
       )}
     </div>

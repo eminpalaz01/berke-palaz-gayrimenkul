@@ -12,6 +12,7 @@ import { generateLayoutMetadata } from '@/hooks/server-metadata-utils'
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import GlobalErrorProvider from '@/components/GlobalErrorProvider'
 import { ClientLayout } from '@/components/ClientLayout'
+import { WhatsAppButton } from '@/components/ui/WhatsAppButton'
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -82,6 +83,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                   <Footer />
                   <ScrollToTopButton />
                 </div>
+                <WhatsAppButton />
                 {/* {process.env.NODE_ENV === 'development' && <TestErrorComponent />} */}
               </ClientLayout>
             </GlobalErrorProvider>

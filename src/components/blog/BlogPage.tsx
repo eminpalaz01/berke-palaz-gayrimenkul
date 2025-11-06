@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { Calendar, Clock, User, Search, Tag, Loader2 } from "lucide-react"
 import { publicBlogApi } from "@/lib/api-client"
 import { BlogPost } from "@/types/api"
+import { BlogDetailModal } from "./BlogDetailModal"
 
 export function BlogPage() {
   const { t } = useTranslation()
@@ -14,6 +15,7 @@ export function BlogPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState("Tümü")
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null)
 
   // Fetch blog posts
   useEffect(() => {
@@ -195,6 +197,7 @@ export function BlogPage() {
                       <Button
                         size="sm"
                         className="bg-blue-600 hover:bg-blue-700 text-white"
+                        onClick={() => setSelectedPost(post)}
                       >
                         {t('blog.readMore')}
                       </Button>
@@ -236,6 +239,13 @@ export function BlogPage() {
           )}
         </div>
       </section>
+
+      {/* Detail Modal */}
+      <BlogDetailModal
+        post={selectedPost}
+        isOpen={!!selectedPost}
+        onClose={() => setSelectedPost(null)}
+      />
     </div>
   )
 }

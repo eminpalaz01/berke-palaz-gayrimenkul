@@ -129,41 +129,59 @@ export function Footer() {
               </div>
 
               {/* Social Media */}
-              <div>
-                <h4 className="text-blue-400 font-semibold text-lg mb-4">
-                  {t('footer.followUs')}
-                </h4>
-                <div className="flex space-x-3">
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="h-6 w-6" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
-                    aria-label="Facebook"
-                  >
-                    <Facebook className="h-6 w-6" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
-                    aria-label="Twitter"
-                  >
-                    <Twitter className="h-6 w-6" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="h-6 w-6" />
-                  </a>
+              {(config?.social?.instagramUrl || config?.social?.facebookUrl || config?.social?.twitterUrl || config?.social?.linkedinUrl) && (
+                <div>
+                  <h4 className="text-blue-400 font-semibold text-lg mb-4">
+                    {t('footer.followUs')}
+                  </h4>
+                  <div className="flex space-x-3">
+                    {config?.social?.instagramUrl && (
+                      <a
+                        href={config.social.instagramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
+                        aria-label="Instagram"
+                      >
+                        <Instagram className="h-6 w-6" />
+                      </a>
+                    )}
+                    {config?.social?.facebookUrl && (
+                      <a
+                        href={config.social.facebookUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
+                        aria-label="Facebook"
+                      >
+                        <Facebook className="h-6 w-6" />
+                      </a>
+                    )}
+                    {config?.social?.twitterUrl && (
+                      <a
+                        href={config.social.twitterUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
+                        aria-label="Twitter"
+                      >
+                        <Twitter className="h-6 w-6" />
+                      </a>
+                    )}
+                    {config?.social?.linkedinUrl && (
+                      <a
+                        href={config.social.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-blue-600 hover:scale-110 transition-all duration-300"
+                        aria-label="LinkedIn"
+                      >
+                        <Linkedin className="h-6 w-6" />
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Links Sections */}
@@ -202,13 +220,9 @@ export function Footer() {
                   <ul className="space-y-3">
                     {footerLinks.services.map((link) => (
                       <li key={link.nameKey}>
-                        <Link
-                          href={link.href}
-                          className="text-gray-300 hover:text-blue-400 hover:translate-x-2 transition-all duration-200 inline-block relative group"
-                        >
-                          <span className="relative z-10">{t(`footer.${link.nameKey}`)}</span>
-                          <div className="absolute inset-0 w-0 bg-blue-600/10 rounded group-hover:w-full transition-all duration-300 -z-0"></div>
-                        </Link>
+                        <span className="text-gray-300 inline-block">
+                          {t(`footer.${link.nameKey}`)}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -235,7 +249,7 @@ export function Footer() {
                   </ul>
 
                   {/* Newsletter */}
-                  <div>
+                  {/* <div>
                     <h4 className="text-blue-400 font-semibold text-lg mb-4">
                       {t('footer.newsletter')}
                     </h4>
@@ -255,7 +269,7 @@ export function Footer() {
                         {t('footer.subscribe')}
                       </button>
                     </form>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse, Listing, CreateListingDto } from '@/types/api'
+import { verifyAdminAuth } from '@/lib/auth-helper'
 
 // GET /api/admin/listings - Get all listings with optional filters
 export async function GET(request: NextRequest) {
+  // Check authentication
+  const auth = await verifyAdminAuth(request)
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
   try {
     const searchParams = request.nextUrl.searchParams
     const type = searchParams.get('type') || undefined
@@ -35,6 +45,15 @@ export async function GET(request: NextRequest) {
 
 // POST /api/admin/listings - Create a new listing
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const auth = await verifyAdminAuth(request)
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
   try {
     const body: CreateListingDto = await request.json()
 

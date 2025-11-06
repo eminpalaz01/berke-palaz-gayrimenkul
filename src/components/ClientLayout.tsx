@@ -3,6 +3,8 @@
 import * as React from "react"
 import { LegalConsent, useConsent } from '@/components/ui/LegalConsent'
 import { DataManagement, useDataManagement } from '@/components/ui/DataManagement'
+import { WhatsAppButton } from '@/components/ui/WhatsAppButton'
+import { usePageView } from '@/hooks/usePageView'
 
 interface ClientLayoutProps {
   children: React.ReactNode
@@ -11,6 +13,14 @@ interface ClientLayoutProps {
 export function ClientLayout({ children }: ClientLayoutProps) {
   const { showConsent, handleConsentAccept, setShowConsent } = useConsent()
   const { showDataManagement, openDataManagement, closeDataManagement } = useDataManagement()
+  
+  // Track page views
+  usePageView()
+
+  React.useEffect(() => {
+    console.log('ClientLayout mounted!')
+    console.log('WhatsAppButton component:', WhatsAppButton)
+  }, [])
 
   React.useEffect(() => {
     const handleOpenDataManagement = () => {
@@ -27,6 +37,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <>
       {children}
+      <WhatsAppButton />
       <LegalConsent
         isOpen={showConsent}
         onClose={() => setShowConsent(false)}

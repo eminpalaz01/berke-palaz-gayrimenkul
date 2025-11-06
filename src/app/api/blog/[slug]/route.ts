@@ -22,8 +22,12 @@ export async function GET(
       return NextResponse.json(response, { status: 404 })
     }
 
-    // Increment views
-    await db.blogPosts.incrementViews(post.id)
+    // Get client identifier (IP address or session)
+    const forwarded = request.headers.get('x-forwarded-for')
+    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'anonymous'
+    
+    // Increment views with rate limiting
+    await db.blogPosts.incrementViews(post.id, ip)
 
     const response: ApiResponse<BlogPost> = {
       success: true,

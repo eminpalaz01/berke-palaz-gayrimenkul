@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion"
 import { X } from "lucide-react"
-import { ReactNode } from "react"
+import { ReactNode, useEffect } from "react"
 import { useTranslations } from 'next-intl'
 
 interface ModalProps {
@@ -21,6 +21,26 @@ export function Modal({
   closeButtonLabel
 }: ModalProps) {
   const t = useTranslations()
+  
+  // Handle ESC key press
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen, onClose])
   
   if (!isOpen) return null
   
