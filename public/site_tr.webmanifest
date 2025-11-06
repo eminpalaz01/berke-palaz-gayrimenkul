@@ -1,0 +1,28 @@
+{
+  "name": "Berke Palaz Gayrimenkul - Hayallerinizdeki Eve Hoş Geldiniz",
+  "short_name": "Berke Palaz",
+  "description": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+  "start_url": "/tr",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["business", "lifestyle", "real estate"],
+  "lang": "tr",
+  "dir": "ltr",
+  "orientation": "any",
+  "theme_color_dark": "#1e293b",
+  "background_color_dark": "#0f172a"
+}

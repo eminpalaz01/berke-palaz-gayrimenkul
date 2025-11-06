@@ -1,0 +1,139 @@
+{
+  "site": {
+    "url": "https://berkepalaz.com",
+    "domain": "berkepalaz.com"
+  },
+  "locales": {
+    "supported": ["tr", "en"],
+    "default": "tr"
+  },
+  "company": {
+    "name": {
+      "tr": "Berke Palaz Gayrimenkul",
+      "en": "Berke Palaz Real Estate"
+    },
+    "description": {
+      "tr": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+      "en": "Berke Palaz Real Estate helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste."
+    },
+    "email": "berke@berkepalaz.com",
+    "phone": "+90 555 123 45 67",
+    "officePhone": "+90 555 444 33 22",
+    "address": {
+      "tr": {
+        "street": "Örnek Mahallesi, Emlak Caddesi No:12",
+        "city": "İstanbul",
+        "postalCode": "34710",
+        "country": "Türkiye",
+        "full": "Örnek Mahallesi, Emlak Caddesi No:12, 34710 Kadıköy, İstanbul"
+      },
+      "en": {
+        "street": "Örnek Mahallesi, Emlak Caddesi No:12",
+        "city": "Istanbul",
+        "postalCode": "34710",
+        "country": "Turkey",
+        "full": "Örnek Mahallesi, Emlak Caddesi No:12, 34710 Kadıköy, Istanbul"
+      }
+    },
+    "coordinates": {
+      "latitude": 40.9936,
+      "longitude": 29.0218
+    },
+    "workingHours": {
+      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "offices": {
+      "main": {
+        "name": {
+          "tr": "Ana Ofis",
+          "en": "Main Office"
+        },
+        "title": {
+          "tr": "Berke Palaz Gayrimenkul Ana Ofis",
+          "en": "Berke Palaz Real Estate Main Office"
+        },
+        "address": {
+          "tr": {
+            "street": "Örnek Mahallesi, Emlak Caddesi No:12",
+            "city": "İstanbul",
+            "postalCode": "34710",
+            "country": "Türkiye",
+            "full": "Örnek Mahallesi, Emlak Caddesi No:12, 34710 Kadıköy, İstanbul"
+          },
+          "en": {
+            "street": "Örnek Mahallesi, Emlak Caddesi No:12",
+            "city": "Istanbul",
+            "postalCode": "34710",
+            "country": "Turkey",
+            "full": "Örnek Mahallesi, Emlak Caddesi No:12, 34710 Kadıköy, Istanbul"
+          }
+        },
+        "coordinates": {
+          "latitude": 40.9936,
+          "longitude": 29.0218
+        }
+      }
+    }
+  },
+  "social": {
+    "instagramUrl": "https://instagram.com/berkepalazgayrimenkul",
+    "youtubeUrl": "https://youtube.com/@berkepalazgayrimenkul",
+    "facebookUrl": "https://facebook.com/berkepalazgayrimenkul",
+    "twitterUrl": "https://twitter.com/berkepalaz",
+    "linkedinUrl": "https://linkedin.com/in/berkepalaz"
+  },
+  "maps": {
+    "googleMapsUrl": "https://maps.google.com/?q=40.9936,29.0218",
+    "yandexMapsUrl": "https://yandex.com.tr/maps/?ll=29.0218,40.9936&z=15"
+  },
+  "business": {
+    "type": "Real Estate",
+    "category": "Property Sales & Rental",
+    "services": [
+      "Residential Sales",
+      "Residential Rentals", 
+      "Commercial Properties",
+      "Investment Consulting",
+      "Property Valuation",
+      "Property Management"
+    ],
+    "areas": [
+      "İstanbul",
+      "İzmir",
+      "Ankara",
+      "Bursa"
+    ],
+    "established": "2015",
+    "licenseNumber": "TR-GAY-2015-001"
+  },
+  "features": {
+    "multiLanguage": true,
+    "darkMode": true,
+    "newsletter": true,
+    "blog": true,
+    "contactForm": true,
+    "propertySearch": true,
+    "virtualTours": false,
+    "mortgageCalculator": true
+  },
+  "analytics": {
+    "googleAnalytics": "",
+    "facebookPixel": "",
+    "hotjar": ""
+  },
+  "seo": {
+    "keywords": [
+      "gayrimenkul",
+      "emlak",
+      "ev satışı",
+      "ev kiralama",
+      "İstanbul emlak",
+      "berke palaz",
+      "gayrimenkul danışmanı"
+    ],
+    "author": "Berke Palaz",
+    "robots": "index, follow"
+  }
+}

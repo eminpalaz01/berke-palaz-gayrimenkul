@@ -1,0 +1,138 @@
+{
+  "tr": {
+    "title": {
+      "default": "Berke Palaz Gayrimenkul - Hayallerinizdeki Eve Hoş Geldiniz",
+      "template": "%s | Berke Palaz Gayrimenkul"
+    },
+    "description": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz. İstanbul, İzmir, Ankara ve Bursa'da gayrimenkul hizmetleri.",
+    "keywords": [
+      "gayrimenkul",
+      "emlak",
+      "ev satışı",
+      "ev kiralama",
+      "İstanbul emlak",
+      "İzmir emlak",
+      "Ankara emlak",
+      "Bursa emlak",
+      "berke palaz",
+      "gayrimenkul danışmanı",
+      "emlak uzmanı",
+      "konut satışı",
+      "konut kiralama",
+      "ticari gayrimenkul",
+      "yatırım danışmanlığı",
+      "emlak değerleme",
+      "mülk yönetimi",
+      "gayrimenkul yatırımı",
+      "ev alım satım",
+      "kiralık daire",
+      "satılık ev",
+      "villa kiralama",
+      "ofis kiralama",
+      "arsa satışı"
+    ],
+    "openGraph": {
+      "siteName": "Berke Palaz Gayrimenkul",
+      "title": "Berke Palaz Gayrimenkul - Hayallerinizdeki Eve Hoş Geldiniz",
+      "description": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+      "type": "website",
+      "locale": "tr_TR"
+    },
+    "twitter": {
+      "card": "summary_large_image",
+      "site": "@berkepalaz",
+      "creator": "@berkepalaz",
+      "title": "Berke Palaz Gayrimenkul - Hayallerinizdeki Eve Hoş Geldiniz",
+      "description": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz."
+    },
+    "jsonLd": {
+      "organization": {
+        "name": "Berke Palaz Gayrimenkul",
+        "alternateName": "Berke Palaz",
+        "description": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+        "foundingDate": "2015",
+        "areaServed": ["İstanbul", "İzmir", "Ankara", "Bursa"],
+        "serviceType": ["Konut Satışı", "Konut Kiralama", "Ticari Gayrimenkul", "Yatırım Danışmanlığı", "Emlak Değerleme", "Mülk Yönetimi"]
+      },
+      "person": {
+        "name": "Berke Palaz",
+        "jobTitle": "Gayrimenkul Danışmanı",
+        "worksFor": "Berke Palaz Gayrimenkul",
+        "knowsAbout": ["Gayrimenkul", "Emlak", "Yatırım Danışmanlığı", "Mülk Değerleme"]
+      },
+      "website": {
+        "name": "Berke Palaz Gayrimenkul",
+        "description": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+        "inLanguage": "tr-TR"
+      }
+    }
+  },
+  "en": {
+    "title": {
+      "default": "Berke Palaz Real Estate - Welcome to Your Dream Home",
+      "template": "%s | Berke Palaz Real Estate"
+    },
+    "description": "Berke Palaz Real Estate helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste. Real estate services in Istanbul, Izmir, Ankara and Bursa.",
+    "keywords": [
+      "real estate",
+      "property",
+      "home sales",
+      "home rental",
+      "Istanbul real estate",
+      "Izmir real estate",
+      "Ankara real estate",
+      "Bursa real estate",
+      "berke palaz",
+      "real estate consultant",
+      "property expert",
+      "residential sales",
+      "residential rentals",
+      "commercial real estate",
+      "investment consulting",
+      "property valuation",
+      "property management",
+      "real estate investment",
+      "buy sell home",
+      "apartment rental",
+      "house for sale",
+      "villa rental",
+      "office rental",
+      "land sale"
+    ],
+    "openGraph": {
+      "siteName": "Berke Palaz Real Estate",
+      "title": "Berke Palaz Real Estate - Welcome to Your Dream Home",
+      "description": "Berke Palaz Real Estate helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste.",
+      "type": "website",
+      "locale": "en_US"
+    },
+    "twitter": {
+      "card": "summary_large_image",
+      "site": "@berkepalaz",
+      "creator": "@berkepalaz",
+      "title": "Berke Palaz Real Estate - Welcome to Your Dream Home",
+      "description": "Berke Palaz Real Estate helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste."
+    },
+    "jsonLd": {
+      "organization": {
+        "name": "Berke Palaz Real Estate",
+        "alternateName": "Berke Palaz",
+        "description": "Berke Palaz Real Estate helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste.",
+        "foundingDate": "2015",
+        "areaServed": ["Istanbul", "Izmir", "Ankara", "Bursa"],
+        "serviceType": ["Residential Sales", "Residential Rentals", "Commercial Properties", "Investment Consulting", "Property Valuation", "Property Management"]
+      },
+      "person": {
+        "name": "Berke Palaz",
+        "jobTitle": "Real Estate Consultant",
+        "worksFor": "Berke Palaz Real Estate",
+        "knowsAbout": ["Real Estate", "Property", "Investment Consulting", "Property Valuation"]
+      },
+      "website": {
+        "name": "Berke Palaz Real Estate",
+        "description": "Berke Palaz Real Estate helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste.",
+        "inLanguage": "en-US"
+      }
+    }
+  }
+}

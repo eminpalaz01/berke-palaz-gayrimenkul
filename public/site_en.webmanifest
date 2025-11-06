@@ -1,0 +1,28 @@
+{
+  "name": "Berke Palaz Real Estate - Welcome to Your Dream Home",
+  "short_name": "Berke Palaz",
+  "description": "Berke Palaz Real Estate helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste.",
+  "start_url": "/en",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["business", "lifestyle", "real estate"],
+  "lang": "en",
+  "dir": "ltr",
+  "orientation": "any",
+  "theme_color_dark": "#1e293b",
+  "background_color_dark": "#0f172a"
+}

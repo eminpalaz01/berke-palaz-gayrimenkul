@@ -1,0 +1,434 @@
+{
+  "navigation": {
+    "home": "Ana Sayfa",
+    "listings": "İlanlar",
+    "about": "Hakkımda",
+    "blog": "Blog",
+    "contact": "İletişim",
+    "language": "Dil",
+    "getConsultation": "Danışmanlık Al"
+  },
+  "hero": {
+    "title": "Hayallerinizdeki Eve Hoş Geldiniz",
+    "subtitle": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+    "exploreListings": "İlanları Keşfet",
+    "getConsultation": "Danışmanlık Al"
+  },
+  "listings": {
+    "title": "Öne Çıkan İlanlar",
+    "subtitle": "Hayalinizdeki evi bulmanıza yardımcı olalım",
+    "viewAll": "Tüm İlanları Gör",
+    "forSale": "Satılık",
+    "forRent": "Kiralık",
+    "land": "Arsa",
+    "rooms": "oda",
+    "bathrooms": "banyo",
+    "sqm": "m²",
+    "perMonth": "/ Ay",
+    "modernApartment": "Modern Daire",
+    "luxuryVilla": "Lüks Villa",
+    "studioApartment": "Stüdyo Daire",
+    "investmentLand": "Yatırımlık İmarlı Arsa",
+    "modernApartmentDesc": "Şehir merkezinde, modern tasarımlı, tüm olanaklara yakın daire.",
+    "luxuryVillaDesc": "Eşsiz deniz manzarasına sahip, özel havuzlu ve geniş bahçeli lüks villa.",
+    "studioApartmentDesc": "Doğa ile iç içe, geniş bahçeli, huzurlu ve sakin bir yaşam alanı.",
+    "investmentLandDesc": "Yatırım için ideal, imar planına uygun arsa."
+  },
+  "about": {
+    "title": "Hakkımda",
+    "subtitle": "Gayrimenkul sektöründe uzman danışmanlık",
+    "description": "Berke Palaz, gayrimenkul sektöründe uzun yılların deneyimine sahip, müşteri memnuniyetini ön planda tutan bir gayrimenkul danışmanıdır. Profesyonel yaklaşımı, geniş bilgi birikimi ve pazarlık becerileri ile müşterilerine hayallerindeki mülkü bulma veya mevcut mülklerini en iyi fiyata satma konusunda en iyi hizmeti sunmayı hedeflemektedir.",
+    "vision": "Vizyonum",
+    "visionText": "Müşteri memnuniyetini en üst düzeyde tutarak, sektörde güvenilir ve yenilikçi bir lider olmak.",
+    "mission": "Misyonum",
+    "missionText": "Etik değerlere bağlı kalarak, şeffaf ve dürüst bir hizmet anlayışıyla gayrimenkul alım, satım ve kiralama süreçlerinizi kolaylaştırmak.",
+    "experience": "Yıl Deneyim",
+    "happyClients": "Mutlu Müşteri",
+    "officeInfo": "Ofis Bilgileri",
+    "officeCompany": "Mavi Emlak Ofisi",
+    "officeSlogan": "Güvenilir Gayrimenkul Ortağınız"
+  },
+  "services": {
+    "title": "Hizmetlerim",
+    "subtitle": "Profesyonel Gayrimenkul Çözümleri",
+    "description": "İhtiyaçlarınıza özel olarak tasarlanmış geniş hizmet yelpazemizle yanınızdayız.",
+    "residentialSales": "Konut Satışı ve Kiralama",
+    "residentialSalesDesc": "Hayalinizdeki evi bulmanıza veya mevcut mülkünüzü en iyi fiyata satmanıza/kiralamanıza yardımcı oluyoruz.",
+    "commercialProperties": "Ticari Gayrimenkul",
+    "commercialPropertiesDesc": "İşletmeniz için en uygun ofis, mağaza, depo ve diğer ticari mülkleri bulma konusunda uzmanız.",
+    "investmentConsulting": "Yatırım Danışmanlığı",
+    "investmentConsultingDesc": "Piyasa analizleri ve uzman öngörülerimizle karlı gayrimenkul yatırım fırsatları sunuyoruz.",
+    "propertyValuation": "Değerleme (Ekspertiz)",
+    "propertyValuationDesc": "Mülkünüzün gerçek piyasa değerini belirlemek için profesyonel ve tarafsız değerleme hizmetleri sağlıyoruz.",
+    "projectDevelopment": "Proje Geliştirme",
+    "projectDevelopmentDesc": "Yeni konut veya ticari projelerinizin geliştirme sürecinin her aşamasında size danışmanlık yapıyoruz.",
+    "propertyManagement": "Mülk Yönetimi",
+    "propertyManagementDesc": "Kiracı bulma, kira toplama ve bakım gibi mülk yönetimi hizmetleriyle yatırımınızın yükünü hafifletiyoruz.",
+    "residentialRentals": "Konut Kiralama"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Gayrimenkul dünyasından haberler ve ipuçları",
+    "searchPlaceholder": "Blogda ara...",
+    "readMore": "Devamını Oku →",
+    "pagination": {
+      "previous": "Önceki",
+      "next": "Sonraki"
+    },
+    "posts": {
+      "investmentTips": {
+        "title": "Gayrimenkul Yatırımında Dikkat Edilmesi Gerekenler",
+        "excerpt": "Gayrimenkul yatırımı yaperken dikkat etmeniz gereken temel unsurları ve stratejileri bu makalede bulabilirsiniz.",
+        "date": "15 Mayıs 2024"
+      },
+      "mortgageTips": {
+        "title": "Konut Kredisi Alırken Nelere Dikkat Etmelisiniz?",
+        "excerpt": "Konut kredisi alırken dikkat etmeniz gerekenler, faiz oranları, geri ödeme planları ve diğer önemli detaylar bu yazıda.",
+        "date": "08 Mayıs 2024"
+      },
+      "marketingStrategies": {
+        "title": "Ev Satışında Pazarlama Stratejileri",
+        "excerpt": "Evinizi en iyi şekilde pazarlamak ve hızlıca satmak için kullanabileceğiniz etkili pazarlama yöntemleri ve ipuçları.",
+        "date": "01 Mayıs 2024"
+      },
+      "locationFactors": {
+        "title": "Bölgenin Gayrimenkul Değerini Etkileyen Faktörler",
+        "excerpt": "Bir bölgenin gayrimenkul değerini artıran veya azaltan faktörler nelerdir? Bu faktörleri analiz ederek yatırımlarınızı daha bilinçli yapabilirsiniz.",
+        "date": "24 Nisan 2024"
+      }
+    }
+  },
+  "contact": {
+    "title": "İletişim",
+    "subtitle": "Bana Ulaşın",
+    "description": "Gayrimenkul ihtiyaçlarınız hakkında görüşmek için aşağıdaki kanallardan bana ulaşabilirsiniz.",
+    "getInTouch": "İletişime Geçin",
+    "form": {
+      "name": "Ad Soyad",
+      "namePlaceholder": "Adınızı ve soyadınızı girin",
+      "email": "E-posta",
+      "emailPlaceholder": "E-posta Adresiniz",
+      "phone": "Telefon",
+      "phonePlaceholder": "Telefon numaranız",
+      "message": "Mesajınız",
+      "messagePlaceholder": "Mesajınız",
+      "submit": "Mesajı Gönder",
+      "sending": "Gönderiliyor...",
+      "success": "Mesajınız başarıyla gönderildi!",
+      "error": "Mesaj gönderilirken bir hata oluştu."
+    },
+    "info": {
+      "phone": "Telefon",
+      "email": "E-posta",
+      "address": "Adres",
+      "workingHours": "Çalışma Saatleri"
+    },
+    "officeInfo": "Ofis Bilgileri"
+  },
+  "footer": {
+    "dreamHomeWelcome": "Hayallerinizdeki Eve Hoş Geldiniz",
+    "footerDescription": "Berke Palaz Gayrimenkul Danışmanı, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+    "quickLinks": "Hızlı Erişim",
+    "services": "Hizmetler",
+    "legal": "Yasal",
+    "newsletter": "E-Bülten",
+    "newsletterDescription": "En son ilanlar ve haberler için bültenimize abone olun.",
+    "emailPlaceholder": "E-posta adresiniz",
+    "subscribe": "Abone Ol",
+    "followUs": "Bizi Takip Edin",
+    "workingHours": "Pazartesi - Cuma: 09:00 - 18:00",
+    "allRightsReserved": "Tüm hakları saklıdır.",
+    "residentialSales": "Konut Satışı",
+    "residentialRentals": "Konut Kiralama",
+    "commercialProperties": "Ticari Gayrimenkul",
+    "investmentConsulting": "Yatırım Danışmanlığı",
+    "propertyValuation": "Değerleme",
+    "propertyManagement": "Mülk Yönetimi",
+    "privacyPolicy": "Gizlilik Politikası",
+    "termsOfService": "Kullanım Koşulları",
+    "cookiePolicy": "Çerez Politikası",
+    "dataManagement": "Veri Yönetimi"
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "tryAgain": "Tekrar Dene",
+    "close": "Kapat",
+    "next": "Sonraki",
+    "previous": "Önceki",
+    "viewMore": "Daha Fazla Gör",
+    "viewDetails": "Detayları Gör",
+    "learnMore": "Daha Fazla Bilgi",
+    "readMore": "Devamını Oku"
+  },
+  "search": {
+    "placeholder": "Sitede ara...",
+    "ariaLabel": "Site içinde arama yapın",
+    "clearSearch": "Aramayı temizle",
+    "searchButton": "Ara",
+    "noResults": "Arama sonucu bulunamadı."
+  },
+  "home": "Ana Sayfa",
+  "PrivacyPolicy": {
+    "badge": "Gizlilik ve Güvenlik",
+    "title": "Gizlilik Politikası",
+    "description": "Kişisel verilerinizin korunması bizim için önemlidir. Bu politika, verilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu açıklar.",
+    "lastUpdated": "Son Güncelleme",
+    "introduction": {
+      "title": "Giriş",
+      "content": "Berke Palaz Gayrimenkul Danışmanı olarak, kişisel verilerinizin korunması konusunda hassasiyetle hareket etmekteyiz. Bu gizlilik politikası, web sitemizi ziyaret ettiğinizde ve hizmetlerimizi kullandığınızda kişisel verilerinizin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamaktadır."
+    },
+    "sections": {
+      "dataCollection": {
+        "title": "Veri Toplama",
+        "content": "Web sitemizi ziyaret ettiğinizde ve formlarımızı doldurduğunuzda aşağıdaki kişisel verilerinizi toplayabiliriz:\n\n• Ad, soyad ve iletişim bilgileri\n• E-posta adresi ve telefon numarası\n• Gayrimenkul tercihleri ve bütçe bilgileri\n• Web sitesi kullanım verileri ve çerezler\n• IP adresi ve tarayıcı bilgileri"
+      },
+      "dataUsage": {
+        "title": "Veri Kullanımı",
+        "content": "Topladığımız kişisel verilerinizi aşağıdaki amaçlarla kullanmaktayız:\n\n• Gayrimenkul danışmanlığı hizmetleri sunmak\n• Size uygun ilan önerileri göndermek\n• Müşteri hizmetleri sunmak\n• Yasal yükümlülüklerimizi yerine getirmek\n• Web sitesi performansını iyileştirmek\n• Size özel teklifler sunmak (onayınız dahilinde)"
+      },
+      "dataProtection": {
+        "title": "Veri Güvenliği",
+        "content": "Kişisel verilerinizin güvenliği için aşağıdaki önlemleri almaktayız:\n\n• SSL şifreleme ile güvenli veri iletimi\n• Güvenli sunucularda veri saklama\n• Yetkisiz erişime karşı koruma\n• Düzenli güvenlik güncellemeleri\n• Personel eğitimleri ve gizlilik anlaşmaları\n• Veri minimizasyonu ilkesine uygun hareket"
+      },
+      "cookies": {
+        "title": "Çerezler",
+        "content": "Web sitemizde deneyiminizi iyileştirmek için çerezler kullanmaktayız:\n\n• Zorunlu çerezler: Site işlevselliği için gerekli\n• İşlevsel çerezler: Tercihlerinizi hatırlamak için\n• Analitik çerezler: Site performansını ölçmek için\n• Pazarlama çerezleri: Kişiselleştirilmiş içerik sunmak için\n\nÇerez tercihlerinizi istediğiniz zaman değiştirebilirsiniz."
+      },
+      "thirdParties": {
+        "title": "Üçüncü Taraf Paylaşımları",
+        "content": "Kişisel verilerinizi aşağıdaki durumlarda üçüncü taraflarla paylaşabiliriz:\n\n• Yasal zorunluluklar gereği\n• Hizmet sağlayıcılarımızla (veri işleme sözleşmeleri dahilinde)\n• İş ortaklarımızla (açık onayınız dahilinde)\n• Şirket birleşme veya devralma durumlarında\n\nÜçüncü tarafların veri koruma standartlarına uymasını sağlamaktayız."
+      },
+      "userRights": {
+        "title": "Kullanıcı Hakları",
+        "content": "KVKK ve GDPR kapsamında aşağıdaki haklara sahipsiniz:\n\n• Verilerinize erişim hakkı\n• Verilerin düzeltilmesini talep etme hakkı\n• Verilerin silinmesini talep etme hakkı\n• Veri işlemeye itiraz etme hakkı\n• Veri taşınabilirliği hakkı\n• Otomatik karar alma süreçlerine itiraz etme hakkı\n\nHaklarınızı kullanmak için bizimle iletişime geçebilirsiniz."
+      }
+    },
+    "contact": {
+      "title": "İletişim",
+      "description": "Gizlilik politikamız hakkında sorularınız varsa veya haklarınızı kullanmak istiyorsanız bizimle iletişime geçebilirsiniz.",
+      "address": "Mavi Emlak Ofisi, İstanbul, Türkiye",
+      "button": "İletişime Geç"
+    }
+  },
+  "TermsOfService": {
+    "badge": "Yasal Koşullar",
+    "title": "Kullanım Koşulları",
+    "description": "Web sitemizi ve hizmetlerimizi kullanırken uymanız gereken koşullar ve kurallar hakkında bilgi edinin.",
+    "lastUpdated": "Son Güncelleme",
+    "introduction": {
+      "title": "Giriş",
+      "content": "Bu kullanım koşulları, Berke Palaz Gayrimenkul web sitesini ve hizmetlerini kullanımınızı düzenler. Sitemizi kullanarak bu koşulları kabul etmiş sayılırsınız."
+    },
+    "sections": {
+      "acceptance": {
+        "title": "Koşulların Kabulü",
+        "content": "Bu web sitesini kullanarak, aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız:\n\n• Sitemizi yasal amaçlar için kullanacaksınız\n• Diğer kullanıcıların haklarına saygı göstereceksiniz\n• Yanıltıcı veya yanlış bilgi vermeyeceksiniz\n• Sitemizin güvenliğini tehlikeye atmayacaksınız\n\nBu koşulları kabul etmiyorsanız, lütfen sitemizi kullanmayınız."
+      },
+      "services": {
+        "title": "Hizmetler",
+        "content": "Berke Palaz Gayrimenkul olarak sunduğumuz hizmetler:\n\n• Gayrimenkul alım-satım danışmanlığı\n• Kiralama hizmetleri\n• Emlak değerleme (ekspertiz)\n• Yatırım danışmanlığı\n• Proje geliştirme danışmanlığı\n\nHizmetlerimiz profesyonel standartlara uygun olarak sunulmaktadır."
+      },
+      "userResponsibilities": {
+        "title": "Kullanıcı Sorumlulukları",
+        "content": "Sitemizi kullanırken aşağıdaki sorumluluklara sahipsiniz:\n\n• Doğru ve güncel bilgi sağlamak\n• Hesap güvenliğinizi korumak\n• Yasalara ve düzenlemelere uymak\n• Fikri mülkiyet haklarına saygı göstermek\n• Spam veya zararlı içerik paylaşmamak\n\nBu sorumlulukları yerine getirmemeniz hesabınızın askıya alınmasına neden olabilir."
+      },
+      "intellectualProperty": {
+        "title": "Fikri Mülkiyet Hakları",
+        "content": "Bu web sitesindeki tüm içerik, tasarım ve materyaller:\n\n• Berke Palaz Gayrimenkul'e aittir\n• Telif hakkı yasaları ile korunmaktadır\n• İzinsiz kullanımı yasaktır\n• Ticari amaçla kopyalanamaz\n• Kaynak gösterilmeden paylaşılamaz\n\nİçerikleri kullanmak için yazılı izin almanız gerekmektedir."
+      },
+      "limitationLiability": {
+        "title": "Sorumluluk Sınırlaması",
+        "content": "Berke Palaz Gayrimenkul aşağıdaki durumlardan sorumlu değildir:\n\n• Üçüncü taraf web sitelerinin içeriği\n• Hizmet kesintileri veya teknik sorunlar\n• Kullanıcı hatalarından kaynaklanan zararlar\n• Piyasa koşullarındaki değişiklikler\n• Mücbir sebep durumları\n\nHizmetlerimizi olduğu gibi sunmaktayız ve garanti vermemekteyiz."
+      },
+      "governingLaw": {
+        "title": "Uygulanacak Hukuk",
+        "content": "Bu kullanım koşulları:\n\n• Türkiye Cumhuriyeti yasalarına tabidir\n• İstanbul mahkemeleri yetkilidir\n• Türkçe versiyonu geçerlidir\n• Uyuşmazlıklar önce dostane çözülmeye çalışılır\n• Yasal süreçler Türk hukuku çerçevesinde yürütülür\n\nUluslararası kullanıcılar için yerel yasalar da geçerli olabilir."
+      }
+    },
+    "importantNotice": {
+      "title": "Önemli Uyarı",
+      "content": "Bu web sitesinde yer alan bilgiler genel bilgilendirme amaçlıdır ve profesyonel tavsiye yerine geçmez. Gayrimenkul işlemlerinizde mutlaka uzman danışmanlık alınız."
+    },
+    "contact": {
+      "title": "İletişim",
+      "description": "Kullanım koşulları hakkında sorularınız varsa bizimle iletişime geçebilirsiniz.",
+      "address": "Mavi Emlak Ofisi, İstanbul, Türkiye",
+      "button": "İletişime Geçin"
+    }
+  },
+  "CookiePolicy": {
+    "badge": "Çerez Yönetimi",
+    "title": "Çerez Politikası",
+    "description": "Web sitemizde kullandığımız çerezler hakkında bilgi edinin ve tercihlerinizi yönetin.",
+    "lastUpdated": "Son Güncelleme",
+    "introduction": {
+      "title": "Giriş",
+      "content": "Bu çerez politikası, web sitemizde kullandığımız çerezler hakkında bilgi vermek ve tercihlerinizi yönetmenize yardımcı olmak için hazırlanmıştır. Çerezler, web sitemizin düzgün çalışması ve kullanıcı deneyiminizi iyileştirmek için kullanılır."
+    },
+    "sections": {
+      "whatAreCookies": {
+        "title": "Çerezler Nedir?",
+        "content": "Çerezler, web sitelerini ziyaret ettiğinizde cihazınıza kaydedilen küçük metin dosyalarıdır. Bu dosyalar, web sitesinin sizi tanımasını ve tercihlerinizi hatırlamasını sağlar. Çerezler, web sitesinin işlevselliğini artırmak, kullanıcı deneyimini iyileştirmek ve site performansını analiz etmek için kullanılır."
+      },
+      "howWeUse": {
+        "title": "Çerezleri Nasıl Kullanıyoruz?",
+        "content": "Web sitemizde farklı amaçlar için çeşitli çerez türleri kullanmaktayız:\n\n• Zorunlu Çerezler: Site işlevselliği için gerekli\n• İşlevsel Çerezler: Tercihlerinizi hatırlamak için\n• Analitik Çerezler: Site performansını ölçmek için\n• Pazarlama Çerezleri: Kişiselleştirilmiş içerik sunmak için\n\nBu çerezler sayesinde size daha iyi bir hizmet sunabiliyoruz."
+      },
+      "managingCookies": {
+        "title": "Çerez Yönetimi",
+        "content": "Çerez tercihlerinizi istediğiniz zaman değiştirebilirsiniz. Tarayıcı ayarlarınızdan çerezleri silebilir veya engelleyebilirsiniz. Ancak, bazı çerezleri devre dışı bırakmanız durumunda web sitesinin bazı özellikleri düzgün çalışmayabilir. Aşağıdaki bölümden çerez tercihlerinizi yönetebilirsiniz."
+      }
+    },
+    "preferences": {
+      "title": "Çerez Tercihleri",
+      "description": "Aşağıdan çerez tercihlerinizi yönetebilirsiniz. Zorunlu çerezler devre dışı bırakılamaz.",
+      "enabled": "Etkin",
+      "disabled": "Devre Dışı",
+      "required": "Gerekli",
+      "acceptAll": "Tümünü Kabul Et",
+      "saveSelected": "Seçilenleri Kaydet",
+      "rejectAll": "Tümünü Reddet",
+      "saved": "Tercihleriniz kaydedildi"
+    },
+    "cookieTypes": {
+      "necessary": {
+        "title": "Zorunlu Çerezler",
+        "description": "Bu çerezler web sitesinin temel işlevleri için gereklidir ve devre dışı bırakılamazlar. Oturum yönetimi, güvenlik ve temel site işlevselliği için kullanılırlar."
+      },
+      "functional": {
+        "title": "İşlevsel Çerezler",
+        "description": "Bu çerezler gelişmiş özellikler ve kişiselleştirme sağlar. Dil tercihiniz, bölge ayarlarınız ve diğer tercihlerinizi hatırlamak için kullanılırlar."
+      },
+      "analytics": {
+        "title": "Analitik Çerezler",
+        "description": "Bu çerezler site performansını ölçmemize ve iyileştirmemize yardımcı olur. Ziyaretçi sayısı, sayfa görüntülemeleri ve kullanıcı davranışları hakkında anonim veri toplarlar."
+      },
+      "marketing": {
+        "title": "Pazarlama Çerezleri",
+        "description": "Bu çerezler kişiselleştirilmiş reklamcılık için kullanılır. İlgi alanlarınıza göre size özel içerik ve teklifler sunmamızı sağlarlar."
+      }
+    },
+    "contact": {
+      "title": "İletişim",
+      "description": "Çerez politikamız hakkında sorularınız varsa bizimle iletişime geçebilirsiniz.",
+      "address": "Mavi Emlak Ofisi, İstanbul, Türkiye",
+      "button": "İletişime Geçin"
+    }
+  },
+  "LegalConsent": {
+    "banner": {
+      "title": "Çerez ve Gizlilik Bildirimi",
+      "description": "Web sitemizde deneyiminizi iyileştirmek için çerezler kullanıyoruz. Devam ederek çerez kullanımını kabul etmiş olursunuz."
+    },
+    "modal": {
+      "title": "Gizlilik Tercihleri",
+      "description": "Gizliliğinize saygı duyuyoruz. Aşağıdan veri işleme tercihlerinizi seçebilirsiniz."
+    },
+    "cookies": {
+      "necessary": {
+        "title": "Gerekli Çerezler",
+        "description": "Web sitesinin temel işlevleri için gerekli çerezler"
+      },
+      "functional": {
+        "title": "İşlevsel Çerezler", 
+        "description": "Gelişmiş özellikler ve kişiselleştirme için çerezler"
+      },
+      "analytics": {
+        "title": "Analitik Çerezler",
+        "description": "Site performansını ölçmek için kullanılan çerezler"
+      },
+      "marketing": {
+        "title": "Pazarlama Çerezler",
+        "description": "Kişiselleştirilmiş reklamcılık için kullanılan çerezler"
+      }
+    },
+    "acceptAll": "Tümünü Kabul Et",
+    "rejectAll": "Tümünü Reddet",
+    "customize": "Özelleştir",
+    "savePreferences": "Tercihleri Kaydet",
+    "cancel": "İptal",
+    "required": "Gerekli",
+    "showDetails": "Detayları Göster",
+    "hideDetails": "Detayları Gizle",
+    "links": {
+      "privacyPolicy": "Gizlilik Politikası",
+      "termsOfService": "Kullanım Koşulları",
+      "cookiePolicy": "Çerez Politikası"
+    }
+  },
+  "DataManagement": {
+    "title": "Veri Yönetimi",
+    "subtitle": "Kişisel verilerinizi yönetin ve haklarınızı kullanın",
+    "tabs": {
+      "overview": "Genel Bakış",
+      "cookies": "Çerezler",
+      "forms": "Formlar",
+      "export": "Veri Dışa Aktarma",
+      "delete": "Veri Silme"
+    },
+    "cookieTypes": {
+      "essential": "Temel",
+      "functional": "İşlevsel",
+      "analytics": "Analitik",
+      "marketing": "Pazarlama",
+      "other": "Diğer"
+    },
+    "overview": {
+      "title": "Veri Yönetimi Genel Bakış",
+      "description": "Bu panel aracılığıyla kişisel verilerinizi görüntüleyebilir, yönetebilir ve haklarınızı kullanabilirsiniz.",
+      "cookies": "Çerezler",
+      "cookiesStored": "çerez saklandı",
+      "forms": "Form Gönderileri",
+      "formsSubmitted": "form gönderildi",
+      "gdprCompliant": "GDPR Uyumlu",
+      "gdprDescription": "Verileriniz GDPR ve KVKK standartlarına uygun olarak işlenmektedir."
+    },
+    "cookies": {
+      "title": "Çerez Yönetimi",
+      "description": "Tarayıcınızda saklanan çerezleri görüntüleyin ve yönetin.",
+      "currentConsents": "Mevcut Onaylarınız"
+    },
+    "forms": {
+      "title": "Form Gönderileri",
+      "description": "Web sitesi üzerinden gönderdiğiniz form verilerini görüntüleyin.",
+      "form": "Form",
+      "expiresIn": "{days} gün sonra sona eriyor",
+      "name": "Ad",
+      "email": "E-posta",
+      "subject": "Konu",
+      "positions": "Pozisyonlar",
+      "noSubmissions": "Henüz form gönderimi bulunamadı."
+    },
+    "export": {
+      "title": "Veri Dışa Aktarma",
+      "description": "Kişisel verilerinizi JSON formatında indirin.",
+      "downloadData": "Verilerimi İndir",
+      "downloadDescription": "Tüm kişisel verilerinizi JSON formatında indirin.",
+      "download": "İndir",
+      "preview": "Önizleme"
+    },
+    "delete": {
+      "title": "Veri Silme",
+      "description": "Tüm kişisel verilerinizi kalıcı olarak silin.",
+      "warning": "Uyarı!",
+      "warningDescription": "Bu işlem geri alınamaz. Aşağıdaki veriler kalıcı olarak silinecektir:",
+      "item1": "Tüm çerezler ve oturum bilgileri",
+      "item2": "Form gönderim kayıtları",
+      "item3": "Tercih ayarları",
+      "item4": "Analitik ve kullanım verileri",
+      "requestDeletion": "Veri Silme Talebi",
+      "confirmTitle": "Veri Silme Onayı",
+      "confirmDescription": "Tüm verilerinizi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "confirmDelete": "Evet, Tüm Verilerimi Sil",
+      "cancel": "İptal"
+    },
+    "enabled": "Etkin",
+    "disabled": "Devre Dışı"
+  },
+  "errors": {
+    "unexpected": "Beklenmeyen bir hata oluştu",
+    "network": "İnternet bağlantısı hatası",
+    "validation": "Doğrulama hatası"
+  }
+}
