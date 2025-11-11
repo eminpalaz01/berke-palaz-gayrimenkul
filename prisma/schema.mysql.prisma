@@ -1,0 +1,111 @@
+// Prisma schema for MySQL database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin user model for authentication
+model AdminUser {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String   // Hashed password
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
+// Session model for authentication
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  username  String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([token])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+// Listing model
+model Listing {
+  id           String   @id @default(cuid())
+  title        String
+  description  String   @db.Text
+  location     String
+  price        Float
+  currency     String   @default("₺")
+  type         String   // 'sale' or 'rent'
+  status       String   @default("active") // 'active', 'inactive', 'sold', 'rented'
+  propertyType String   // 'apartment', 'villa', 'office', 'land', 'commercial'
+  area         Float
+  rooms        Int?
+  bathrooms    Int?
+  floor        Int?
+  buildingAge  Int?
+  features     String   @db.Text // JSON array stored as text
+  images       String   @db.Text // JSON array stored as text
+  coverImage   String?  @db.Text
+  locale       String   @default("tr")
+  views        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([locale])
+  @@index([createdAt])
+  @@map("listings")
+}
+
+// Blog post model
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String    @db.Text
+  content     String    @db.Text
+  coverImage  String?   @db.Text
+  author      String
+  status      String    @default("draft") // 'draft', 'published', 'archived'
+  tags        String    @db.Text // JSON array stored as text
+  locale      String    @default("tr")
+  views       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+
+  @@index([slug])
+  @@index([status])
+  @@index([locale])
+  @@index([createdAt])
+  @@map("blog_posts")
+}
+
+// Page view tracking model
+model PageView {
+  id        String   @id @default(cuid())
+  timestamp DateTime @default(now())
+
+  @@index([timestamp])
+  @@map("page_views")
+}
+
+// View tracking for rate limiting (listings and blog posts)
+model ViewTracking {
+  id         String   @id @default(cuid())
+  entityType String   // 'listing' or 'blog'
+  entityId   String
+  identifier String   // IP address or user identifier
+  timestamp  DateTime @default(now())
+
+  @@index([entityType, entityId, identifier])
+  @@index([timestamp])
+  @@map("view_tracking")
+}

@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { authDb } from './db'
+import { db } from './db'
 
 export async function verifyAdminAuth(request: NextRequest): Promise<{ authenticated: boolean; error?: string }> {
   try {
@@ -9,7 +9,7 @@ export async function verifyAdminAuth(request: NextRequest): Promise<{ authentic
       return { authenticated: false, error: 'No authentication token' }
     }
 
-    const result = await authDb.verifySession(token)
+    const result = await db.admin.verifySession(token)
 
     if (!result.valid) {
       return { authenticated: false, error: 'Invalid or expired session' }

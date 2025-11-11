@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import { X, Loader2 } from "lucide-react"
 import { Listing, UpdateListingDto } from "@/types/api"
 
 interface EditListingModalProps {
@@ -30,18 +30,39 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
     status: listing.status
   })
   const [saving, setSaving] = useState(false)
-  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>(listing.coverImage || '')
+  const [newImageUrl, setNewImageUrl] = useState<string>('')
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      setImageFile(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string)
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formDataUpload = new FormData()
+      formDataUpload.append('file', file)
+      formDataUpload.append('type', 'listing')
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      })
+
+      const result = await response.json()
+
+      if (result.success && result.data?.url) {
+        setImagePreview(result.data.url)
+        setNewImageUrl(result.data.url)
+      } else {
+        console.error('Upload failed:', result.error)
+        alert('Resim yüklenirken bir hata oluştu: ' + (result.error || 'Bilinmeyen hata'))
       }
-      reader.readAsDataURL(file)
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert('Resim yüklenirken bir hata oluştu')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -83,7 +104,7 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
         status: listing.status
       })
       setImagePreview(listing.coverImage || '')
-      setImageFile(null)
+      setNewImageUrl('')
     }
   }, [listing, isOpen])
 
@@ -92,8 +113,8 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
     setSaving(true)
     try {
       const dataToSave = { ...formData }
-      if (imageFile) {
-        dataToSave.coverImage = imagePreview
+      if (newImageUrl) {
+        dataToSave.coverImage = newImageUrl
       }
       await onSave(listing.id, dataToSave)
       onClose()
@@ -144,14 +165,22 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
                   />
                 </div>
               )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  disabled={uploading}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                {uploading && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
+                  </div>
+                )}
+              </div>
               <p className="text-sm text-gray-500 dark:text-slate-400">
-                Yeni resim seçmezseniz mevcut resim korunur
+                {uploading ? 'Resim yükleniyor...' : 'Yeni resim seçmezseniz mevcut resim korunur'}
               </p>
             </div>
           </div>

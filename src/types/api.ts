@@ -91,7 +91,7 @@ export interface UpdateBlogPostDto extends Partial<CreateBlogPostDto> {
 
 // Stats Types
 export interface ViewStats {
-  total: number
+  threeMonths: number
   weekly: number
   monthly: number
 }

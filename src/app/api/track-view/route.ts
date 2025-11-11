@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { pageViewsDb } from '@/lib/db'
+import { db } from '@/lib/db'
 import { ApiResponse } from '@/types/api'
 
 // Force dynamic rendering
@@ -8,19 +8,26 @@ export const dynamic = 'force-dynamic'
 // POST /api/track-view - Track page view
 export async function POST(request: NextRequest) {
   try {
-    console.log('📊 [Track View] API called')
+    console.trace('📊 [Track View] API called')
     
-    // Track page view (no rate limiting)
-    pageViewsDb.incrementView()
+    // Track page view
+    await db.pageViews.track()
     
-    const totalViews = pageViewsDb.getTotalViews()
-    const weeklyViews = pageViewsDb.getWeeklyViews()
-    const monthlyViews = pageViewsDb.getMonthlyViews()
+    // Get view counts
+    const now = new Date()
+    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     
-    console.log('📊 [Track View] Success!')
-    console.log('   Total:', totalViews)
-    console.log('   Weekly:', weeklyViews)
-    console.log('   Monthly:', monthlyViews)
+    const [totalViews, weeklyViews, monthlyViews] = await Promise.all([
+      db.pageViews.getCount(),
+      db.pageViews.getCount(oneWeekAgo),
+      db.pageViews.getCount(oneMonthAgo)
+    ])
+    
+    console.trace('📊 [Track View] Success!')
+    console.trace('   Total:', totalViews)
+    console.trace('   Weekly:', weeklyViews)
+    console.trace('   Monthly:', monthlyViews)
     
     const response: ApiResponse = {
       success: true,

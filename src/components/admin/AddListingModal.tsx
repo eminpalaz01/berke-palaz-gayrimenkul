@@ -13,6 +13,7 @@ interface AddListingModalProps {
 
 export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProps) {
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>("")
   const [formData, setFormData] = useState<CreateListingDto>({
     title: "",
@@ -50,16 +51,35 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
     }
   }, [isOpen, onClose, loading])
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const base64String = reader.result as string
-        setImagePreview(base64String)
-        setFormData({ ...formData, coverImage: base64String })
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formDataUpload = new FormData()
+      formDataUpload.append('file', file)
+      formDataUpload.append('type', 'listing')
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      })
+
+      const result = await response.json()
+
+      if (result.success && result.data?.url) {
+        setImagePreview(result.data.url)
+        setFormData({ ...formData, coverImage: result.data.url })
+      } else {
+        console.error('Upload failed:', result.error)
+        alert('Resim yüklenirken bir hata oluştu: ' + (result.error || 'Bilinmeyen hata'))
       }
-      reader.readAsDataURL(file)
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert('Resim yüklenirken bir hata oluştu')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -121,19 +141,30 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                       setImagePreview("")
                       setFormData({ ...formData, coverImage: "" })
                     }}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                    disabled={uploading}
+                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
               ) : (
-                <label className="w-32 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg cursor-pointer hover:border-blue-500 dark:hover:border-blue-400">
-                  <Upload className="h-8 w-8 text-gray-400 dark:text-slate-500" />
-                  <span className="mt-2 text-sm text-gray-500 dark:text-slate-400">Resim Seç</span>
+                <label className={`w-32 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg cursor-pointer hover:border-blue-500 dark:hover:border-blue-400 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  {uploading ? (
+                    <>
+                      <Loader2 className="h-8 w-8 text-gray-400 dark:text-slate-500 animate-spin" />
+                      <span className="mt-2 text-sm text-gray-500 dark:text-slate-400">Yükleniyor...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-8 w-8 text-gray-400 dark:text-slate-500" />
+                      <span className="mt-2 text-sm text-gray-500 dark:text-slate-400">Resim Seç</span>
+                    </>
+                  )}
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
+                    disabled={uploading}
                     className="hidden"
                   />
                 </label>

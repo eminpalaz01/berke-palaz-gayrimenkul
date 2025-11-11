@@ -111,8 +111,26 @@ export function ContactSection() {
                 <div className="flex items-start space-x-3">
                   <Clock className="h-4 w-4 text-blue-400 mt-1" />
                   <div className="text-slate-300">
-                    <p>Pazartesi - Cuma: 09:00 - 18:00</p>
-                    <p>Cumartesi: 10:00 - 16:00</p>
+                    {config?.company?.officeWorkingHours ? (
+                      <>
+                        <p>
+                          {t(`days.${config.company.officeWorkingHours.weekdays.days[0]}`)} - {t(`days.${config.company.officeWorkingHours.weekdays.days[config.company.officeWorkingHours.weekdays.days.length - 1]}`)}: {config.company.officeWorkingHours.weekdays.opens} - {config.company.officeWorkingHours.weekdays.closes}
+                        </p>
+                        <p>
+                          {t(`days.${config.company.officeWorkingHours.saturday.days[0]}`)}: {config.company.officeWorkingHours.saturday.opens} - {config.company.officeWorkingHours.saturday.closes}
+                        </p>
+                        {config.company.officeWorkingHours.sunday && (
+                          <p>
+                            {t(`days.${config.company.officeWorkingHours.sunday.days[0]}`)}: {config.company.officeWorkingHours.sunday.opens === 'Closed' ? t('contact.closed') : `${config.company.officeWorkingHours.sunday.opens} - ${config.company.officeWorkingHours.sunday.closes}`}
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p>Pazartesi - Cuma: 09:00 - 18:00</p>
+                        <p>Cumartesi: 10:00 - 16:00</p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

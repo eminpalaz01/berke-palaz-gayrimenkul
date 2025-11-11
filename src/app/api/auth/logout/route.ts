@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { authDb } from '@/lib/db'
+import { db } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
     const token = request.cookies.get('admin_token')?.value
 
     if (token) {
-      await authDb.logout(token)
+      await db.admin.logout(token)
     }
 
     // Create response and clear cookie

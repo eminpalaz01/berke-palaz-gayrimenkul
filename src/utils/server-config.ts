@@ -37,9 +37,13 @@ export function loadServerRuntimeConfig(): RuntimeConfig {
           en: { street: 'Address', city: 'City', postalCode: '00000', country: 'Turkey', full: 'Address, 00000 City/Turkey' }
         },
         coordinates: { latitude: 39.6484, longitude: 27.8826 },
-        workingHours: { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '17:00' },
+        officeWorkingHours: {
+          weekdays: { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '18:00' },
+          saturday: { days: ['Saturday'], opens: '10:00', closes: '16:00' }
+        },
         offices: {}
       },
+      workingHours: { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '09:00', closes: '18:00' },
       social: { instagramUrl: 'https://instagram.com', youtubeUrl: 'https://youtube.com' },
       maps: { googleMapsUrl: 'https://maps.google.com', yandexMapsUrl: 'https://yandex.com.tr/maps' }
     };

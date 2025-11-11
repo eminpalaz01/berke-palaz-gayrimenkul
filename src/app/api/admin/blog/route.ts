@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || undefined
     const locale = searchParams.get('locale') || undefined
 
-    const posts = await db.blogPosts.findAll({
+    const posts = await db.blog.findAll({
       status,
       search,
       locale
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if slug already exists
-    const existingPost = await db.blogPosts.findBySlug(body.slug)
+    const existingPost = await db.blog.findBySlug(body.slug)
     if (existingPost) {
       const response: ApiResponse = {
         success: false,
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 })
     }
 
-    const newPost = await db.blogPosts.create({
+    const newPost = await db.blog.create({
       ...body,
       tags: body.tags || [],
       status: body.status || 'draft'

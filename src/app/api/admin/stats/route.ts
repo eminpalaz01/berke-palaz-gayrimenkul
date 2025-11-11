@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db, pageViewsDb } from '@/lib/db'
-import { ApiResponse, DashboardStats } from '@/types/api'
+import { db } from '@/lib/db'
+import { ApiResponse, DashboardStats, Listing, BlogPost } from '@/types/api'
 import { verifyAdminAuth } from '@/lib/auth-helper'
 
 // GET /api/admin/stats - Get dashboard statistics
@@ -15,27 +15,37 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const allListings = await db.listings.findAll()
-    const allBlogPosts = await db.blogPosts.findAll()
+    const allListings = (await db.listings.findAll()) as Listing[]
+    const allBlogPosts = (await db.blog.findAll()) as BlogPost[]
 
-    const activeListings = allListings.filter(l => l.status === 'active')
-    const publishedPosts = allBlogPosts.filter(p => p.status === 'published')
+    const activeListings = allListings.filter((l) => l.status === 'active')
+    const publishedPosts = allBlogPosts.filter((p) => p.status === 'published')
 
     // Get page views with real-time calculations
-    const totalViews = pageViewsDb.getTotalViews()
-    const weeklyViews = pageViewsDb.getWeeklyViews()
-    const monthlyViews = pageViewsDb.getMonthlyViews()
+    const now = new Date()
+    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    const threeMonthsAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000) // Approximately 3 months
     
-    console.log('📊 [Stats API] Views:', { totalViews, weeklyViews, monthlyViews })
-
+    const [threeMonthsViews, weeklyViews, monthlyViews] = await Promise.all([
+      db.pageViews.getCount(threeMonthsAgo),
+      db.pageViews.getCount(oneWeekAgo),
+      db.pageViews.getCount(oneMonthAgo)
+    ])
+    
+    console.trace('📊 [Stats API] Views:', { threeMonthsViews, weeklyViews, monthlyViews })
     // Get recent listings (last 3)
     const recentListings = allListings
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
       .slice(0, 3)
 
     // Get recent blog posts (last 3)
     const recentBlogPosts = allBlogPosts
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
       .slice(0, 3)
 
     const stats: DashboardStats = {
@@ -44,7 +54,7 @@ export async function GET(request: NextRequest) {
       totalBlogPosts: allBlogPosts.length,
       publishedBlogPosts: publishedPosts.length,
       views: {
-        total: totalViews,
+        threeMonths: threeMonthsViews,
         weekly: weeklyViews,
         monthly: monthlyViews
       },

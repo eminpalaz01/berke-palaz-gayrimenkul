@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const tag = searchParams.get('tag') || undefined
 
     // Only return published posts for public API
-    let posts = await db.blogPosts.findAll({
+    let posts = await db.blog.findAll({
       status: 'published',
       search,
       locale
@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
 
     // Filter by tag if provided
     if (tag) {
-      posts = posts.filter(post => 
-        post.tags.some(t => t.toLowerCase() === tag.toLowerCase())
+      posts = posts.filter((post: BlogPost) => 
+        post.tags.some((t: string) => t.toLowerCase() === tag.toLowerCase())
       )
     }
 

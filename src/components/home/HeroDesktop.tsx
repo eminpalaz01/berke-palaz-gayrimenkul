@@ -2,8 +2,13 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
+import { useRuntimeConfig } from "@/utils/runtime-config"
+import { useParams } from "next/navigation"
 
 export function HeroDesktop() {
+  const { config } = useRuntimeConfig()
+  const params = useParams()
+  const locale = params.locale as string || 'tr'
   return (
     <div className="relative h-[600px] lg:h-[700px]">
       {/* Blue Background with Gradient */}
@@ -24,7 +29,7 @@ export function HeroDesktop() {
               <div className="flex flex-col items-start gap-2">
                 <Image
                   src="/images/logo-beyaz.png"
-                  alt="Coldwell Banker Eagle"
+                  alt={config?.company?.officeName?.[locale] || "Coldwell Banker Eagle"}
                   width={80}
                   height={80}
                   className="object-contain"

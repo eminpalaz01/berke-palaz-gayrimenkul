@@ -10,7 +10,7 @@
   },
   "hero": {
     "title": "Hayallerinizdeki Eve Hoş Geldiniz",
-    "subtitle": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+    "subtitle": "Berke Palaz Gayrimenkul Danışmanı, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
     "exploreListings": "İlanları Keşfet",
     "getConsultation": "Danışmanlık Al"
   },
@@ -100,6 +100,7 @@
   },
   "contact": {
     "title": "İletişim",
+    "closed": "Kapalı",
     "subtitle": "Bana Ulaşın",
     "description": "Gayrimenkul ihtiyaçlarınız hakkında görüşmek için aşağıdaki kanallardan bana ulaşabilirsiniz.",
     "getInTouch": "İletişime Geçin",
@@ -136,7 +137,8 @@
     "emailPlaceholder": "E-posta adresiniz",
     "subscribe": "Abone Ol",
     "followUs": "Bizi Takip Edin",
-    "workingHours": "Pazartesi - Cuma: 09:00 - 18:00",
+    "defaultWorkingHours": "Pazartesi - Cuma: 09:00 - 18:00",
+    "defaultSaturdayHours": "Cumartesi: 10:00 - 16:00",
     "allRightsReserved": "Tüm hakları saklıdır.",
     "residentialSales": "Konut Satışı",
     "residentialRentals": "Konut Kiralama",
@@ -152,6 +154,15 @@
   "whatsapp": {
     "chatWithUs": "WhatsApp ile Mesaj Gönderin",
     "defaultMessage": "Merhaba, bilgi almak istiyorum."
+  },
+  "days": {
+    "Monday": "Pazartesi",
+    "Tuesday": "Salı",
+    "Wednesday": "Çarşamba",
+    "Thursday": "Perşembe",
+    "Friday": "Cuma",
+    "Saturday": "Cumartesi",
+    "Sunday": "Pazar"
   },
   "common": {
     "loading": "Yükleniyor...",
@@ -222,7 +233,7 @@
     "lastUpdated": "Son Güncelleme",
     "introduction": {
       "title": "Giriş",
-      "content": "Bu kullanım koşulları, Berke Palaz Gayrimenkul web sitesini ve hizmetlerini kullanımınızı düzenler. Sitemizi kullanarak bu koşulları kabul etmiş sayılırsınız."
+      "content": "Bu kullanım koşulları, Berke Palaz Gayrimenkul Danışmanı web sitesini ve hizmetlerini kullanımınızı düzenler. Sitemizi kullanarak bu koşulları kabul etmiş sayılırsınız."
     },
     "sections": {
       "acceptance": {
@@ -231,7 +242,7 @@
       },
       "services": {
         "title": "Hizmetler",
-        "content": "Berke Palaz Gayrimenkul olarak sunduğumuz hizmetler:\n\n• Gayrimenkul alım-satım danışmanlığı\n• Kiralama hizmetleri\n• Emlak değerleme (ekspertiz)\n• Yatırım danışmanlığı\n• Proje geliştirme danışmanlığı\n\nHizmetlerimiz profesyonel standartlara uygun olarak sunulmaktadır."
+        "content": "Berke Palaz Gayrimenkul Danışmanı olarak sunduğumuz hizmetler:\n\n• Gayrimenkul alım-satım danışmanlığı\n• Kiralama hizmetleri\n• Emlak değerleme (ekspertiz)\n• Yatırım danışmanlığı\n• Proje geliştirme danışmanlığı\n\nHizmetlerimiz profesyonel standartlara uygun olarak sunulmaktadır."
       },
       "userResponsibilities": {
         "title": "Kullanıcı Sorumlulukları",
@@ -239,11 +250,11 @@
       },
       "intellectualProperty": {
         "title": "Fikri Mülkiyet Hakları",
-        "content": "Bu web sitesindeki tüm içerik, tasarım ve materyaller:\n\n• Berke Palaz Gayrimenkul'e aittir\n• Telif hakkı yasaları ile korunmaktadır\n• İzinsiz kullanımı yasaktır\n• Ticari amaçla kopyalanamaz\n• Kaynak gösterilmeden paylaşılamaz\n\nİçerikleri kullanmak için yazılı izin almanız gerekmektedir."
+        "content": "Bu web sitesindeki tüm içerik, tasarım ve materyaller:\n\n• Berke Palaz Gayrimenkul Danışmanı'a aittir\n• Telif hakkı yasaları ile korunmaktadır\n• İzinsiz kullanımı yasaktır\n• Ticari amaçla kopyalanamaz\n• Kaynak gösterilmeden paylaşılamaz\n\nİçerikleri kullanmak için yazılı izin almanız gerekmektedir."
       },
       "limitationLiability": {
         "title": "Sorumluluk Sınırlaması",
-        "content": "Berke Palaz Gayrimenkul aşağıdaki durumlardan sorumlu değildir:\n\n• Üçüncü taraf web sitelerinin içeriği\n• Hizmet kesintileri veya teknik sorunlar\n• Kullanıcı hatalarından kaynaklanan zararlar\n• Piyasa koşullarındaki değişiklikler\n• Mücbir sebep durumları\n\nHizmetlerimizi olduğu gibi sunmaktayız ve garanti vermemekteyiz."
+        "content": "Berke Palaz Gayrimenkul Danışmanı aşağıdaki durumlardan sorumlu değildir:\n\n• Üçüncü taraf web sitelerinin içeriği\n• Hizmet kesintileri veya teknik sorunlar\n• Kullanıcı hatalarından kaynaklanan zararlar\n• Piyasa koşullarındaki değişiklikler\n• Mücbir sebep durumları\n\nHizmetlerimizi olduğu gibi sunmaktayız ve garanti vermemekteyiz."
       },
       "governingLaw": {
         "title": "Uygulanacak Hukuk",

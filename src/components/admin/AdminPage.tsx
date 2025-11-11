@@ -19,7 +19,7 @@ import {
   Loader2,
   LogOut
 } from "lucide-react"
-import { listingsApi, blogApi, statsApi } from "@/lib/api-client"
+import { listingsApi, blogApi, statsApi, cleanupApi } from "@/lib/api-client"
 import { Listing, BlogPost, DashboardStats, UpdateListingDto, UpdateBlogPostDto, CreateListingDto, CreateBlogPostDto } from "@/types/api"
 import toast from "react-hot-toast"
 import { EditListingModal } from "./EditListingModal"
@@ -28,13 +28,14 @@ import { AddListingModal } from "./AddListingModal"
 import { AddBlogModal } from "./AddBlogModal"
 import { ViewListingModal } from "./ViewListingModal"
 import { ViewBlogModal } from "./ViewBlogModal"
+import { ChangePasswordModal } from "./ChangePasswordModal"
+import { ConfigManagement } from "./ConfigManagement"
 
 interface AdminPageProps {
   onLogout?: () => void
 }
 
 export function AdminPage({ onLogout }: AdminPageProps) {
-  const router = useRouter()
   const [activeTab, setActiveTab] = useState("dashboard")
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(false)
@@ -51,6 +52,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
   const [viewingBlogPost, setViewingBlogPost] = useState<BlogPost | null>(null)
   const [showAddListing, setShowAddListing] = useState(false)
   const [showAddBlog, setShowAddBlog] = useState(false)
+  const [showChangePassword, setShowChangePassword] = useState(false)
 
   const tabs = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
@@ -62,6 +64,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
 
   // Fetch dashboard stats
   const fetchStats = async () => {
+    await cleanupApi.deleteOldPageViews()
     setLoading(true)
     const response = await statsApi.getDashboard()
     if (response.success && response.data) {
@@ -189,7 +192,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
       setShowAddListing(false)
       fetchListings()
       if (activeTab === 'dashboard') fetchStats()
-    } else {
+          } else {
       toast.error(response.error || 'İlan oluşturulamadı')
       throw new Error(response.error)
     }
@@ -349,11 +352,11 @@ export function AdminPage({ onLogout }: AdminPageProps) {
               <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">Son 30 gün</p>
             </div>
             <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg">
-              <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Toplam</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">Son 3 Ay</p>
               <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">
-                {stats.views.total.toLocaleString('tr-TR')}
+                {stats.views.threeMonths.toLocaleString('tr-TR')}
               </p>
-              <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">Tüm zamanlar</p>
+              <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">Son 3 ay</p>
             </div>
           </div>
         </motion.div>
@@ -645,7 +648,39 @@ export function AdminPage({ onLogout }: AdminPageProps) {
       case "users":
         return <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg text-center dark:text-white">Kullanıcı yönetimi yakında...</div>
       case "settings":
-        return <div className="bg-white dark:bg-slate-800 p-8 rounded-lg shadow-lg text-center dark:text-white">Ayarlar yakında...</div>
+        return (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold dark:text-white">Ayarlar</h2>
+            
+            {/* Security Settings */}
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 dark:text-white">Güvenlik</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                      <div>
+                        <p className="font-medium dark:text-white">Şifre Değiştir</p>
+                        <p className="text-sm text-gray-600 dark:text-slate-400">
+                          Hesap güvenliğiniz için şifrenizi düzenli olarak değiştirin
+                        </p>
+                      </div>
+                      <Button
+                        onClick={() => setShowChangePassword(true)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        Şifre Değiştir
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Config Management */}
+            <ConfigManagement />
+          </div>
+        )
       default:
         return renderDashboard()
     }
@@ -768,6 +803,13 @@ export function AdminPage({ onLogout }: AdminPageProps) {
           post={viewingBlogPost}
           isOpen={true}
           onClose={() => setViewingBlogPost(null)}
+        />
+      )}
+
+      {showChangePassword && (
+        <ChangePasswordModal
+          isOpen={true}
+          onClose={() => setShowChangePassword(false)}
         />
       )}
     </div>

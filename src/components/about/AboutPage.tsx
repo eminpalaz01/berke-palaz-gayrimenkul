@@ -70,12 +70,13 @@ export function AboutPage() {
               className="flex flex-col items-center text-center lg:items-start lg:text-left"
             >
               <div className="rounded-full w-40 h-40 mb-6 shadow-lg overflow-hidden">
-                <Image 
-                  src="/images/profile.png" 
-                  alt="Berke Palaz Profile" 
-                  width={160} 
-                  height={160} 
-                  className="object-cover w-full h-full" 
+                <Image
+                  src="/images/profile.png"
+                  alt="Berke Palaz Profile"
+                  width={160}
+                  height={160}
+                  className="object-cover w-full h-full"
+                  style={{ objectPosition: 'center 10%' }} // üstten %10 kırpma
                 />
               </div>
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-gray-900 dark:text-white">
@@ -85,7 +86,7 @@ export function AboutPage() {
                 {t('about.subtitle')}
               </h2>
               <p className="mt-4 text-gray-600 dark:text-slate-300 max-w-[600px]">
-                10+ {t('about.experience')} | 100+ {t('about.happyClients')}
+                {config?.stats?.yearsOfExperience || 10}+ {t('about.experience')} | {config?.stats?.happyClients || 100}+ {t('about.happyClients')}
               </p>
               <p className="mt-4 text-gray-700 dark:text-slate-300 max-w-[600px] leading-relaxed">
                 {t('about.description')}

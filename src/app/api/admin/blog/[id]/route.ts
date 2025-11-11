@@ -22,7 +22,7 @@ export async function GET(
 
   try {
     const { id } = await params
-    const post = await db.blogPosts.findById(id)
+    const post = await db.blog.findById(id)
 
     if (!post) {
       const response: ApiResponse = {
@@ -67,7 +67,7 @@ export async function PATCH(
 
     // If slug is being updated, check if it already exists
     if (body.slug) {
-      const existingPost = await db.blogPosts.findBySlug(body.slug)
+      const existingPost = await db.blog.findBySlug(body.slug)
       if (existingPost && existingPost.id !== id) {
         const response: ApiResponse = {
           success: false,
@@ -77,7 +77,7 @@ export async function PATCH(
       }
     }
 
-    const updatedPost = await db.blogPosts.update(id, body)
+    const updatedPost = await db.blog.update(id, body)
 
     if (!updatedPost) {
       const response: ApiResponse = {
@@ -119,12 +119,12 @@ export async function DELETE(
 
   try {
     const { id } = await params
-    const deleted = await db.blogPosts.delete(id)
+    const deleted = await db.blog.delete(id)
 
     if (!deleted) {
       const response: ApiResponse = {
         success: false,
-        error: 'Blog post not found'
+        error: 'Blog post not found or already deleted'
       }
       return NextResponse.json(response, { status: 404 })
     }

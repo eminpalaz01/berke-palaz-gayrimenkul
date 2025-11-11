@@ -4,19 +4,27 @@
     "domain": "berkepalaz.com"
   },
   "locales": {
-    "supported": ["tr", "en"],
+    "supported": [
+      "tr",
+      "en"
+    ],
     "default": "tr"
   },
   "company": {
     "name": {
-      "tr": "Berke Palaz Gayrimenkul",
-      "en": "Berke Palaz Real Estate"
+      "tr": "Berke Palaz Gayrimenkul Danışmanı",
+      "en": "Berke Palaz Real Estate Agent"
+    },
+    "officeName": {
+      "tr": "Örnek Banker Eagle",
+      "en": "Örnek Banker Eagle"
     },
     "description": {
-      "tr": "Berke Palaz Gayrimenkul, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
-      "en": "Berke Palaz Real Estate helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste."
+      "tr": "Berke Palaz Gayrimenkul Danışmanı, size en uygun gayrimenkulü bulmanızda yardımcı olur. Geniş portföyümüzle, her bütçeye ve zevke uygun seçenekler sunuyoruz.",
+      "en": "Berke Palaz Real Estate Agent helps you find the most suitable property. With our wide portfolio, we offer options for every budget and taste."
     },
     "email": "berke@berkepalaz.com",
+    "officeEmail": "örnek@cb.com.tr",
     "phone": "+90 555 123 45 67",
     "officePhone": "+90 555 444 33 22",
     "address": {
@@ -39,10 +47,44 @@
       "latitude": 40.9936,
       "longitude": 29.0218
     },
-    "workingHours": {
-      "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "personalWorkingHours": {
+      "days": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
       "opens": "09:00",
       "closes": "18:00"
+    },
+    "officeWorkingHours": {
+      "weekdays": {
+        "days": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "opens": "09:00",
+        "closes": "18:00"
+      },
+      "saturday": {
+        "days": [
+          "Saturday"
+        ],
+        "opens": "10:00",
+        "closes": "16:00"
+      },
+      "sunday": {
+        "days": [
+          "Sunday"
+        ],
+        "opens": "Closed",
+        "closes": "Closed"
+      }
     },
     "offices": {
       "main": {
@@ -51,8 +93,8 @@
           "en": "Main Office"
         },
         "title": {
-          "tr": "Berke Palaz Gayrimenkul Ana Ofis",
-          "en": "Berke Palaz Real Estate Main Office"
+          "tr": "Berke Palaz Gayrimenkul Danışmanı Ana Ofis",
+          "en": "Berke Palaz Real Estate Agent Main Office"
         },
         "address": {
           "tr": {
@@ -77,6 +119,18 @@
       }
     }
   },
+  "workingHours": {
+    "days": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "opens": "09:00",
+    "closes": "18:00"
+  },
   "social": {
     "instagramUrl": "https://instagram.com/me",
     "youtubeUrl": "https://youtube.com/@me",
@@ -94,7 +148,7 @@
     "category": "Property Sales & Rental",
     "services": [
       "Residential Sales",
-      "Residential Rentals", 
+      "Residential Rentals",
       "Commercial Properties",
       "Investment Consulting",
       "Property Valuation",
@@ -108,6 +162,10 @@
     ],
     "established": "2015",
     "licenseNumber": "TR-GAY-2015-001"
+  },
+  "stats": {
+    "yearsOfExperience": 10,
+    "happyClients": 100
   },
   "features": {
     "multiLanguage": true,
