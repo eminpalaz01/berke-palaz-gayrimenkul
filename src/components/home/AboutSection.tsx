@@ -24,31 +24,34 @@ export function AboutSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="relative"
+            className="relative flex flex-col items-center"
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[400px] md:h-[800px] lg:h-[700px]">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full max-w-[490px] aspect-[5/6] mx-auto">
               <Image
                 src="/images/profile.png"
                 alt="Berke Palaz"
                 fill
                 className="object-cover"
                 priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
             </div>
-            
+
             {/* Stats Overlay */}
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-11/12 bg-white dark:bg-slate-800 rounded-xl shadow-xl p-6">
+            <div className="relative mt-6 w-11/12 max-w-[450px] bg-white dark:bg-slate-800 rounded-xl shadow-xl p-6">
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-1">10+</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-1">
+                    {config?.stats?.yearsOfExperience || 10}+
+                  </div>
                   <div className="text-sm text-slate-600 dark:text-slate-400">
                     {t('about.experience')}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-1">100+</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-1">
+                    {config?.stats?.happyClients || 100}+
+                  </div>
                   <div className="text-sm text-slate-600 dark:text-slate-400">
                     {t('about.happyClients')}
                   </div>

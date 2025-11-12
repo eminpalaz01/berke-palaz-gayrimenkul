@@ -18,11 +18,6 @@ export function ClientLayout({ children }: ClientLayoutProps) {
   usePageView()
 
   React.useEffect(() => {
-    console.log('ClientLayout mounted!')
-    console.log('WhatsAppButton component:', WhatsAppButton)
-  }, [])
-
-  React.useEffect(() => {
     const handleOpenDataManagement = () => {
       openDataManagement()
     }

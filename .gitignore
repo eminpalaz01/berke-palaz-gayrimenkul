@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /out/
+/public/uploads/
 
 # production
 /build
@@ -32,9 +33,14 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
+
+# prisma
+/prisma/migrations/
+.env
 
 # typescript
 *.tsbuildinfo
@@ -42,3 +48,9 @@ next-env.d.ts
 
 # conf files
 /public/configs/*/
+
+# uploads (keep folder structure, ignore uploaded files)
+/public/uploads/**/*
+!/public/uploads/.gitkeep
+!/public/uploads/listing/.gitkeep
+!/public/uploads/blog/.gitkeep

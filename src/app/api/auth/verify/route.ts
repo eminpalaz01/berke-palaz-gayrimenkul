@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { authDb } from '@/lib/db'
+import { db } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const result = await authDb.verifySession(token)
+    const result = await db.admin.verifySession(token)
 
     if (!result.valid) {
       return NextResponse.json(

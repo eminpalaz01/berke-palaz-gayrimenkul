@@ -12,7 +12,7 @@ export async function GET(
 ) {
   try {
     const { slug } = await params
-    const post = await db.blogPosts.findBySlug(slug)
+    const post = await db.blog.findBySlug(slug)
 
     if (!post || post.status !== 'published') {
       const response: ApiResponse = {
@@ -27,7 +27,7 @@ export async function GET(
     const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'anonymous'
     
     // Increment views with rate limiting
-    await db.blogPosts.incrementViews(post.id, ip)
+    await db.blog.incrementViews(post.id)
 
     const response: ApiResponse<BlogPost> = {
       success: true,

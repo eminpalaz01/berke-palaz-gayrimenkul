@@ -1,483 +1,570 @@
-// In-memory database simulation for development
-// In production, this would be replaced with a real database (PostgreSQL, MongoDB, etc.)
+import { PrismaClient } from '@prisma/client'
+import { hashPassword, verifyPassword } from './password'
 
-import { Listing, BlogPost } from '@/types/api'
-
-// Admin user credentials (in production, use hashed passwords and database)
-interface AdminUser {
-  username: string
-  password: string // In production, this should be hashed
+// Prisma Client singleton
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
 }
 
-const adminUser: AdminUser = {
-  username: 'admin',
-  password: '123' // In production, use bcrypt or similar
+export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+
+// Type helpers
+type ListingWhereInput = {
+  type?: string
+  status?: string
+  locale?: string
+  OR?: Array<{
+    title?: { contains: string }
+    description?: { contains: string }
+    location?: { contains: string }
+  }>
 }
 
-// Session management (in-memory for development)
-interface Session {
-  token: string
-  username: string
-  createdAt: number
-  expiresAt: number
+type BlogWhereInput = {
+  status?: string
+  locale?: string
+  OR?: Array<{
+    title?: { contains: string }
+    excerpt?: { contains: string }
+    content?: { contains: string }
+  }>
 }
 
-const sessions = new Map<string, Session>()
-
-// Session configuration
-const SESSION_DURATION = 24 * 60 * 60 * 1000 // 24 hours
-
-// Helper function to generate session token
-const generateToken = (): string => {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36)
-}
-
-// Auth operations
-export const authDb = {
-  // Verify credentials and create session
-  login: async (username: string, password: string): Promise<{ success: boolean; token?: string; error?: string }> => {
-    if (username === adminUser.username && password === adminUser.password) {
-      const token = generateToken()
-      const now = Date.now()
-      
-      sessions.set(token, {
-        token,
-        username,
-        createdAt: now,
-        expiresAt: now + SESSION_DURATION
-      })
-      
-      return { success: true, token }
-    }
-    
-    return { success: false, error: 'Geçersiz kullanıcı adı veya şifre' }
-  },
-  
-  // Verify session token
-  verifySession: async (token: string): Promise<{ valid: boolean; username?: string }> => {
-    const session = sessions.get(token)
-    
-    if (!session) {
-      return { valid: false }
-    }
-    
-    // Check if session expired
-    if (Date.now() > session.expiresAt) {
-      sessions.delete(token)
-      return { valid: false }
-    }
-    
-    return { valid: true, username: session.username }
-  },
-  
-  // Logout and destroy session
-  logout: async (token: string): Promise<boolean> => {
-    return sessions.delete(token)
-  },
-  
-  // Clean up expired sessions periodically
-  cleanupExpiredSessions: () => {
-    const now = Date.now()
-    for (const [token, session] of sessions.entries()) {
-      if (now > session.expiresAt) {
-        sessions.delete(token)
-      }
-    }
-  }
-}
-
-// Cleanup expired sessions every hour
-setInterval(() => {
-  authDb.cleanupExpiredSessions()
-}, 60 * 60 * 1000)
-
-// Mock data storage
-const listings: Listing[] = [
-  {
-    id: '1',
-    title: 'Modern Daire',
-    description: 'Şehir merkezinde modern ve konforlu daire',
-    location: 'Beşiktaş, İstanbul',
-    price: 5800000,
-    currency: '₺',
-    type: 'sale',
-    status: 'active',
-    propertyType: 'apartment',
-    area: 120,
-    rooms: 3,
-    bathrooms: 2,
-    floor: 5,
-    buildingAge: 2,
-    features: ['Asansör', 'Otopark', 'Güvenlik'],
-    images: [],
-    coverImage: '/images/listings/listing-1.jpg',
-    createdAt: new Date('2024-12-15').toISOString(),
-    updatedAt: new Date('2024-12-15').toISOString(),
-    views: 245,
-    locale: 'tr'
-  },
-  {
-    id: '2',
-    title: 'Lüks Villa',
-    description: 'Deniz manzaralı lüks villa',
-    location: 'Çeşme, İzmir',
-    price: 45000,
-    currency: '₺',
-    type: 'rent',
-    status: 'active',
-    propertyType: 'villa',
-    area: 350,
-    rooms: 5,
-    bathrooms: 4,
-    buildingAge: 1,
-    features: ['Havuz', 'Bahçe', 'Deniz Manzarası'],
-    images: [],
-    coverImage: '/images/listings/listing-2.jpg',
-    createdAt: new Date('2024-12-12').toISOString(),
-    updatedAt: new Date('2024-12-12').toISOString(),
-    views: 189,
-    locale: 'tr'
-  },
-  {
-    id: '3',
-    title: 'Stüdyo Daire',
-    description: 'Merkezi konumda stüdyo daire',
-    location: 'Kadıköy, İstanbul',
-    price: 1850000,
-    currency: '₺',
-    type: 'sale',
-    status: 'inactive',
-    propertyType: 'apartment',
-    area: 45,
-    rooms: 1,
-    bathrooms: 1,
-    floor: 3,
-    buildingAge: 5,
-    features: ['Asansör', 'Güvenlik'],
-    images: [],
-    coverImage: '/images/listings/listing-3.jpg',
-    createdAt: new Date('2024-12-10').toISOString(),
-    updatedAt: new Date('2024-12-10').toISOString(),
-    views: 156,
-    locale: 'tr'
-  }
-]
-
-const blogPosts: BlogPost[] = [
-  {
-    id: '1',
-    title: 'Gayrimenkul Yatırımında Dikkat Edilmesi Gerekenler',
-    slug: 'gayrimenkul-yatiriminda-dikkat-edilmesi-gerekenler',
-    excerpt: 'Gayrimenkul yatırımı yaparken dikkat etmeniz gereken önemli noktalar',
-    content: 'Gayrimenkul yatırımı, uzun vadeli ve güvenli bir yatırım aracıdır...',
-    coverImage: '/images/blog/blog-1.jpg',
-    author: 'Berke Palaz',
-    status: 'published',
-    views: 1250,
-    tags: ['Yatırım', 'Gayrimenkul', 'Finans'],
-    locale: 'tr',
-    createdAt: new Date('2024-05-15').toISOString(),
-    updatedAt: new Date('2024-05-15').toISOString(),
-    publishedAt: new Date('2024-05-15').toISOString()
-  },
-  {
-    id: '2',
-    title: 'Konut Kredisi Alırken Nelere Dikkat Etmelisiniz?',
-    slug: 'konut-kredisi-alirken-nelere-dikkat-etmelisiniz',
-    excerpt: 'Konut kredisi başvurusu yaparken bilmeniz gerekenler',
-    content: 'Konut kredisi almak ev sahibi olmanın en yaygın yollarından biridir...',
-    coverImage: '/images/blog/blog-2.jpg',
-    author: 'Berke Palaz',
-    status: 'draft',
-    views: 0,
-    tags: ['Kredi', 'Konut', 'Finans'],
-    locale: 'tr',
-    createdAt: new Date('2024-05-08').toISOString(),
-    updatedAt: new Date('2024-05-08').toISOString()
-  },
-  {
-    id: '3',
-    title: 'Ev Satışında Pazarlama Stratejileri',
-    slug: 'ev-satisinda-pazarlama-stratejileri',
-    excerpt: 'Evinizi hızlı ve karlı satmak için etkili pazarlama yöntemleri',
-    content: 'Ev satışında başarılı olmak için doğru pazarlama stratejileri çok önemlidir...',
-    coverImage: '/images/blog/blog-3.jpg',
-    author: 'Berke Palaz',
-    status: 'published',
-    views: 890,
-    tags: ['Satış', 'Pazarlama', 'Gayrimenkul'],
-    locale: 'tr',
-    createdAt: new Date('2024-05-01').toISOString(),
-    updatedAt: new Date('2024-05-01').toISOString(),
-    publishedAt: new Date('2024-05-01').toISOString()
-  }
-]
-
-// Helper function to generate unique IDs
-let listingIdCounter = 4
-let blogIdCounter = 4
-
-export const generateId = (type: 'listing' | 'blog'): string => {
-  if (type === 'listing') {
-    return String(listingIdCounter++)
-  }
-  return String(blogIdCounter++)
-}
-
-// Rate limiting for listings and blog posts only
-interface ViewTracker {
-  [key: string]: number[] // key: "listing-{id}-{ip}" or "blog-{id}-{ip}", value: array of timestamps
-}
-
-const viewTracking: ViewTracker = {}
-
-// Simple page views storage with timestamps - use global to persist across module reloads
-const globalForPageViews = global as typeof globalThis & {
-  pageViewTimestamps: number[]
-}
-
-if (!globalForPageViews.pageViewTimestamps) {
-  globalForPageViews.pageViewTimestamps = []
-}
-
-const pageViewTimestamps = globalForPageViews.pageViewTimestamps
-
-// Rate limiting configuration (only for listings and blog posts)
-const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute in milliseconds
-const MAX_VIEWS_PER_WINDOW = 3 // Maximum 3 views per minute per IP
-
-// Helper function to check and update rate limit (only for listings and blog posts)
-export const canIncrementView = (type: 'listing' | 'blog', id: string, identifier: string): boolean => {
-  const key = `${type}-${id}-${identifier}`
-  const now = Date.now()
-  
-  // Initialize if not exists
-  if (!viewTracking[key]) {
-    viewTracking[key] = []
-  }
-  
-  // Remove old timestamps outside the window
-  viewTracking[key] = viewTracking[key].filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW)
-  
-  // Check if limit exceeded
-  if (viewTracking[key].length >= MAX_VIEWS_PER_WINDOW) {
-    return false
-  }
-  
-  // Add current timestamp
-  viewTracking[key].push(now)
-  return true
-}
-
-// Page view operations (no rate limiting)
-export const pageViewsDb = {
-  incrementView: (): void => {
-    const now = Date.now()
-    pageViewTimestamps.push(now)
-  },
-  
-  getTotalViews: (): number => {
-    return pageViewTimestamps.length
-  },
-  
-  getViewsInTimeRange: (startTime: number, endTime: number): number => {
-    return pageViewTimestamps.filter(
-      timestamp => timestamp >= startTime && timestamp <= endTime
-    ).length
-  },
-  
-  getWeeklyViews: (): number => {
-    const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
-    return pageViewsDb.getViewsInTimeRange(oneWeekAgo, Date.now())
-  },
-  
-  getMonthlyViews: (): number => {
-    const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000)
-    return pageViewsDb.getViewsInTimeRange(oneMonthAgo, Date.now())
-  }
-}
-
-// Cleanup old tracking data periodically (every 5 minutes) - only for listings/blog rate limiting
-setInterval(() => {
-  const now = Date.now()
-  Object.keys(viewTracking).forEach(key => {
-    viewTracking[key] = viewTracking[key].filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW)
-    // Remove empty arrays
-    if (viewTracking[key].length === 0) {
-      delete viewTracking[key]
-    }
-  })
-}, 5 * 60 * 1000)
-
-// Listing operations
+// Helper functions for database operations
 export const db = {
+  // Listings operations
   listings: {
-    findAll: async (filters?: {
+    async findAll(filters?: {
       type?: string
       status?: string
       search?: string
       locale?: string
-    }): Promise<Listing[]> => {
-      let filtered = [...listings]
+      limit?: number
+    }) {
+      const where: ListingWhereInput = {}
 
-      if (filters?.type) {
-        filtered = filtered.filter(l => l.type === filters.type)
-      }
-      if (filters?.status) {
-        filtered = filtered.filter(l => l.status === filters.status)
-      }
+      if (filters?.type) where.type = filters.type
+      if (filters?.status) where.status = filters.status
+      if (filters?.locale) where.locale = filters.locale
       if (filters?.search) {
-        const search = filters.search.toLowerCase()
-        filtered = filtered.filter(l =>
-          l.title.toLowerCase().includes(search) ||
-          l.location.toLowerCase().includes(search)
-        )
-      }
-      if (filters?.locale) {
-        filtered = filtered.filter(l => l.locale === filters.locale)
+        where.OR = [
+          { title: { contains: filters.search } },
+          { description: { contains: filters.search } },
+          { location: { contains: filters.search } }
+        ]
       }
 
-      return filtered.sort((a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      )
+      const listings = await prisma.listing.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: filters?.limit
+      })
+
+      return listings.map((listing: { features: string; images: string; [key: string]: unknown }) => ({
+        ...listing,
+        features: JSON.parse(listing.features) as string[],
+        images: JSON.parse(listing.images) as string[]
+      }))
     },
 
-    findById: async (id: string): Promise<Listing | null> => {
-      return listings.find(l => l.id === id) || null
-    },
+    async findById(id: string) {
+      const listing = await prisma.listing.findUnique({
+        where: { id }
+      })
 
-    create: async (data: Omit<Listing, 'id' | 'createdAt' | 'updatedAt' | 'views'>): Promise<Listing> => {
-      const newListing: Listing = {
-        ...data,
-        id: generateId('listing'),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        views: 0
+      if (!listing) return null
+
+      return {
+        ...listing,
+        features: JSON.parse(listing.features),
+        images: JSON.parse(listing.images)
       }
-      listings.push(newListing)
-      return newListing
     },
 
-    update: async (id: string, data: Partial<Listing>): Promise<Listing | null> => {
-      const index = listings.findIndex(l => l.id === id)
-      if (index === -1) return null
+    async create(data: {
+      title: string
+      description: string
+      location: string
+      price: number
+      currency?: string
+      type: string
+      status?: string
+      propertyType: string
+      area: number
+      rooms?: number
+      bathrooms?: number
+      floor?: number
+      buildingAge?: number
+      features?: string[]
+      images?: string[]
+      coverImage?: string
+      locale?: string
+    }) {
+      const listing = await prisma.listing.create({
+        data: {
+          ...data,
+          features: JSON.stringify(data.features || []),
+          images: JSON.stringify(data.images || [])
+        }
+      })
 
-      listings[index] = {
-        ...listings[index],
-        ...data,
-        updatedAt: new Date().toISOString()
+      return {
+        ...listing,
+        features: JSON.parse(listing.features),
+        images: JSON.parse(listing.images)
       }
-      return listings[index]
     },
 
-    delete: async (id: string): Promise<boolean> => {
-      const index = listings.findIndex(l => l.id === id)
-      if (index === -1) return false
+    async update(id: string, data: Partial<{
+      title: string
+      description: string
+      location: string
+      price: number
+      currency: string
+      type: string
+      status: string
+      propertyType: string
+      area: number
+      rooms: number
+      bathrooms: number
+      floor: number
+      buildingAge: number
+      features: string[]
+      images: string[]
+      coverImage: string
+      locale: string
+    }>) {
+      const updateData: Record<string, unknown> = { ...data }
+      
+      if (data.features) {
+        updateData.features = JSON.stringify(data.features)
+      }
+      if (data.images) {
+        updateData.images = JSON.stringify(data.images)
+      }
 
-      listings.splice(index, 1)
-      return true
+      const listing = await prisma.listing.update({
+        where: { id },
+        data: updateData
+      })
+
+      return {
+        ...listing,
+        features: JSON.parse(listing.features),
+        images: JSON.parse(listing.images)
+      }
     },
 
-    incrementViews: async (id: string, identifier: string = 'anonymous'): Promise<boolean> => {
-      // Check rate limit
-      if (!canIncrementView('listing', id, identifier)) {
+    async delete(id: string) {
+      try {
+        // First, check if the listing exists
+        const listing = await prisma.listing.findUnique({
+          where: { id }
+        })
+
+        if (!listing) {
+          return false
+        }
+
+        // Delete related view tracking records first
+        await prisma.viewTracking.deleteMany({
+          where: {
+            entityType: 'listing',
+            entityId: id
+          }
+        })
+
+        // Then delete the listing
+        await prisma.listing.delete({
+          where: { id }
+        })
+
+        return true
+      } catch (error) {
+        console.error('Error deleting listing:', error)
         return false
       }
-      
-      const listing = listings.find(l => l.id === id)
-      if (listing) {
-        listing.views++
-        return true
-      }
-      return false
+    },
+
+    async incrementViews(id: string) {
+      await prisma.listing.update({
+        where: { id },
+        data: { views: { increment: 1 } }
+      })
     }
   },
 
-  blogPosts: {
-    findAll: async (filters?: {
+  // Blog operations
+  blog: {
+    async findAll(filters?: {
       status?: string
       search?: string
       locale?: string
-    }): Promise<BlogPost[]> => {
-      let filtered = [...blogPosts]
+      limit?: number
+    }) {
+      const where: BlogWhereInput = {}
 
-      if (filters?.status) {
-        filtered = filtered.filter(p => p.status === filters.status)
-      }
+      if (filters?.status) where.status = filters.status
+      if (filters?.locale) where.locale = filters.locale
       if (filters?.search) {
-        const search = filters.search.toLowerCase()
-        filtered = filtered.filter(p =>
-          p.title.toLowerCase().includes(search) ||
-          p.excerpt.toLowerCase().includes(search)
-        )
-      }
-      if (filters?.locale) {
-        filtered = filtered.filter(p => p.locale === filters.locale)
+        where.OR = [
+          { title: { contains: filters.search } },
+          { excerpt: { contains: filters.search } },
+          { content: { contains: filters.search } }
+        ]
       }
 
-      return filtered.sort((a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      )
+      const posts = await prisma.blogPost.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: filters?.limit
+      })
+
+      return posts.map((post: { tags: string; [key: string]: unknown }) => ({
+        ...post,
+        tags: JSON.parse(post.tags) as string[]
+      }))
     },
 
-    findById: async (id: string): Promise<BlogPost | null> => {
-      return blogPosts.find(p => p.id === id) || null
-    },
+    async findById(id: string) {
+      const post = await prisma.blogPost.findUnique({
+        where: { id }
+      })
 
-    findBySlug: async (slug: string): Promise<BlogPost | null> => {
-      return blogPosts.find(p => p.slug === slug) || null
-    },
+      if (!post) return null
 
-    create: async (data: Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt' | 'views'>): Promise<BlogPost> => {
-      const newPost: BlogPost = {
-        ...data,
-        id: generateId('blog'),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        views: 0
+      return {
+        ...post,
+        tags: JSON.parse(post.tags)
       }
-      blogPosts.push(newPost)
-      return newPost
     },
 
-    update: async (id: string, data: Partial<BlogPost>): Promise<BlogPost | null> => {
-      const index = blogPosts.findIndex(p => p.id === id)
-      if (index === -1) return null
+    async findBySlug(slug: string) {
+      const post = await prisma.blogPost.findUnique({
+        where: { slug }
+      })
 
-      blogPosts[index] = {
-        ...blogPosts[index],
-        ...data,
-        updatedAt: new Date().toISOString()
+      if (!post) return null
+
+      return {
+        ...post,
+        tags: JSON.parse(post.tags)
+      }
+    },
+
+    async create(data: {
+      title: string
+      slug: string
+      excerpt: string
+      content: string
+      coverImage?: string
+      author: string
+      status?: string
+      tags?: string[]
+      locale?: string
+      publishedAt?: Date
+    }) {
+      const post = await prisma.blogPost.create({
+        data: {
+          ...data,
+          tags: JSON.stringify(data.tags || [])
+        }
+      })
+
+      return {
+        ...post,
+        tags: JSON.parse(post.tags)
+      }
+    },
+
+    async update(id: string, data: Partial<{
+      title: string
+      slug: string
+      excerpt: string
+      content: string
+      coverImage: string
+      author: string
+      status: string
+      tags: string[]
+      locale: string
+      publishedAt: Date
+    }>) {
+      const updateData: Record<string, unknown> = { ...data }
+      
+      if (data.tags) {
+        updateData.tags = JSON.stringify(data.tags)
       }
 
-      // Set publishedAt when status changes to published
-      if (data.status === 'published' && !blogPosts[index].publishedAt) {
-        blogPosts[index].publishedAt = new Date().toISOString()
+      const post = await prisma.blogPost.update({
+        where: { id },
+        data: updateData
+      })
+
+      return {
+        ...post,
+        tags: JSON.parse(post.tags)
       }
-
-      return blogPosts[index]
     },
 
-    delete: async (id: string): Promise<boolean> => {
-      const index = blogPosts.findIndex(p => p.id === id)
-      if (index === -1) return false
+    async delete(id: string) {
+      try {
+        // First, check if the blog post exists
+        const post = await prisma.blogPost.findUnique({
+          where: { id }
+        })
 
-      blogPosts.splice(index, 1)
-      return true
-    },
+        if (!post) {
+          return false
+        }
 
-    incrementViews: async (id: string, identifier: string = 'anonymous'): Promise<boolean> => {
-      // Check rate limit
-      if (!canIncrementView('blog', id, identifier)) {
+        // Delete related view tracking records first
+        await prisma.viewTracking.deleteMany({
+          where: {
+            entityType: 'blog',
+            entityId: id
+          }
+        })
+
+        // Then delete the blog post
+        await prisma.blogPost.delete({
+          where: { id }
+        })
+
+        return true
+      } catch (error) {
+        console.error('Error deleting blog post:', error)
         return false
       }
-      
-      const post = blogPosts.find(p => p.id === id)
-      if (post) {
-        post.views++
-        return true
+    },
+
+    async incrementViews(id: string) {
+      await prisma.blogPost.update({
+        where: { id },
+        data: { views: { increment: 1 } }
+      })
+    }
+  },
+
+  // Admin operations
+  admin: {
+    async findByUsername(username: string) {
+      return await prisma.adminUser.findUnique({
+        where: { username }
+      })
+    },
+
+    async create(data: { username: string; password: string }) {
+      return await prisma.adminUser.create({
+        data
+      })
+    },
+
+    async login(username: string, password: string) {
+      const user = await prisma.adminUser.findUnique({
+        where: { username }
+      })
+
+      if (!user) {
+        return { success: false, error: 'Geçersiz kullanıcı adı veya şifre' }
       }
-      return false
+
+      // Verify password (supports both hashed and plain text for migration)
+      let isValidPassword = false
+      
+      // Check if password is hashed (bcrypt hashes start with $2a$, $2b$, or $2y$)
+      if (user.password.startsWith('$2')) {
+        isValidPassword = await verifyPassword(password, user.password)
+      } else {
+        // Legacy plain text password - still support but should be migrated
+        isValidPassword = user.password === password
+        
+        // Auto-migrate to hashed password on successful login
+        if (isValidPassword) {
+          const hashedPassword = await hashPassword(password)
+          await prisma.adminUser.update({
+            where: { username },
+            data: { password: hashedPassword }
+          })
+        }
+      }
+
+      if (!isValidPassword) {
+        return { success: false, error: 'Geçersiz kullanıcı adı veya şifre' }
+      }
+
+      // Create session
+      const token = Math.random().toString(36).substring(2) + Date.now().toString(36)
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
+      await prisma.session.create({
+        data: {
+          token,
+          username,
+          expiresAt
+        }
+      })
+
+      return { success: true, token }
+    },
+
+    async updatePassword(username: string, newPassword: string) {
+      const hashedPassword = await hashPassword(newPassword)
+      
+      await prisma.adminUser.update({
+        where: { username },
+        data: { password: hashedPassword }
+      })
+
+      return { success: true }
+    },
+
+    async verifySession(token: string) {
+      const session = await prisma.session.findUnique({
+        where: { token }
+      })
+
+      if (!session) {
+        return { valid: false, error: 'Session not found' }
+      }
+
+      if (session.expiresAt < new Date()) {
+        await prisma.session.delete({ where: { token } })
+        return { valid: false, error: 'Session expired' }
+      }
+
+      return { valid: true, username: session.username }
+    },
+
+    async logout(token: string) {
+      try {
+        await prisma.session.delete({ where: { token } })
+        return { success: true }
+      } catch {
+        return { success: false, error: 'Session not found' }
+      }
+    }
+  },
+
+  // Session operations
+  sessions: {
+    async create(data: { token: string; username: string; expiresAt: Date }) {
+      return await prisma.session.create({
+        data
+      })
+    },
+
+    async findByToken(token: string) {
+      return await prisma.session.findUnique({
+        where: { token }
+      })
+    },
+
+    async delete(token: string) {
+      await prisma.session.delete({
+        where: { token }
+      })
+    },
+
+    async deleteExpired() {
+      await prisma.session.deleteMany({
+        where: {
+          expiresAt: {
+            lt: new Date()
+          }
+        }
+      })
+    }
+  },
+
+  // View tracking operations
+  viewTracking: {
+    async canView(entityType: string, entityId: string, identifier: string): Promise<boolean> {
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+
+      const recentView = await prisma.viewTracking.findFirst({
+        where: {
+          entityType,
+          entityId,
+          identifier,
+          timestamp: {
+            gte: oneHourAgo
+          }
+        }
+      })
+
+      return !recentView
+    },
+
+    async track(entityType: string, entityId: string, identifier: string) {
+      await prisma.viewTracking.create({
+        data: {
+          entityType,
+          entityId,
+          identifier
+        }
+      })
+    },
+
+    async cleanup() {
+      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+      
+      await prisma.viewTracking.deleteMany({
+        where: {
+          timestamp: {
+            lt: oneWeekAgo
+          }
+        }
+      })
+    }
+  },
+
+  // Page view tracking
+  pageViews: {
+    async track() {
+      await prisma.pageView.create({
+        data: {}
+      })
+    },
+
+    async getCount(since?: Date) {
+      const where = since ? {
+        timestamp: {
+          gte: since
+        }
+      } : undefined
+
+      return await prisma.pageView.count({ where })
+    }
+  },
+
+  // Stats operations
+  stats: {
+    async getOverview() {
+      const [
+        totalListings,
+        activeListings,
+        totalBlogPosts,
+        publishedBlogPosts,
+        totalViews
+      ] = await Promise.all([
+        prisma.listing.count(),
+        prisma.listing.count({ where: { status: 'active' } }),
+        prisma.blogPost.count(),
+        prisma.blogPost.count({ where: { status: 'published' } }),
+        prisma.pageView.count()
+      ])
+
+      return {
+        totalListings,
+        activeListings,
+        totalBlogPosts,
+        publishedBlogPosts,
+        totalViews
+      }
     }
   }
 }
+
+export default db

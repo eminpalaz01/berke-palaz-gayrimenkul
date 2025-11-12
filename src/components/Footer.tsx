@@ -118,13 +118,22 @@ export function Footer() {
                   </div>
                 )}
                 
-                <div className="flex items-center space-x-4 group">
-                  <div className="flex-shrink-0 w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center group-hover:bg-blue-600/30 transition-colors">
+                <div className="flex items-start space-x-4 group">
+                  <div className="flex-shrink-0 w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center group-hover:bg-blue-600/30 transition-colors mt-1">
                     <Clock className="h-5 w-5 text-blue-400" />
                   </div>
-                  <span className="text-gray-300 font-medium">
-                    {t('footer.workingHours')}
-                  </span>
+                  <div className="text-gray-300 font-medium">
+                    {config?.workingHours ? (
+                      <p>
+                        {t(`days.${config.workingHours.days[0]}`)} - {t(`days.${config.workingHours.days[config.workingHours.days.length - 1]}`)}: {config.workingHours.opens} - {config.workingHours.closes}
+                      </p>
+                    ) : (
+                      <>
+                        <p>{t('footer.defaultWorkingHours')}</p>
+                        <p>{t('footer.defaultSaturdayHours')}</p>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
 

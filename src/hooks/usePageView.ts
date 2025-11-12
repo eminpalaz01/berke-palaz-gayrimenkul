@@ -28,7 +28,7 @@ export function usePageView() {
             'Content-Type': 'application/json',
           },
         })
-        console.log('✅ [Page View] Tracked:', pathname)
+        console.trace('✅ [Page View] Tracked:', pathname)
       } catch (error) {
         // Silently fail - don't disrupt user experience
         console.error('❌ [Page View] Failed to track:', error)

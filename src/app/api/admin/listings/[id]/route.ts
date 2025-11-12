@@ -112,7 +112,7 @@ export async function DELETE(
     if (!deleted) {
       const response: ApiResponse = {
         success: false,
-        error: 'Listing not found'
+        error: 'Listing not found or already deleted'
       }
       return NextResponse.json(response, { status: 404 })
     }

@@ -68,14 +68,31 @@ export interface RuntimeConfig {
       latitude: number;
       longitude: number;
     };
-    workingHours: {
-      days: string[];
-      opens: string;
-      closes: string;
+    officeWorkingHours: {
+      weekdays: {
+        days: string[];
+        opens: string;
+        closes: string;
+      };
+      saturday: {
+        days: string[];
+        opens: string;
+        closes: string;
+      };
+      sunday?: {
+        days: string[];
+        opens: string;
+        closes: string;
+      };
     };
     offices: {
       [key: string]: Office;
     };
+  };
+  workingHours: {
+    days: string[];
+    opens: string;
+    closes: string;
   };
   social: {
     instagramUrl?: string;
@@ -88,6 +105,10 @@ export interface RuntimeConfig {
   maps: {
     googleMapsUrl: string;
     yandexMapsUrl: string;
+  };
+  stats?: {
+    yearsOfExperience: number;
+    happyClients: number;
   };
   media?: {
     heroVideoId: string;
@@ -206,10 +227,17 @@ export async function loadRuntimeConfig(): Promise<RuntimeConfig> {
             latitude: 39.6484,
             longitude: 27.8826
           },
-          workingHours: {
-            days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-            opens: '09:00',
-            closes: '17:00'
+          officeWorkingHours: {
+            weekdays: {
+              days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+              opens: '09:00',
+              closes: '18:00'
+            },
+            saturday: {
+              days: ['Saturday'],
+              opens: '10:00',
+              closes: '16:00'
+            }
           },
           offices: {
             balikesir: {
@@ -273,6 +301,11 @@ export async function loadRuntimeConfig(): Promise<RuntimeConfig> {
               }
             }
           }
+        },
+        workingHours: {
+          days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+          opens: '09:00',
+          closes: '18:00'
         },
         social: {
           instagramUrl: 'https://instagram.com',
@@ -389,10 +422,17 @@ export function getRuntimeConfig(): RuntimeConfig {
         latitude: 39.6484,
         longitude: 27.8826
       },
-      workingHours: {
-        days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        opens: '09:00',
-        closes: '17:00'
+      officeWorkingHours: {
+        weekdays: {
+          days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+          opens: '09:00',
+          closes: '18:00'
+        },
+        saturday: {
+          days: ['Saturday'],
+          opens: '10:00',
+          closes: '16:00'
+        }
       },
       offices: {
         main: {
@@ -426,6 +466,11 @@ export function getRuntimeConfig(): RuntimeConfig {
           }
         }
       }
+    },
+    workingHours: {
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '09:00',
+      closes: '18:00'
     },
     social: {
       instagramUrl: 'https://instagram.com',

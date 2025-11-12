@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Moon, SunMedium, Menu, X, Phone, Mail, Globe, Check, Home, Building, User, MessageCircle, FileText } from "lucide-react"
+import { Moon, SunMedium, Menu, X, Phone, Mail, Globe, Check, Home, Building, User, MessageCircle, FileText, Settings } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/hooks/utils"
@@ -90,36 +90,46 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20 min-h-[64px] lg:min-h-[80px]">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <Link 
-              href="/" 
-              className="relative inline-block h-12 group"
-              aria-label="Berke Palaz Gayrimenkul Ana Sayfa"
-            >
-              {/* Light mode logo - in normal flow to maintain width */}
-              <Image
-                src="/images/logo.png"
-                alt="Berke Palaz Gayrimenkul"
-                width={180}
-                height={48}
-                className={cn(
-                  "h-12 w-auto object-contain transition-opacity duration-500 ease-in-out",
-                  resolvedTheme === "dark" ? "opacity-0" : "opacity-100"
-                )}
-                priority
-              />
-              {/* Dark mode logo - absolutely positioned */}
-              <Image
-                src="/images/logo-beyaz.png"
-                alt="Berke Palaz Gayrimenkul"
-                width={180}
-                height={48}
-                className={cn(
-                  "absolute inset-0 h-12 w-auto object-contain transition-opacity duration-500 ease-in-out",
-                  resolvedTheme === "dark" ? "opacity-100" : "opacity-0"
-                )}
-                priority
-              />
-            </Link>
+            <div className="relative">
+              <Link 
+                href="/" 
+                className="relative inline-block h-12 group"
+                aria-label="Berke Palaz Gayrimenkul Ana Sayfa"
+              >
+                {/* Light mode logo - in normal flow to maintain width */}
+                <Image
+                  src="/images/logo.png"
+                  alt="Berke Palaz Gayrimenkul"
+                  width={180}
+                  height={48}
+                  className={cn(
+                    "h-12 w-auto object-contain transition-opacity duration-500 ease-in-out",
+                    resolvedTheme === "dark" ? "opacity-0" : "opacity-100"
+                  )}
+                  priority
+                />
+                {/* Dark mode logo - absolutely positioned */}
+                <Image
+                  src="/images/logo-beyaz.png"
+                  alt="Berke Palaz Gayrimenkul"
+                  width={180}
+                  height={48}
+                  className={cn(
+                    "absolute inset-0 h-12 w-auto object-contain transition-opacity duration-500 ease-in-out",
+                    resolvedTheme === "dark" ? "opacity-100" : "opacity-0"
+                  )}
+                  priority
+                />
+              </Link>
+              {/* Hidden Admin Icon - Bottom left corner of logo */}
+              <Link
+                href="/admin"
+                className="absolute -bottom-1 -left-1 w-3 h-3 opacity-20 hover:opacity-100 transition-opacity duration-300"
+                aria-label="Yönetim Paneli"
+              >
+                <Settings className="w-3 h-3 text-slate-400 dark:text-slate-600" />
+              </Link>
+            </div>
             {/* Brand Text */}
             <div className="flex flex-col border-l border-slate-300 dark:border-slate-600 pl-3 md:pl-4">
               <span className="text-sm md:text-lg font-bold text-slate-800 dark:text-white leading-tight">

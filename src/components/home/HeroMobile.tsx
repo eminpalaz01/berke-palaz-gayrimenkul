@@ -2,8 +2,13 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
+import { useRuntimeConfig } from "@/utils/runtime-config"
+import { useParams } from "next/navigation"
 
 export function HeroMobile() {
+  const { config } = useRuntimeConfig()
+  const params = useParams()
+  const locale = params.locale as string || 'tr'
   return (
     <div className="relative h-screen flex flex-col overflow-hidden min-h-screen max-h-screen">
       {/* Image Section - Enhanced with overlay */}
@@ -60,7 +65,7 @@ export function HeroMobile() {
                 <div className="relative w-16 h-16">
                   <Image
                     src="/images/logo-beyaz.png"
-                    alt="Coldwell Banker Eagle"
+                    alt={config?.company?.officeName?.[locale] || "Coldwell Banker Eagle"}
                     fill
                     className="object-contain drop-shadow-2xl"
                     priority

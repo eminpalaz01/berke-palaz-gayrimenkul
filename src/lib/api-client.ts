@@ -135,6 +135,15 @@ export const statsApi = {
   },
 }
 
+// Cleanup API
+export const cleanupApi = {
+  deleteOldPageViews: async (): Promise<ApiResponse> => {
+    return fetchApi('/cleanup', {
+      method: 'DELETE',
+    })
+  },
+}
+
 // Public Listings API
 export const publicListingsApi = {
   getAll: async (filters?: {

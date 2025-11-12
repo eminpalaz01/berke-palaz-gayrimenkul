@@ -148,9 +148,9 @@ export function generateClientJsonLd(
           },
           openingHoursSpecification: [{
             '@type': 'OpeningHoursSpecification',
-            dayOfWeek: runtimeConfig.company.workingHours.days,
-            opens: runtimeConfig.company.workingHours.opens,
-            closes: runtimeConfig.company.workingHours.closes
+            dayOfWeek: runtimeConfig.workingHours.days,
+            opens: runtimeConfig.workingHours.opens,
+            closes: runtimeConfig.workingHours.closes
           }],
           priceRange: APP_CONFIG.business.priceRange,
           inLanguage: [validatedLocale],
@@ -184,9 +184,9 @@ export function generateClientJsonLd(
           },
           openingHoursSpecification: [{
             '@type': 'OpeningHoursSpecification',
-            dayOfWeek: runtimeConfig.company.workingHours.days,
-            opens: runtimeConfig.company.workingHours.opens,
-            closes: runtimeConfig.company.workingHours.closes
+            dayOfWeek: runtimeConfig.workingHours.days,
+            opens: runtimeConfig.workingHours.opens,
+            closes: runtimeConfig.workingHours.closes
           }],
           priceRange: APP_CONFIG.business.priceRange,
           inLanguage: [validatedLocale],
