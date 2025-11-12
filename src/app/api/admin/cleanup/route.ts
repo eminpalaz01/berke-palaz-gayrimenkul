@@ -25,7 +25,7 @@ export async function DELETE(request: NextRequest) {
       }
     })
 
-    console.trace(`🧹 [Cleanup API] Deleted ${result.count} old page views.`)
+    console.log(`🧹 [Cleanup API] Deleted ${result.count} old page views.`)
 
     const response: ApiResponse = {
       success: true,

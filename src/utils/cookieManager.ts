@@ -156,7 +156,7 @@ export class LegalLogger {
 
       // Log to console in development
       if (process.env.NODE_ENV === 'development') {
-        console.trace('Legal Log Entry:', logEntry)
+        console.log('Legal Log Entry:', logEntry)
       }
     } catch (error) {
       console.error('Error adding legal log entry:', error)
@@ -482,7 +482,7 @@ export class CookieManager {
    */
   static logDataCollection(dataType: string, data: unknown, consentType?: string): void {
     if (process.env.NODE_ENV === 'development') {
-      console.trace(`Data collected (${dataType}):`, {
+      console.log(`Data collected (${dataType}):`, {
         type: dataType,
         consentRequired: consentType,
         consentGiven: consentType ? this.isTrackingAllowed(consentType as 'analytics' | 'functional' | 'marketing') : 'not-required',
