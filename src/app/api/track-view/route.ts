@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 // POST /api/track-view - Track page view
 export async function POST(request: NextRequest) {
   try {
-    console.trace('📊 [Track View] API called')
+    console.log('📊 [Track View] API called')
     
     // Track page view
     await db.pageViews.track()
@@ -24,10 +24,10 @@ export async function POST(request: NextRequest) {
       db.pageViews.getCount(oneMonthAgo)
     ])
     
-    console.trace('📊 [Track View] Success!')
-    console.trace('   Total:', totalViews)
-    console.trace('   Weekly:', weeklyViews)
-    console.trace('   Monthly:', monthlyViews)
+    console.log('📊 [Track View] Success!')
+    console.log('   Total:', totalViews)
+    console.log('   Weekly:', weeklyViews)
+    console.log('   Monthly:', monthlyViews)
     
     const response: ApiResponse = {
       success: true,

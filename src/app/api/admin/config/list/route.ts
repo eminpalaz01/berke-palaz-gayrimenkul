@@ -19,7 +19,7 @@ async function cleanupOldBackups(dir: string) {
         const stats = await fs.stat(fullPath)
         if (stats.mtimeMs < oneWeekAgo) {
           await fs.unlink(fullPath)
-          console.trace(`Deleted old backup: ${fullPath}`)
+          console.log(`Deleted old backup: ${fullPath}`)
         }
       }
     }

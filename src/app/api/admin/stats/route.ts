@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       db.pageViews.getCount(oneMonthAgo)
     ])
     
-    console.trace('📊 [Stats API] Views:', { threeMonthsViews, weeklyViews, monthlyViews })
+    console.log('📊 [Stats API] Views:', { threeMonthsViews, weeklyViews, monthlyViews })
     // Get recent listings (last 3)
     const recentListings = allListings
       .sort((a, b) => 
