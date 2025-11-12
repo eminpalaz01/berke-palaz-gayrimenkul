@@ -24,12 +24,12 @@ try {
   // Production'da migration'ları otomatik uygula
   if (isProduction) {
     console.log('🔄 Production ortamı tespit edildi');
-    console.log('📊 Migration'lar uygulanıyor...');
+    console.log('📊 Migration\'lar uygulanıyor...');
     
     try {
       // Migration'ları uygula (varsa)
       execSync('npx prisma migrate deploy', { stdio: 'inherit' });
-      console.log('✅ Migration'lar başarıyla uygulandı');
+      console.log('✅ Migration\'lar başarıyla uygulandı');
     } catch (error) {
       console.log('Migration bulunamadi veya zaten uygulanmis');
       
