@@ -377,7 +377,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
                       {formatPrice(listing.price, listing.currency)}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-slate-400">
-                      {formatDate(listing.createdAt)}
+                      {new Date(listing.createdAt).toLocaleDateString() || ''}
                     </p>
                   </div>
                 </div>
@@ -490,7 +490,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
                       </button>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
-                      {formatDate(listing.createdAt)}
+                      {new Date(listing.createdAt).toLocaleDateString() || ''}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
@@ -599,7 +599,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{post.views}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
-                      {formatDate(post.createdAt)}
+                      {new Date(post.createdAt).toLocaleDateString() || ''}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">

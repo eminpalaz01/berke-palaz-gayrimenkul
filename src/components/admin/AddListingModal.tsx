@@ -303,7 +303,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
               <input
                 type="number"
                 min="0"
-                value={formData.rooms}
+                value={formData.rooms ?? ''}
                 onChange={(e) => setFormData({ ...formData, rooms: Number(e.target.value) })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -317,7 +317,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
               <input
                 type="number"
                 min="0"
-                value={formData.bathrooms}
+                value={formData.bathrooms  ?? ''}
                 onChange={(e) => setFormData({ ...formData, bathrooms: Number(e.target.value) })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />

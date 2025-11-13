@@ -14,19 +14,19 @@ export interface Listing {
   location: string
   price: number
   currency: string
-  type: 'sale' | 'rent'
-  status: 'active' | 'inactive' | 'sold' | 'rented'
-  propertyType: 'apartment' | 'villa' | 'office' | 'land' | 'commercial'
+  type: string
+  status: string
+  propertyType: string
   area: number
-  rooms?: number
-  bathrooms?: number
-  floor?: number
-  buildingAge?: number
+  rooms?: number | null
+  bathrooms?: number | null
+  floor?: number | null
+  buildingAge?: number | null
   features: string[]
   images: string[]
-  coverImage?: string
-  createdAt: string
-  updatedAt: string
+  coverImage?: string | null
+  createdAt: Date
+  updatedAt: Date
   views: number
   locale: string
 }
@@ -37,22 +37,22 @@ export interface CreateListingDto {
   location: string
   price: number
   currency: string
-  type: 'sale' | 'rent'
-  propertyType: 'apartment' | 'villa' | 'office' | 'land' | 'commercial'
+  type: string
+  propertyType: string
   area: number
-  rooms?: number
-  bathrooms?: number
-  floor?: number
-  buildingAge?: number
+  rooms?: number | null
+  bathrooms?: number | null
+  floor?: number | null
+  buildingAge?: number | null
   features?: string[]
   images?: string[]
-  coverImage?: string
-  status?: 'active' | 'inactive' | 'sold' | 'rented'
+  coverImage?: string | null
+  status?: string
   locale: string
 }
 
 export interface UpdateListingDto extends Partial<CreateListingDto> {
-  status?: 'active' | 'inactive' | 'sold' | 'rented'
+  status?: string
 }
 
 // Blog Types
@@ -62,15 +62,15 @@ export interface BlogPost {
   slug: string
   excerpt: string
   content: string
-  coverImage?: string
+  coverImage?: string | null
   author: string
-  status: 'draft' | 'published' | 'archived'
+  status: string
   views: number
   tags: string[]
   locale: string
-  createdAt: string
-  updatedAt: string
-  publishedAt?: string
+  createdAt: Date
+  updatedAt: Date
+  publishedAt?: Date | null
 }
 
 export interface CreateBlogPostDto {
@@ -78,15 +78,15 @@ export interface CreateBlogPostDto {
   slug: string
   excerpt: string
   content: string
-  coverImage?: string
+  coverImage?: string | null
   author: string
   tags?: string[]
-  status?: 'draft' | 'published' | 'archived'
+  status?: string
   locale: string
 }
 
 export interface UpdateBlogPostDto extends Partial<CreateBlogPostDto> {
-  status?: 'draft' | 'published' | 'archived'
+  status?: string
 }
 
 // Stats Types

@@ -192,7 +192,9 @@ export function BlogPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400">
                         <Calendar className="h-4 w-4" />
-                        <span>{formatDate(post.publishedAt || post.createdAt)}</span>
+                        <span>
+                        {new Date(post.publishedAt || post.createdAt).toLocaleDateString()}
+                      </span>
                       </div>
                       <Button
                         size="sm"
@@ -217,7 +219,7 @@ export function BlogPage() {
           )}
 
           {/* Pagination */}
-          {!loading && filteredPosts.length > 0 && (
+          {/* {!loading && filteredPosts.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -236,7 +238,7 @@ export function BlogPage() {
                 </Button>
               </div>
             </motion.div>
-          )}
+          )} */}
         </div>
       </section>
 
