@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { unlink } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
+import { deleteImageFile } from '@/lib/upload-helper'
 
 // DELETE /api/upload/delete - Resim silme
 export async function DELETE(request: NextRequest) {
@@ -16,28 +14,13 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // URL'den dosya yolunu çıkar
-    // Örnek: /uploads/listing/123456.jpg -> public/uploads/listing/123456.jpg
-    const filepath = join(process.cwd(), 'public', url)
+    const result = await deleteImageFile(url)
 
-    // Dosya var mı kontrol et
-    if (!existsSync(filepath)) {
-      return NextResponse.json(
-        { success: false, error: 'Dosya bulunamadı' },
-        { status: 404 }
-      )
+    if (!result.success) {
+      const status = result.error === 'Dosya bulunamadı' ? 404 : 
+                     result.error === 'Geçersiz dosya yolu' ? 403 : 500
+      return NextResponse.json(result, { status })
     }
-
-    // Güvenlik kontrolü - sadece uploads klasöründeki dosyaları sil
-    if (!filepath.includes(join('public', 'uploads'))) {
-      return NextResponse.json(
-        { success: false, error: 'Geçersiz dosya yolu' },
-        { status: 403 }
-      )
-    }
-
-    // Dosyayı sil
-    await unlink(filepath)
 
     return NextResponse.json({
       success: true,
