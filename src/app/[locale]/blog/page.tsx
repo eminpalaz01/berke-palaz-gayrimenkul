@@ -25,7 +25,6 @@ export default async function Blog({ params }: { params: Promise<{ locale: strin
   const { locale } = await params
   return (
     <>
-      <JsonLdComponent locale={locale} types={['Blog']} />
       <BlogPage />
     </>
   )

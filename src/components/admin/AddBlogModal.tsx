@@ -26,6 +26,7 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
     status: "draft",
     locale: "tr"
   })
+  const [tagsInput, setTagsInput] = useState('');
 
   // Handle ESC key press and prevent body scroll
   useEffect(() => {
@@ -269,11 +270,17 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
               </label>
               <input
                 type="text"
-                value={formData.tags?.join(', ') || ''}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  tags: e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag) 
-                })}
+                value={tagsInput}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setTagsInput(value);
+
+                  const tagsArray = value
+                    .split(',')
+                    .map(tag => tag.trim())
+                    .filter(tag => tag);
+                  setFormData({ ...formData, tags: tagsArray });
+                }}
                 placeholder="Gayrimenkul, Yatırım, İpuçları"
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />

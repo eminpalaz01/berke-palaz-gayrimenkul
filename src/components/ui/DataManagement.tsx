@@ -42,7 +42,11 @@ export function DataManagement({ isOpen, onClose }: DataManagementProps) {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `berkepalaz-user-data-${new Date().toISOString().split('T')[0]}.json`
+    a.download = `berkepalaz-user-data-${new Date().toLocaleDateString('tr-TR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    })}.json`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)

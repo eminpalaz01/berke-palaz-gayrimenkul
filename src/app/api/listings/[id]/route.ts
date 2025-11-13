@@ -21,13 +21,9 @@ export async function GET(
       }
       return NextResponse.json(response, { status: 404 })
     }
-
-    // Get client identifier (IP address or session)
-    const forwarded = request.headers.get('x-forwarded-for')
-    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'anonymous'
     
     // Increment views with rate limiting
-    await db.listings.incrementViews(id, ip)
+    await db.listings.incrementViews(id)
 
     const response: ApiResponse<Listing> = {
       success: true,

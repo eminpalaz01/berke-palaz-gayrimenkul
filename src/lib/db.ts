@@ -1,5 +1,6 @@
-import { PrismaClient } from '@prisma/client'
+import { Listing, PrismaClient } from '@prisma/client'
 import { hashPassword, verifyPassword } from './password'
+import { BlogPost } from '@/types/api'
 
 // Prisma Client singleton
 const globalForPrisma = globalThis as unknown as {
@@ -62,12 +63,14 @@ export const db = {
         take: filters?.limit
       })
 
-      return listings.map((listing: { features: string; images: string; [key: string]: unknown }) => ({
+      // JSON string olan alanları parse ederek tip uyumlu hale getiriyoruz
+      return listings.map(listing => ({
         ...listing,
-        features: JSON.parse(listing.features) as string[],
-        images: JSON.parse(listing.images) as string[]
-      }))
+        features: listing.features ? JSON.parse(listing.features) : [],
+        images: listing.images ? JSON.parse(listing.images) : []
+      })) satisfies Listing[]
     },
+
 
     async findById(id: string) {
       const listing = await prisma.listing.findUnique({
@@ -78,9 +81,9 @@ export const db = {
 
       return {
         ...listing,
-        features: JSON.parse(listing.features),
-        images: JSON.parse(listing.images)
-      }
+        features: listing.features ? JSON.parse(listing.features) : [],
+        images: listing.images ? JSON.parse(listing.images) : []
+      } satisfies Listing
     },
 
     async create(data: {
@@ -93,13 +96,13 @@ export const db = {
       status?: string
       propertyType: string
       area: number
-      rooms?: number
-      bathrooms?: number
-      floor?: number
-      buildingAge?: number
+      rooms?: number | null
+      bathrooms?: number | null
+      floor?: number | null
+      buildingAge?: number | null
       features?: string[]
       images?: string[]
-      coverImage?: string
+      coverImage?: string | null
       locale?: string
     }) {
       const listing = await prisma.listing.create({
@@ -117,27 +120,31 @@ export const db = {
       }
     },
 
-    async update(id: string, data: Partial<{
-      title: string
-      description: string
-      location: string
-      price: number
-      currency: string
-      type: string
-      status: string
-      propertyType: string
-      area: number
-      rooms: number
-      bathrooms: number
-      floor: number
-      buildingAge: number
-      features: string[]
-      images: string[]
-      coverImage: string
-      locale: string
-    }>) {
+    async update(
+      id: string,
+      data: Partial<{
+        title: string
+        description: string
+        location: string
+        price: number
+        currency: string
+        type: string
+        status: string
+        propertyType: string
+        area: number
+        rooms: number | null
+        bathrooms: number | null
+        floor: number | null
+        buildingAge: number | null
+        features: string[]
+        images: string[]
+        coverImage: string | null
+        locale: string
+      }>
+    ) {
       const updateData: Record<string, unknown> = { ...data }
-      
+
+      // Stringify for saving
       if (data.features) {
         updateData.features = JSON.stringify(data.features)
       }
@@ -152,9 +159,9 @@ export const db = {
 
       return {
         ...listing,
-        features: JSON.parse(listing.features),
-        images: JSON.parse(listing.images)
-      }
+        features: listing.features ? JSON.parse(listing.features) : [],
+        images: listing.images ? JSON.parse(listing.images) : []
+      } satisfies Listing
     },
 
     async delete(id: string) {
@@ -225,7 +232,7 @@ export const db = {
       return posts.map((post: { tags: string; [key: string]: unknown }) => ({
         ...post,
         tags: JSON.parse(post.tags) as string[]
-      }))
+      })) as BlogPost[] 
     },
 
     async findById(id: string) {
@@ -259,7 +266,7 @@ export const db = {
       slug: string
       excerpt: string
       content: string
-      coverImage?: string
+      coverImage?: string | null
       author: string
       status?: string
       tags?: string[]
@@ -284,7 +291,7 @@ export const db = {
       slug: string
       excerpt: string
       content: string
-      coverImage: string
+      coverImage: string | null
       author: string
       status: string
       tags: string[]

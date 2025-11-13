@@ -25,7 +25,7 @@ export default async function Listings({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   return (
     <>
-      <JsonLdComponent locale={locale} types={['WebPage']} />
+      <JsonLdComponent locale={locale} types={['WebSite']} />
       <ListingsPage />
     </>
   )
