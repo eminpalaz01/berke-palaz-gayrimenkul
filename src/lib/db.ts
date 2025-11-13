@@ -1,6 +1,7 @@
 import { Listing, PrismaClient } from '@prisma/client'
 import { hashPassword, verifyPassword } from './password'
 import { BlogPost } from '@/types/api'
+import { deleteImageFile } from './upload-helper'
 
 // Prisma Client singleton
 const globalForPrisma = globalThis as unknown as {
@@ -175,6 +176,19 @@ export const db = {
           return false
         }
 
+        // Delete cover image if exists
+        if (listing.coverImage) {
+          await deleteImageFile(listing.coverImage)
+        }
+
+        // Delete all images in the images array
+        if (listing.images) {
+          const images = JSON.parse(listing.images) as string[]
+          for (const imageUrl of images) {
+            await deleteImageFile(imageUrl)
+          }
+        }
+
         // Delete related view tracking records first
         await prisma.viewTracking.deleteMany({
           where: {
@@ -324,6 +338,11 @@ export const db = {
 
         if (!post) {
           return false
+        }
+
+        // Delete cover image if exists
+        if (post.coverImage) {
+          await deleteImageFile(post.coverImage)
         }
 
         // Delete related view tracking records first

@@ -1,4 +1,7 @@
 // Resim yükleme yardımcı fonksiyonları
+import { unlink } from 'fs/promises'
+import { join } from 'path'
+import { existsSync } from 'fs'
 
 export interface UploadResponse {
   success: boolean
@@ -43,7 +46,7 @@ export async function uploadImage(
 }
 
 /**
- * Resim sil
+ * Resim sil (Client-side)
  * @param url - Silinecek resmin URL'i
  * @returns Silme sonucu
  */
@@ -61,6 +64,43 @@ export async function deleteImage(url: string): Promise<{ success: boolean; erro
       success: false,
       error: 'Dosya silinirken bir hata oluştu',
     }
+  }
+}
+
+/**
+ * Resim dosyasını fiziksel olarak sil (Server-side)
+ * @param imageUrl - Silinecek resmin URL'i
+ * @returns Silme sonucu
+ */
+export async function deleteImageFile(imageUrl: string | null | undefined): Promise<{ success: boolean; error?: string }> {
+  if (!imageUrl) {
+    return { success: false, error: 'URL parametresi gerekli' }
+  }
+
+  try {
+    // URL'den dosya yolunu çıkar
+    // Örnek: /uploads/listing/123456.jpg -> public/uploads/listing/123456.jpg
+    const filepath = join(process.cwd(), 'public', imageUrl)
+
+    // Dosya var mı kontrol et
+    if (!existsSync(filepath)) {
+      console.warn(`Image file not found: ${filepath}`)
+      return { success: false, error: 'Dosya bulunamadı' }
+    }
+
+    // Güvenlik kontrolü - sadece uploads klasöründeki dosyaları sil
+    if (!filepath.includes(join('public', 'uploads'))) {
+      console.error(`Invalid file path for deletion: ${filepath}`)
+      return { success: false, error: 'Geçersiz dosya yolu' }
+    }
+
+    // Dosyayı sil
+    await unlink(filepath)
+    console.log(`Successfully deleted image: ${imageUrl}`)
+    return { success: true }
+  } catch (error) {
+    console.error(`Error deleting image file ${imageUrl}:`, error)
+    return { success: false, error: 'Dosya silinirken bir hata oluştu' }
   }
 }
 
