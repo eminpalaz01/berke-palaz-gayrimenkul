@@ -48,17 +48,6 @@ export function useNavigationTranslation() {
 }
 
 /**
- * Beton Santrallerimiz sayfası için özel hook
- */
-export function useConcretePlantTranslation() {
-  const { t } = useTranslation()
-
-  return {
-    t: (key: string) => t(`ConcretePlantPage.${key}`)
-  }
-}
-
-/**
  * Hero bölümü için özel hook
  */
 export function useHeroTranslation() {

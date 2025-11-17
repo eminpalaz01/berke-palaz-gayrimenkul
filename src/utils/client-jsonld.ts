@@ -24,7 +24,6 @@ function getCountryCode(locale: string, runtimeConfig: RuntimeConfig): string {
   // Map country names to ISO codes
   // For companies operating in specific countries, both language versions should map to the same country code
   const countryNameToCode: Record<string, string> = {
-    // Turkey (Şelale Beton operates in Turkey)
     'Türkiye': 'TR',
     'Turkey': 'TR',
     

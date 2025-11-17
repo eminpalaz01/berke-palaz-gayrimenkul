@@ -64,8 +64,6 @@ const config: Config = {
           // Ana marka renkleri
           primary: "#6C757D", // Koyu gri - güven ve profesyonellik
           secondary: "#E67E22", // Turuncu - enerji ve dinamizm (daha yumuşak)
-          // selale-beton-logo-red: "#dd0f24"
-          // Beton sektörüne uygun gri tonları
           concrete: {
             50: "#F8F9FA",   // Çok açık gri
             100: "#E9ECEF",  // Açık gri

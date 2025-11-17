@@ -119,7 +119,7 @@ function getMetadataConfigPath(): string {
   const configPath = process.env.NEXT_PUBLIC_CONFIG_PATH;
 
   if (configPath && !configPath.startsWith('/')) {
-    // If a specific config path is defined (e.g., 'selale-beton'), use it
+    // If a specific config path is defined (e.g., 'abc-conf'), use it
     return path.join(process.cwd(), 'public', 'configs', configPath, 'metadata-config.json');
   } else if (configPath) {
     // If the path is absolute, use it directly
