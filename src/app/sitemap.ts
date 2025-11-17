@@ -4,9 +4,9 @@ import { routes, noLocaleRoutes, RouteConfig } from '@/routes';
 import { locales } from '@/i18n';
 
 // Bu satır static export için eklenmeli:
-export const revalidate = false;
+// export const revalidate = false;
 
-export default function sitemap(): MetadataRoute.Sitemap {  
+export default function sitemap(): MetadataRoute.Sitemap {
   // Static export kontrolü
   const isStaticExport = process.env.NEXT_PUBLIC_OUTPUT === 'export';
 

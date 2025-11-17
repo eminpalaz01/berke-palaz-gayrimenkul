@@ -117,7 +117,7 @@ export function generateLayoutMetadata(locale: string): Metadata {
     },
     description: localeConfig?.description || 'Default description',
     keywords: localeConfig?.keywords || ['default', 'keywords'],
-    verification: { google: APP_CONFIG.seo.googleVerification },
+    verification: { google: APP_CONFIG.seo.googleVerification || '' },
     authors: [{ name: getStaticCompanyName(validatedLocale), url: siteUrl }],
     creator: getStaticCompanyName(validatedLocale),
     publisher: getStaticCompanyName(validatedLocale),

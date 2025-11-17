@@ -5,8 +5,7 @@
   },
   "locales": {
     "supported": [
-      "tr",
-      "en"
+      "tr"
     ],
     "default": "tr"
   },
@@ -145,6 +144,8 @@
   },
   "business": {
     "type": "Real Estate",
+    "classification": "Real Estate Agency",
+    "priceRange": "",
     "category": "Property Sales & Rental",
     "services": [
       "Residential Sales",
@@ -193,6 +194,14 @@
       "gayrimenkul danışmanı"
     ],
     "author": "Berke Palaz",
-    "robots": "index, follow"
+    "robots": "index, follow",
+    "twitterHandle": "@berkepalaz",
+    "googleVerification": "your-google-verification-code"
+  },
+  "location": {
+    "region": "TR-10",
+    "placename": "Balıkesir",
+    "position": "39.6484, 27.8826",
+    "icbm": "39.6484, 27.8826"
   }
 }
