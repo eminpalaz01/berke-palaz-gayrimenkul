@@ -10,7 +10,7 @@ interface GlobalErrorProviderProps {
 }
 
 export default function GlobalErrorProvider({ children }: GlobalErrorProviderProps) {
-  useEffect(() => {
+  useEffect(() => { 
     // Setup global error handlers when component mounts
     setupGlobalErrorHandlers()
   }, [])
