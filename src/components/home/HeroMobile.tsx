@@ -106,10 +106,10 @@ export function HeroMobile() {
             className="mb-4"
           >
             <div className="inline-block bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
-              <p className="italic text-lg font-semibold leading-snug text-white tracking-wide mb-1">
+              <p className="text-lg font-semibold leading-snug text-white tracking-wide mb-1" style={{ fontFamily: 'Contralto Big, serif' }}>
                 Doğru Gayrimenkul
               </p>
-              <p className="italic text-lg font-semibold leading-snug text-white tracking-wide">
+              <p className="text-lg font-semibold leading-snug text-white tracking-wide" style={{ fontFamily: 'Contralto Big, serif' }}>
                 Doğru Rehberle Bulunur
               </p>
             </div>
@@ -121,7 +121,7 @@ export function HeroMobile() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
-            <p className="text-sm font-light leading-relaxed text-white/85 max-w-[85%]">
+            <p className="text-sm font-light leading-relaxed text-white/85 max-w-[85%]" style={{ fontFamily: 'Montserrat, sans-serif' }}>
               Satış, kiralama ve yatırım süreçlerinde güvenilir danışmanlık
             </p>
           </motion.div>

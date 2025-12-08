@@ -298,16 +298,29 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
               />
             </div>
 
-            {/* Rooms */}
+            {/* Bedrooms */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
-                Oda Sayısı
+                Yatak Odası
               </label>
               <input
                 type="number"
                 min="0"
                 value={formData.rooms ?? ''}
                 onChange={(e) => setFormData({ ...formData, rooms: Number(e.target.value) })}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Hall */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Salon
+              </label>
+              <input
+                type="number"
+                value={formData.hall ?? 0}
+                onChange={(e) => setFormData({ ...formData, hall: Number(e.target.value) })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -336,19 +349,6 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                 min="0"
                 value={formData.floor || ''}
                 onChange={(e) => setFormData({ ...formData, floor: e.target.value ? Number(e.target.value) : undefined })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* Hall */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
-                Salon
-              </label>
-              <input
-                type="number"
-                value={formData.hall ?? 0}
-                onChange={(e) => setFormData({ ...formData, hall: Number(e.target.value) })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -435,13 +435,13 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
 
               {/* Image Previews */}
               {imagePreviews.length > 0 && (
-                <div className="grid grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {imagePreviews.map((url, index) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
+                    <div key={index} className="relative w-full pb-[100%] rounded-lg overflow-hidden border border-gray-200 dark:border-slate-600">
                       <img
                         src={url}
                         alt={`Preview ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                       />
                       <button
                         type="button"
@@ -452,7 +452,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                           setFormData({ ...formData, images: newImages })
                         }}
                         disabled={uploadingImages}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-md z-10"
                       >
                         <X className="h-3 w-3" />
                       </button>

@@ -28,7 +28,7 @@ export function AboutSection() {
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full max-w-[490px] aspect-[5/6] mx-auto">
               <Image
-                src="/images/profile.png"
+                src="/images/profile.jpg"
                 alt="Berke Palaz"
                 fill
                 className="object-cover"
