@@ -49,6 +49,7 @@ model Listing {
   bathrooms    Int?
   floor        Int?
   buildingAge  Int?
+  hall         Int?     // Number of halls/living rooms
   features     String   @db.Text // JSON array stored as text
   images       String   @db.Text // JSON array stored as text
   coverImage   String?  @db.Text

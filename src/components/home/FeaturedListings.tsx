@@ -106,6 +106,12 @@ export function FeaturedListings() {
                   {/* Property Details */}
                   {listing.propertyType !== "land" && (
                     <div className="flex items-center flex-wrap gap-4 mb-4 text-sm text-slate-600 dark:text-slate-300">
+                      {listing.hall && (
+                        <div className="flex items-center gap-1">
+                          <Home className="h-4 w-4 text-blue-600" />
+                          <span className="font-semibold">{listing.hall}</span>
+                        </div>
+                      )}
                       {listing.rooms && listing.rooms > 0 && (
                         <div className="flex items-center gap-1">
                           <Bed className="h-4 w-4 text-blue-600" />

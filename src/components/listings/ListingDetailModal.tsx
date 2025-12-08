@@ -51,30 +51,17 @@ export function ListingDetailModal({ listing, isOpen, onClose }: ListingDetailMo
           </span>
         </div>
 
-        {/* Cover Image */}
-        {(listing.coverImage || (listing.images && listing.images.length > 0)) && (
-          <div>
-            <div className="aspect-video bg-gray-200 dark:bg-slate-700 rounded-lg overflow-hidden">
-              <img
-                src={listing.coverImage || listing.images[0]}
-                alt={listing.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        )}
-
         {/* Images Gallery */}
-        {listing.images && listing.images.length > 1 && (
+        {listing.images && listing.images.length > 0 ? (
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-              Tüm Görseller ({listing.images.length})
+              Görseller ({listing.images.length})
             </h3>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {listing.images.map((image, index) => (
                 <div
                   key={index}
-                  className="aspect-square bg-gray-200 dark:bg-slate-700 rounded-lg overflow-hidden"
+                  className="aspect-video bg-gray-200 dark:bg-slate-700 rounded-lg overflow-hidden hover:opacity-90 transition-opacity cursor-pointer"
                 >
                   <img
                     src={image}
@@ -83,6 +70,16 @@ export function ListingDetailModal({ listing, isOpen, onClose }: ListingDetailMo
                   />
                 </div>
               ))}
+            </div>
+          </div>
+        ) : listing.coverImage && (
+          <div>
+            <div className="aspect-video bg-gray-200 dark:bg-slate-700 rounded-lg overflow-hidden">
+              <img
+                src={listing.coverImage}
+                alt={listing.title}
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         )}
@@ -121,6 +118,13 @@ export function ListingDetailModal({ listing, isOpen, onClose }: ListingDetailMo
                 <p className="text-sm text-gray-600 dark:text-slate-400">Alan</p>
                 <p className="text-lg font-bold text-gray-900 dark:text-white">{listing.area} m²</p>
               </div>
+              {listing.hall && (
+                <div className="bg-gray-50 dark:bg-slate-700 p-3 rounded-lg text-center">
+                  <Home className="h-5 w-5 mx-auto mb-2 text-gray-600 dark:text-slate-400" />
+                  <p className="text-sm text-gray-600 dark:text-slate-400">Salon</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white">{listing.hall}</p>
+                </div>
+              )}
               {listing.rooms && (
                 <div className="bg-gray-50 dark:bg-slate-700 p-3 rounded-lg text-center">
                   <Bed className="h-5 w-5 mx-auto mb-2 text-gray-600 dark:text-slate-400" />
