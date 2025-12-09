@@ -143,14 +143,49 @@ export const db = {
         locale: string
       }>
     ) {
+      // Get the existing listing to compare old images
+      const existingListing = await prisma.listing.findUnique({
+        where: { id }
+      })
+
+      if (!existingListing) {
+        throw new Error('Listing not found')
+      }
+
       const updateData: Record<string, unknown> = { ...data }
 
-      // Stringify for saving
+      // Handle coverImage update - delete old one if changed
+      if (data.coverImage && existingListing.coverImage && data.coverImage !== existingListing.coverImage) {
+        console.log('Deleting old cover image:', existingListing.coverImage)
+        await deleteImageFile(existingListing.coverImage)
+      }
+
+      // Handle images array update - delete removed images
+      if (data.images) {
+        try {
+          const oldImages = existingListing.images ? JSON.parse(existingListing.images) as string[] : []
+          const newImages = data.images
+          
+          // Find images that were removed
+          const removedImages = oldImages.filter(oldImg => !newImages.includes(oldImg))
+          
+          // Delete removed images from file system
+          for (const imageUrl of removedImages) {
+            if (imageUrl && typeof imageUrl === 'string') {
+              console.log('Deleting removed image:', imageUrl)
+              await deleteImageFile(imageUrl)
+            }
+          }
+        } catch (parseError) {
+          console.error('Error parsing old images JSON:', parseError)
+        }
+        
+        updateData.images = JSON.stringify(data.images)
+      }
+
+      // Stringify features for saving
       if (data.features) {
         updateData.features = JSON.stringify(data.features)
-      }
-      if (data.images) {
-        updateData.images = JSON.stringify(data.images)
       }
 
       const listing = await prisma.listing.update({
@@ -178,14 +213,26 @@ export const db = {
 
         // Delete cover image if exists
         if (listing.coverImage) {
+          console.log('Deleting cover image:', listing.coverImage)
           await deleteImageFile(listing.coverImage)
         }
 
         // Delete all images in the images array
         if (listing.images) {
-          const images = JSON.parse(listing.images) as string[]
-          for (const imageUrl of images) {
-            await deleteImageFile(imageUrl)
+          try {
+            const images = JSON.parse(listing.images) as string[]
+            console.log('Deleting images array:', images)
+            
+            if (Array.isArray(images) && images.length > 0) {
+              for (const imageUrl of images) {
+                if (imageUrl && typeof imageUrl === 'string') {
+                  console.log('Deleting image:', imageUrl)
+                  await deleteImageFile(imageUrl)
+                }
+              }
+            }
+          } catch (parseError) {
+            console.error('Error parsing images JSON:', parseError)
           }
         }
 
@@ -312,7 +359,22 @@ export const db = {
       locale: string
       publishedAt: Date
     }>) {
+      // Get the existing blog post to compare old cover image
+      const existingPost = await prisma.blogPost.findUnique({
+        where: { id }
+      })
+
+      if (!existingPost) {
+        throw new Error('Blog post not found')
+      }
+
       const updateData: Record<string, unknown> = { ...data }
+
+      // Handle coverImage update - delete old one if changed
+      if (data.coverImage && existingPost.coverImage && data.coverImage !== existingPost.coverImage) {
+        console.log('Deleting old blog cover image:', existingPost.coverImage)
+        await deleteImageFile(existingPost.coverImage)
+      }
       
       if (data.tags) {
         updateData.tags = JSON.stringify(data.tags)
