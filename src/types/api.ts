@@ -22,6 +22,7 @@ export interface Listing {
   bathrooms?: number | null
   floor?: number | null
   buildingAge?: number | null
+  hall?: number | null
   features: string[]
   images: string[]
   coverImage?: string | null
@@ -44,6 +45,7 @@ export interface CreateListingDto {
   bathrooms?: number | null
   floor?: number | null
   buildingAge?: number | null
+  hall?: number | null
   features?: string[]
   images?: string[]
   coverImage?: string | null

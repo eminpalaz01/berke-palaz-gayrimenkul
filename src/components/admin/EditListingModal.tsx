@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { X, Loader2 } from "lucide-react"
+import { X, Loader2, Upload } from "lucide-react"
 import { Listing, UpdateListingDto } from "@/types/api"
 
 interface EditListingModalProps {
@@ -26,12 +26,16 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
     bathrooms: listing.bathrooms,
     floor: listing.floor,
     buildingAge: listing.buildingAge,
+    hall: listing.hall,
     features: listing.features,
+    images: listing.images,
     status: listing.status
   })
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [uploadingImages, setUploadingImages] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>(listing.coverImage || '')
+  const [imagePreviews, setImagePreviews] = useState<string[]>(listing.images || [])
   const [newImageUrl, setNewImageUrl] = useState<string>('')
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,10 +104,13 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
         bathrooms: listing.bathrooms,
         floor: listing.floor,
         buildingAge: listing.buildingAge,
+        hall: listing.hall,
         features: listing.features,
+        images: listing.images,
         status: listing.status
       })
       setImagePreview(listing.coverImage || '')
+      setImagePreviews(listing.images || [])
       setNewImageUrl('')
     }
   }, [listing, isOpen])
@@ -138,7 +145,7 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white dark:bg-slate-800 border-b dark:border-slate-700 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold dark:text-white">İlan Düzenle</h2>
           <button 
@@ -150,7 +157,7 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
               Kapak Resmi
@@ -310,7 +317,7 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
-                Oda Sayısı
+                Yatak Odası
               </label>
               <input
                 type="number"
@@ -322,6 +329,19 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Salon
+              </label>
+              <input
+                type="text"
+                value={formData.hall || ''}
+                onChange={(e) => setFormData({ ...formData, hall: Number(e.target.value) })}
+                placeholder="Örn: 1+1, 2+1, 3+1"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Banyo
               </label>
               <input
@@ -331,7 +351,9 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                 Kat
@@ -343,25 +365,118 @@ export function EditListingModal({ listing, isOpen, onClose, onSave }: EditListi
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Durum
+              </label>
+              <select
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' | 'sold' | 'rented' })}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="active">Aktif</option>
+                <option value="inactive">Pasif</option>
+                <option value="sold">Satıldı</option>
+                <option value="rented">Kiralandı</option>
+              </select>
+            </div>
           </div>
 
+          {/* Additional Images Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
-              Durum
+              İlan Resimleri (Çoklu)
             </label>
-            <select
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' | 'sold' | 'rented' })}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="active">Aktif</option>
-              <option value="inactive">Pasif</option>
-              <option value="sold">Satıldı</option>
-              <option value="rented">Kiralandı</option>
-            </select>
+            <div className="space-y-4">
+              <label className={`w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg cursor-pointer hover:border-blue-500 dark:hover:border-blue-400 p-6 ${uploadingImages ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                {uploadingImages ? (
+                  <>
+                    <Loader2 className="h-8 w-8 text-gray-400 dark:text-slate-500 animate-spin" />
+                    <span className="mt-2 text-sm text-gray-500 dark:text-slate-400">Yükleniyor...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 text-gray-400 dark:text-slate-500" />
+                    <span className="mt-2 text-sm text-gray-500 dark:text-slate-400">Resimler Seç (Çoklu)</span>
+                    <span className="mt-1 text-xs text-gray-400 dark:text-slate-500">Birden fazla resim seçebilirsiniz</span>
+                  </>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={async (e) => {
+                    const files = e.target.files
+                    if (!files || files.length === 0) return
+
+                    setUploadingImages(true)
+                    try {
+                      const uploadedUrls: string[] = []
+                      
+                      for (let i = 0; i < files.length; i++) {
+                        const file = files[i]
+                        const formDataUpload = new FormData()
+                        formDataUpload.append('file', file)
+                        formDataUpload.append('type', 'listing')
+
+                        const response = await fetch('/api/upload', {
+                          method: 'POST',
+                          body: formDataUpload,
+                        })
+
+                        const result = await response.json()
+
+                        if (result.success && result.data?.url) {
+                          uploadedUrls.push(result.data.url)
+                        }
+                      }
+
+                      setImagePreviews([...imagePreviews, ...uploadedUrls])
+                      setFormData({ ...formData, images: [...(formData.images || []), ...uploadedUrls] })
+                    } catch (error) {
+                      console.error('Upload error:', error)
+                      alert('Resimler yüklenirken bir hata oluştu')
+                    } finally {
+                      setUploadingImages(false)
+                    }
+                  }}
+                  disabled={uploadingImages}
+                  className="hidden"
+                />
+              </label>
+
+              {/* Image Previews */}
+              {imagePreviews.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {imagePreviews.map((url, index) => (
+                    <div key={index} className="relative w-full pb-[100%] rounded-lg overflow-hidden border border-gray-200 dark:border-slate-600">
+                      <img
+                        src={url}
+                        alt={`Preview ${index + 1}`}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newPreviews = imagePreviews.filter((_, i) => i !== index)
+                          const newImages = (formData.images || []).filter((_, i) => i !== index)
+                          setImagePreviews(newPreviews)
+                          setFormData({ ...formData, images: newImages })
+                        }}
+                        disabled={uploadingImages}
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-md z-10"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="flex justify-end gap-4 pt-4">
+          <div className="flex justify-end gap-4 pt-4 border-t dark:border-slate-700">
             <Button
               type="button"
               variant="outline"

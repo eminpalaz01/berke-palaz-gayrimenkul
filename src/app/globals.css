@@ -205,6 +205,16 @@
   @apply bg-muted-foreground/50;
 }
 
+/* Hide scrollbar utility class */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
 /* Responsive Typography System */
 @layer utilities {
   /* Default Desktop/Tablet sizes - Normal sizes for larger screens */

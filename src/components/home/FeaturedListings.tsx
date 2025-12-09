@@ -5,14 +5,17 @@ import { useTranslation } from "@/hooks/useTranslation"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/navigation"
 import { motion } from "framer-motion"
-import { Bed, Bath, Square, Loader2, Home } from "lucide-react"
+import { Bed, Bath, Square, Loader2, Home, Building } from "lucide-react"
 import { publicListingsApi } from "@/lib/api-client"
 import { Listing } from "@/types/api"
+import { ListingDetailModal } from "@/components/listings/ListingDetailModal"
 
 export function FeaturedListings() {
   const { t } = useTranslation()
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -43,6 +46,16 @@ export function FeaturedListings() {
 
   const getTypeLabel = (type: string) => {
     return type === 'sale' ? t('listings.forSale') : t('listings.forRent')
+  }
+
+  const handleListingClick = (listing: Listing) => {
+    setSelectedListing(listing)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedListing(null)
   }
 
   return (
@@ -76,7 +89,8 @@ export function FeaturedListings() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="flex flex-col bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              onClick={() => handleListingClick(listing)}
+              className="flex flex-col bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
@@ -106,10 +120,10 @@ export function FeaturedListings() {
                   {/* Property Details */}
                   {listing.propertyType !== "land" && (
                     <div className="flex items-center flex-wrap gap-4 mb-4 text-sm text-slate-600 dark:text-slate-300">
-                      {listing.rooms && listing.rooms > 0 && (
+                      {(listing.hall || listing.rooms) && (
                         <div className="flex items-center gap-1">
                           <Bed className="h-4 w-4 text-blue-600" />
-                          <span>{listing.rooms} oda</span>
+                          <span className="font-semibold">{listing.rooms || 0}+{listing.hall || 0}</span>
                         </div>
                       )}
                       {listing.bathrooms && listing.bathrooms > 0 && (
@@ -124,8 +138,8 @@ export function FeaturedListings() {
                       </div>
                       {listing.floor !== undefined && listing.floor !== null && (
                         <div className="flex items-center gap-1">
-                          <Home className="h-4 w-4 text-blue-600" />
-                          <span>{listing.floor}. kat</span>
+                          <Building className="h-4 w-4 text-blue-600" />
+                          <span>{listing.floor}. Kat</span>
                         </div>
                       )}
                     </div>
@@ -175,6 +189,13 @@ export function FeaturedListings() {
           </Button>
         </motion.div>
       </div>
+
+      {/* Listing Detail Modal */}
+      <ListingDetailModal
+        listing={selectedListing}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </section>
   )
 }

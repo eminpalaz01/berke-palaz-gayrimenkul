@@ -117,11 +117,11 @@ export function ViewListingModal({ listing, isOpen, onClose }: ViewListingModalP
               <p className="text-sm text-gray-600 dark:text-slate-400">Alan</p>
               <p className="text-lg font-bold text-gray-900 dark:text-white">{listing.area} m²</p>
             </div>
-            {listing.rooms && (
+            {(listing.hall || listing.rooms) && (
               <div className="bg-gray-50 dark:bg-slate-700 p-3 rounded-lg text-center">
                 <Bed className="h-5 w-5 mx-auto mb-2 text-gray-600 dark:text-slate-400" />
                 <p className="text-sm text-gray-600 dark:text-slate-400">Oda Sayısı</p>
-                <p className="text-lg font-bold text-gray-900 dark:text-white">{listing.rooms}</p>
+                <p className="text-lg font-bold text-gray-900 dark:text-white">{listing.rooms || 0}+{listing.hall || 0}</p>
               </div>
             )}
             {listing.bathrooms && (

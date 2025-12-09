@@ -71,7 +71,7 @@ export function AboutPage() {
             >
               <div className="rounded-full w-40 h-40 mb-6 shadow-lg overflow-hidden">
                 <Image
-                  src="/images/profile.png"
+                  src="/images/profile.jpg"
                   alt="Berke Palaz Profile"
                   width={160}
                   height={160}

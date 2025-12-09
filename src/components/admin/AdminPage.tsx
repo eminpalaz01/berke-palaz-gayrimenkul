@@ -492,21 +492,21 @@ export function AdminPage({ onLogout }: AdminPageProps) {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                       {new Date(listing.createdAt).toLocaleDateString() || ''}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
+                    <td className="text-sm font-medium">
+                      <div className="flex">
                         <Button 
                           size="sm" 
                           variant="outline"
                           onClick={() => setViewingListing(listing)}
                         >
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-5 w-5" />
                         </Button>
                         <Button 
                           size="sm" 
                           variant="outline"
                           onClick={() => setEditingListing(listing)}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-5 w-5" />
                         </Button>
                         <Button 
                           size="sm" 
@@ -514,7 +514,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
                           className="text-red-600 hover:text-red-700"
                           onClick={() => handleDeleteListing(listing.id)}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-5 w-5" />
                         </Button>
                       </div>
                     </td>
@@ -601,21 +601,21 @@ export function AdminPage({ onLogout }: AdminPageProps) {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                       {new Date(post.createdAt).toLocaleDateString() || ''}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
+                    <td className="text-sm font-medium">
+                      <div className="flex">
                         <Button 
                           size="sm" 
                           variant="outline"
                           onClick={() => setViewingBlogPost(post)}
                         >
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-5 w-5" />
                         </Button>
                         <Button 
                           size="sm" 
                           variant="outline"
                           onClick={() => setEditingBlogPost(post)}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-5 w-5" />
                         </Button>
                         <Button 
                           size="sm" 
@@ -623,10 +623,11 @@ export function AdminPage({ onLogout }: AdminPageProps) {
                           className="text-red-600 hover:text-red-700"
                           onClick={() => handleDeleteBlogPost(post.id)}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-5 w-5" />
                         </Button>
                       </div>
                     </td>
+
                   </tr>
                 ))}
               </tbody>

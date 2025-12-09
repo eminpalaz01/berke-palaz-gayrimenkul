@@ -14,7 +14,9 @@ interface AddListingModalProps {
 export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProps) {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [uploadingImages, setUploadingImages] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>("")
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
   const [formData, setFormData] = useState<CreateListingDto>({
     title: "",
     description: "",
@@ -26,6 +28,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
     area: 0,
     rooms: 0,
     bathrooms: 0,
+    hall: 0,
     coverImage: "",
     images: [],
     status: "active",
@@ -295,16 +298,29 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
               />
             </div>
 
-            {/* Rooms */}
+            {/* Bedrooms */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
-                Oda Sayısı
+                Yatak Odası
               </label>
               <input
                 type="number"
                 min="0"
                 value={formData.rooms ?? ''}
                 onChange={(e) => setFormData({ ...formData, rooms: Number(e.target.value) })}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Hall */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Salon
+              </label>
+              <input
+                type="number"
+                value={formData.hall ?? 0}
+                onChange={(e) => setFormData({ ...formData, hall: Number(e.target.value) })}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -351,6 +367,99 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                 <option value="active">Aktif</option>
                 <option value="inactive">Pasif</option>
               </select>
+            </div>
+          </div>
+
+          {/* Additional Images Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+              İlan Resimleri (Çoklu)
+            </label>
+            <div className="space-y-4">
+              <label className={`w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg cursor-pointer hover:border-blue-500 dark:hover:border-blue-400 p-6 ${uploadingImages ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                {uploadingImages ? (
+                  <>
+                    <Loader2 className="h-8 w-8 text-gray-400 dark:text-slate-500 animate-spin" />
+                    <span className="mt-2 text-sm text-gray-500 dark:text-slate-400">Yükleniyor...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 text-gray-400 dark:text-slate-500" />
+                    <span className="mt-2 text-sm text-gray-500 dark:text-slate-400">Resimler Seç (Çoklu)</span>
+                    <span className="mt-1 text-xs text-gray-400 dark:text-slate-500">Birden fazla resim seçebilirsiniz</span>
+                  </>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={async (e) => {
+                    const files = e.target.files
+                    if (!files || files.length === 0) return
+
+                    setUploadingImages(true)
+                    try {
+                      const uploadedUrls: string[] = []
+                      
+                      for (let i = 0; i < files.length; i++) {
+                        const file = files[i]
+                        const formDataUpload = new FormData()
+                        formDataUpload.append('file', file)
+                        formDataUpload.append('type', 'listing')
+
+                        const response = await fetch('/api/upload', {
+                          method: 'POST',
+                          body: formDataUpload,
+                        })
+
+                        const result = await response.json()
+
+                        if (result.success && result.data?.url) {
+                          uploadedUrls.push(result.data.url)
+                        }
+                      }
+
+                      setImagePreviews([...imagePreviews, ...uploadedUrls])
+                      setFormData({ ...formData, images: [...(formData.images || []), ...uploadedUrls] })
+                    } catch (error) {
+                      console.error('Upload error:', error)
+                      alert('Resimler yüklenirken bir hata oluştu')
+                    } finally {
+                      setUploadingImages(false)
+                    }
+                  }}
+                  disabled={uploadingImages}
+                  className="hidden"
+                />
+              </label>
+
+              {/* Image Previews */}
+              {imagePreviews.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {imagePreviews.map((url, index) => (
+                    <div key={index} className="relative w-full pb-[100%] rounded-lg overflow-hidden border border-gray-200 dark:border-slate-600">
+                      <img
+                        src={url}
+                        alt={`Preview ${index + 1}`}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newPreviews = imagePreviews.filter((_, i) => i !== index)
+                          const newImages = (formData.images || []).filter((_, i) => i !== index)
+                          setImagePreviews(newPreviews)
+                          setFormData({ ...formData, images: newImages })
+                        }}
+                        disabled={uploadingImages}
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-md z-10"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
