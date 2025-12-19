@@ -40,12 +40,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Dosya boyutu kontrolü
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        { success: false, error: 'Dosya boyutu çok büyük. Maksimum 5MB olmalıdır.' },
-        { status: 400 }
-      )
-    }
+    // if (file.size > MAX_FILE_SIZE) {
+    //   return NextResponse.json(
+    //     { success: false, error: 'Dosya boyutu çok büyük. Maksimum 5MB olmalıdır.' },
+    //     { status: 400 }
+    //   )
+    // }
 
     // Tip kontrolü
     if (!type || !['listing', 'blog'].includes(type)) {

@@ -2,8 +2,8 @@
 
 import { Modal } from "@/components/ui/Modal"
 import { Listing } from "@/types/api"
-import { MapPin, Home, Bed, Bath, Maximize, DollarSign, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState } from "react"
+import { MapPin, Home, Bed, Bath, Maximize, DollarSign, ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react"
+import { useState, useEffect } from "react"
 
 interface ListingDetailModalProps {
   listing: Listing | null
@@ -13,6 +13,49 @@ interface ListingDetailModalProps {
 
 export function ListingDetailModal({ listing, isOpen, onClose }: ListingDetailModalProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  // ESC tuşu ile tam ekranı kapatma ve WhatsApp butonunu gizleme
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isFullscreen) {
+          // Önce tam ekranı kapat
+          e.stopPropagation()
+          setIsFullscreen(false)
+        }
+        // Modal'ın kendi ESC handler'ı çalışacak
+      }
+    }
+
+    if (isFullscreen) {
+      // Tam ekran açıkken ESC'yi yakala
+      document.addEventListener('keydown', handleEscape, { capture: true })
+      // Body scroll'u engelle ve mobilde touch scroll'u da engelle
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+      document.body.style.height = '100%'
+      // WhatsApp butonunu gizle
+      document.body.setAttribute('data-fullscreen-active', 'true')
+    } else {
+      // WhatsApp butonunu göster ve scroll'u geri aç
+      document.body.removeAttribute('data-fullscreen-active')
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape, { capture: true })
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
+      document.body.removeAttribute('data-fullscreen-active')
+    }
+  }, [isFullscreen])
 
   if (!listing) return null
 
@@ -55,7 +98,16 @@ export function ListingDetailModal({ listing, isOpen, onClose }: ListingDetailMo
     setCurrentImageIndex(index)
   }
 
+  const openFullscreen = () => {
+    setIsFullscreen(true)
+  }
+
+  const closeFullscreen = () => {
+    setIsFullscreen(false)
+  }
+
   return (
+    <>
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="7xl">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-0 lg:gap-6 min-h-[600px]">
         {/* Left Side - Image Gallery (Takes 3/5 of space on large screens) */}
@@ -74,6 +126,16 @@ export function ListingDetailModal({ listing, isOpen, onClose }: ListingDetailMo
                 <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
                   {currentImageIndex + 1} / {images.length}
                 </div>
+
+                {/* Fullscreen Button - Sağ Alt Köşe */}
+                <button
+                  onClick={openFullscreen}
+                  className="absolute bottom-4 right-4 w-10 h-10 bg-black/70 hover:bg-black/90 text-white rounded-lg flex items-center justify-center transition-colors shadow-lg group z-20"
+                  aria-label="Tam ekran"
+                  title="Tam ekran"
+                >
+                  <Maximize2 className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                </button>
 
                 {/* Navigation Arrows */}
                 {images.length > 1 && (
@@ -98,7 +160,7 @@ export function ListingDetailModal({ listing, isOpen, onClose }: ListingDetailMo
 
               {/* Thumbnail Navigation - Only visible on large screens */}
               {images.length > 1 && (
-                <div className="hidden lg:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                <div className="hidden lg:block absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 z-10">
                   <div className="flex gap-2 overflow-x-auto scrollbar-hide justify-center px-2">
                     {images.map((image, index) => (
                       <button
@@ -227,5 +289,85 @@ export function ListingDetailModal({ listing, isOpen, onClose }: ListingDetailMo
         </div>
       </div>
     </Modal>
+
+    {/* Fullscreen Modal */}
+    {isFullscreen && (
+      <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden touch-none">
+        {/* Close Button - Sağ Üst Köşe - Mobil Uyumlu */}
+        <button
+          onClick={closeFullscreen}
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 active:bg-white/30 text-white rounded-full flex items-center justify-center transition-colors shadow-lg z-10 group"
+          aria-label="Kapat"
+        >
+          <X className="h-5 w-5 sm:h-6 sm:w-6 group-hover:scale-110 transition-transform" />
+        </button>
+
+        {/* Image Counter - Mobil Uyumlu */}
+        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black/70 text-white px-2 py-1 sm:px-4 sm:py-2 rounded-full text-xs sm:text-base font-medium z-10">
+          {currentImageIndex + 1} / {images.length}
+        </div>
+
+        {/* Main Fullscreen Image - Mobil için padding azaltıldı */}
+        <div className="relative w-full h-full flex items-center justify-center p-2 sm:p-4 overflow-hidden">
+          <img
+            src={images[currentImageIndex]}
+            alt={`${listing.title} - ${currentImageIndex + 1}`}
+            className="max-w-full max-h-full object-contain select-none"
+            draggable="false"
+          />
+        </div>
+
+        {/* Navigation Arrows - Mobil Uyumlu */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={prevImage}
+              className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-full flex items-center justify-center transition-colors shadow-lg z-10"
+              aria-label="Önceki resim"
+            >
+              <ChevronLeft className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-full flex items-center justify-center transition-colors shadow-lg z-10"
+              aria-label="Sonraki resim"
+            >
+              <ChevronRight className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+            </button>
+          </>
+        )}
+
+        {/* Thumbnail Navigation - Mobil için optimize edildi */}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 sm:bottom-6 left-1/2 -translate-x-1/2 max-w-full sm:max-w-4xl w-full px-2 sm:px-4 overflow-hidden">
+            <div className="flex gap-2 sm:gap-3 overflow-x-auto scrollbar-hide justify-start sm:justify-center pb-1 overscroll-contain">
+              {images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToImage(index)}
+                  className={`flex-shrink-0 w-12 h-12 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                    currentImageIndex === index
+                      ? 'border-blue-500 scale-110'
+                      : 'border-white/30 hover:border-white/60 active:border-white/80'
+                  }`}
+                >
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ESC Hint - Sadece desktop'ta göster */}
+        <div className="hidden sm:block absolute bottom-6 right-6 bg-black/70 text-white px-3 py-1.5 rounded-lg text-sm">
+          ESC tuşuna basarak kapatabilirsiniz
+        </div>
+      </div>
+    )}
+  </>
   )
 }
