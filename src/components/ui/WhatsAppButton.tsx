@@ -1,16 +1,36 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { useRuntimeConfig } from "@/utils/runtime-config"
 
 export function WhatsAppButton() {
   const [isHovered, setIsHovered] = useState(false)
+  const [isFullscreenActive, setIsFullscreenActive] = useState(false)
   const { config } = useRuntimeConfig()
   const pathname = usePathname()
 
-  // Admin sayfalarında butonu gizle
-  if (pathname?.includes('/admin')) {
+  // Tam ekran durumunu dinle
+  useEffect(() => {
+    const checkFullscreen = () => {
+      setIsFullscreenActive(document.body.hasAttribute('data-fullscreen-active'))
+    }
+
+    // İlk kontrol
+    checkFullscreen()
+
+    // MutationObserver ile body attribute değişikliklerini izle
+    const observer = new MutationObserver(checkFullscreen)
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['data-fullscreen-active']
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
+  // Admin sayfalarında ve tam ekran modunda butonu gizle
+  if (pathname?.includes('/admin') || isFullscreenActive) {
     return null
   }
 
