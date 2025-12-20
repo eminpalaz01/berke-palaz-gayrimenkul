@@ -4,8 +4,12 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 const isStaticExport = process.env.NEXT_PUBLIC_OUTPUT === 'export'
+const ignoreTsErrors = process.env.NEXT_PUBLIC_IGNORE_TS_ERRORS === 'true';
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: ignoreTsErrors,
+  },
   output: isStaticExport ? 'export' : undefined, // dynamic veya SSR olabilir
   images: isStaticExport ? { unoptimized: true } : undefined, // Sadece static export'ta ekle
   trailingSlash: isStaticExport ? true : undefined,
