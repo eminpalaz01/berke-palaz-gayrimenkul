@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import sharp from 'sharp'
 
 // Maksimum dosya boyutu (5MB)
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 
-// İzin verilen dosya tipleri
-const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+// İzin verilen dosya tipleri (HEIC dahil)
+const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/heic', 'image/heif']
 
 // Dosya adını güvenli hale getir
 function sanitizeFilename(filename: string): string {
@@ -31,8 +32,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Dosya tipi kontrolü
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    // Dosya tipi kontrolü - MIME type boş olabilir (iPhone/Mac için)
+    if (file.type && !ALLOWED_TYPES.includes(file.type) && !file.type.startsWith('image/')) {
       return NextResponse.json(
         { success: false, error: 'Geçersiz dosya tipi. Sadece resim dosyaları yüklenebilir.' },
         { status: 400 }
@@ -55,11 +56,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Dosya adını oluştur
+    // Dosya adını oluştur (her zaman .jpg uzantısı kullan)
     const timestamp = Date.now()
-    const originalName = sanitizeFilename(file.name)
-    const extension = originalName.split('.').pop()
-    const filename = `${timestamp}-${Math.random().toString(36).substring(7)}.${extension}`
+    const filename = `${timestamp}-${Math.random().toString(36).substring(7)}.jpg`
 
     // Klasör yolunu belirle
     const uploadDir = join(process.cwd(), 'public', 'uploads', type)
@@ -69,12 +68,18 @@ export async function POST(request: NextRequest) {
       await mkdir(uploadDir, { recursive: true })
     }
 
-    // Dosyayı kaydet
+    // Dosyayı normalize et ve kaydet
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    const filepath = join(uploadDir, filename)
     
-    await writeFile(filepath, buffer)
+    // 🔥 NORMALIZATION: iPhone EXIF rotation fix + format conversion
+    const normalizedBuffer = await sharp(buffer)
+      .rotate() // EXIF orientation'ı otomatik düzelt (iPhone için kritik)
+      .jpeg({ quality: 85, mozjpeg: true }) // Tüm formatları JPEG'e çevir
+      .toBuffer()
+    
+    const filepath = join(uploadDir, filename)
+    await writeFile(filepath, normalizedBuffer)
 
     // URL'i döndür
     const url = `/uploads/${type}/${filename}`
@@ -84,8 +89,8 @@ export async function POST(request: NextRequest) {
       data: {
         url,
         filename,
-        size: file.size,
-        type: file.type
+        size: normalizedBuffer.length,
+        type: 'image/jpeg'
       }
     })
   } catch (error) {
