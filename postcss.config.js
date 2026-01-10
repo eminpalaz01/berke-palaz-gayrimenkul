@@ -19,7 +19,5 @@ module.exports = {
     },
     // CSS optimizasyonu ve tarayıcı uyumluluğu
     'postcss-normalize': {},
-    // Renk fonksiyonları için ek destek
-    'postcss-color-function': {},
   },
 }

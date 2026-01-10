@@ -1,4 +1,5 @@
-import { APP_CONFIG, SupportedLocale } from '@/config';
+import { SupportedLocale } from '@/config';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/constants/locales';
 
 /**
  * Locale to region mapping for Open Graph and other metadata
@@ -62,7 +63,7 @@ export const LOCALE_TO_REGION_MAP: Record<string, string> = {
  */
 export function mapLocaleToRegion(locale: SupportedLocale | string): string {
   return LOCALE_TO_REGION_MAP[locale] || 
-         LOCALE_TO_REGION_MAP[APP_CONFIG.locales.default] || 
+         LOCALE_TO_REGION_MAP[DEFAULT_LOCALE] || 
          'en_US';
 }
 
@@ -72,7 +73,7 @@ export function mapLocaleToRegion(locale: SupportedLocale | string): string {
  */
 export function getAlternateLocaleRegion(locale: SupportedLocale | string): string {
   // Find the first supported locale that's different from current
-  const alternateLocale = APP_CONFIG.locales.supported.find(l => l !== locale) || APP_CONFIG.locales.default;
+  const alternateLocale = SUPPORTED_LOCALES.find(l => l !== locale) || DEFAULT_LOCALE;
   return mapLocaleToRegion(alternateLocale);
 }
 
@@ -82,11 +83,11 @@ export function getAlternateLocaleRegion(locale: SupportedLocale | string): stri
  */
 export function getAllAlternateLocaleRegions(locale: SupportedLocale | string): string[] {
   // Get all supported locales except the current one
-  const alternateLocales = APP_CONFIG.locales.supported.filter(l => l !== locale);
+  const alternateLocales = SUPPORTED_LOCALES.filter(l => l !== locale);
   
   // If no alternates found, return default locale region
   if (alternateLocales.length === 0) {
-    return [mapLocaleToRegion(APP_CONFIG.locales.default)];
+    return [mapLocaleToRegion(DEFAULT_LOCALE)];
   }
   
   // Map all alternate locales to their regions
@@ -131,8 +132,8 @@ export function getLocaleInfo(locale: SupportedLocale | string) {
     currentRegion,
     alternateRegions,
     optimalAlternates,
-    totalSupportedLocales: APP_CONFIG.locales.supported.length,
-    allSupportedLocales: [...APP_CONFIG.locales.supported],
+    totalSupportedLocales: SUPPORTED_LOCALES.length,
+    allSupportedLocales: [...SUPPORTED_LOCALES],
     availableMappings: Object.keys(LOCALE_TO_REGION_MAP),
   };
 }

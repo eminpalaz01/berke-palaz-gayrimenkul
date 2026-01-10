@@ -15,6 +15,7 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>("")
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]) // Track uploaded files for cleanup
   const [formData, setFormData] = useState<CreateBlogPostDto>({
     title: "",
     slug: "",
@@ -28,11 +29,52 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
   })
   const [tagsInput, setTagsInput] = useState('');
 
+  // Cleanup uploaded files when modal closes without saving
+  const cleanupUploadedFiles = async () => {
+    if (uploadedFiles.length === 0) return
+
+    console.log('Cleaning up uploaded files:', uploadedFiles)
+    
+    for (const fileUrl of uploadedFiles) {
+      try {
+        await fetch(`/api/upload/delete?url=${encodeURIComponent(fileUrl)}`, {
+          method: 'DELETE',
+        })
+        console.log('Cleaned up:', fileUrl)
+      } catch (error) {
+        console.error('Failed to cleanup:', fileUrl, error)
+      }
+    }
+  }
+
+  // Handle modal close
+  const handleClose = async () => {
+    if (!loading) {
+      await cleanupUploadedFiles()
+      // Reset state
+      setImagePreview("")
+      setUploadedFiles([])
+      setFormData({
+        title: "",
+        slug: "",
+        excerpt: "",
+        content: "",
+        coverImage: "",
+        author: "Berke Palaz",
+        tags: [],
+        status: "draft",
+        locale: "tr"
+      })
+      setTagsInput('')
+      onClose()
+    }
+  }
+
   // Handle ESC key press and prevent body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen && !loading) {
-        onClose()
+        handleClose()
       }
     }
 
@@ -45,7 +87,7 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = 'unset'
     }
-  }, [isOpen, onClose, loading])
+  }, [isOpen, loading])
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -67,6 +109,8 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
       if (result.success && result.data?.url) {
         setImagePreview(result.data.url)
         setFormData({ ...formData, coverImage: result.data.url })
+        // Track uploaded file for cleanup
+        setUploadedFiles(prev => [...prev, result.data.url])
       } else {
         console.error('Upload failed:', result.error)
         alert('Resim yüklenirken bir hata oluştu: ' + (result.error || 'Bilinmeyen hata'))
@@ -92,6 +136,8 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
     setLoading(true)
     try {
       await onSave(formData)
+      // Clear uploaded files tracking on successful save (don't cleanup, they're now in DB)
+      setUploadedFiles([])
       onClose()
     } catch (error) {
       console.error('Error saving blog post:', error)
@@ -104,7 +150,7 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget && !loading) {
-      onClose()
+      handleClose()
     }
   }
 
@@ -117,7 +163,7 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
         <div className="sticky top-0 bg-white dark:bg-slate-800 border-b dark:border-slate-700 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold dark:text-white">Yeni Blog Yazısı Ekle</h2>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             disabled={loading}
             className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -141,7 +187,19 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
                   />
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={async () => {
+                      // Delete the file from server
+                      if (imagePreview) {
+                        try {
+                          await fetch(`/api/upload/delete?url=${encodeURIComponent(imagePreview)}`, {
+                            method: 'DELETE',
+                          })
+                          // Remove from tracking
+                          setUploadedFiles(prev => prev.filter(url => url !== imagePreview))
+                        } catch (error) {
+                          console.error('Failed to delete image:', error)
+                        }
+                      }
                       setImagePreview("")
                       setFormData({ ...formData, coverImage: "" })
                     }}
@@ -292,7 +350,7 @@ export function AddBlogModal({ isOpen, onClose, onSave }: AddBlogModalProps) {
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={loading}
             >
               İptal

@@ -1,6 +1,6 @@
 // Import from config for centralized management
-import { APP_CONFIG } from '@/config';
+import { DEFAULT_LOCALE as defaultLocale, SUPPORTED_LOCALES as supportedLocales } from '@/config';
 export { type SupportedLocale } from '@/config';
 
-export const SUPPORTED_LOCALES = APP_CONFIG.locales.supported;
-export const DEFAULT_LOCALE = APP_CONFIG.locales.default;
+export const SUPPORTED_LOCALES = supportedLocales;
+export const DEFAULT_LOCALE = defaultLocale;

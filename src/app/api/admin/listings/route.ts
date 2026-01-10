@@ -66,6 +66,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 })
     }
 
+    // Validate that coverImage and images are provided
+    if (!body.coverImage) {
+      const response: ApiResponse = {
+        success: false,
+        error: 'Cover image is required'
+      }
+      return NextResponse.json(response, { status: 400 })
+    }
+
     const newListing = await db.listings.create({
       ...body,
       features: body.features || [],

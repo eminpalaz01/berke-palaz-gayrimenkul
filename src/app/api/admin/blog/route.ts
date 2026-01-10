@@ -64,6 +64,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 })
     }
 
+    // Validate that coverImage is provided
+    if (!body.coverImage) {
+      const response: ApiResponse = {
+        success: false,
+        error: 'Cover image is required'
+      }
+      return NextResponse.json(response, { status: 400 })
+    }
+
     // Check if slug already exists
     const existingPost = await db.blog.findBySlug(body.slug)
     if (existingPost) {

@@ -1,0 +1,76 @@
+{
+  "title": {
+    "default": "Berke Palaz Balikesir Real Estate Agent - Welcome to Your Dream Home",
+    "template": "%s | Balikesir Real Estate Agent Berke Palaz"
+  },
+  "description": "Real estate services in Balikesir. Buy, sell or rent residential, land or commercial properties with local expert Berke Palaz.",
+  "keywords": [
+    "Balikesir real estate",
+    "Balikesir property",
+    "house for sale Balikesir",
+    "apartment for rent Balikesir",
+    "Karesi real estate",
+    "Altieylul real estate",
+    "Balikesir land for sale",
+    "Balikesir commercial property",
+    "property investment Balikesir",
+    "Balikesir real estate agent",
+    "Berke Palaz"
+  ],
+  "dc": {
+    "subject": "Real Estate, Property, Residential Sales, Residential Rentals, Commercial Properties",
+    "description": "Real estate services including residential sales, rentals, land and investment properties in Balikesir.",
+    "publisher": "Berke Palaz Real Estate Agent",
+    "contributor": "Berke Palaz",
+    "coverage": "Balikesir, Karesi, Altieylul, Turkey",
+    "rights": "© 2025 Berke Palaz Real Estate Agent. All rights reserved."
+  },
+  "openGraph": {
+    "siteName": "Balikesir Real Estate - Berke Palaz",
+    "title": "Balikesir Real Estate Services - Berke Palaz",
+    "description": "Buy, sell, or rent properties in Balikesir with trusted local agent Berke Palaz.",
+    "type": "website",
+    "locale": "en_US",
+    "alt": "Berke Palaz Real Estate Logo"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "site": "@berkepalaz",
+    "creator": "@berkepalaz",
+    "title": "Balikesir Real Estate Consultant - Berke Palaz",
+    "description": "Find the best real estate opportunities in Balikesir with local consultant Berke Palaz."
+  },
+  "jsonLd": {
+    "organization": {
+      "name": "Berke Palaz Balikesir Real Estate",
+      "alternateName": "Berke Palaz",
+      "description": "Real estate services including residential sales, rentals, land and investment properties in Balikesir.",
+      "foundingDate": "2023",
+      "areaServed": ["Balikesir", "Karesi", "Altieylul"],
+      "serviceType": [
+        "Residential Sales",
+        "Residential Rentals",
+        "Land Sales",
+        "Commercial Properties",
+        "Investment Consulting",
+        "Property Valuation"
+      ]
+    },
+    "person": {
+      "name": "Berke Palaz",
+      "jobTitle": "Real Estate Consultant",
+      "worksFor": "Berke Palaz Real Estate",
+      "knowsAbout": [
+        "Balikesir real estate",
+        "property investment",
+        "land sale",
+        "residential property"
+      ]
+    },
+    "website": {
+      "name": "Balikesir Real Estate - Berke Palaz",
+      "description": "Buy, sell or rent properties in Balikesir.",
+      "inLanguage": "en-US"
+    }
+  }
+}

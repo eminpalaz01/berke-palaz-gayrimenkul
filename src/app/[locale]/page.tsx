@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const validatedLocale = validateLocale(locale) as SupportedLocale;
   
-  // Load metadata config instead of translations
+  // Load metadata config from JSON files (synchronous, build-time safe)
   const metadataConfig = loadMetadataConfig();
   const localeConfig = metadataConfig[validatedLocale as keyof typeof metadataConfig];
   
@@ -36,7 +36,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   return (
     <>
-      <JsonLdComponent locale={locale} types = {['WebSite', 'Organization']} />
+      <JsonLdComponent locale={locale} types = {['WebSite', 'Organization:RealEstateAgent']} />
       <Home />
     </>
   )

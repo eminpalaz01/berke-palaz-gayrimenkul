@@ -79,8 +79,25 @@ export async function deleteImageFile(imageUrl: string | null | undefined): Prom
 
   try {
     // URL'den dosya yolunu çıkar
-    // Örnek: /uploads/listing/123456.jpg -> public/uploads/listing/123456.jpg
-    const filepath = join(process.cwd(), 'public', imageUrl)
+    // Örnek: /api/files/listing/123456.jpg -> uploads/listing/123456.jpg
+    let filepath: string
+    
+    if (imageUrl.startsWith('/api/files/')) {
+      // Yeni format: /api/files/listing/123456.jpg
+      const urlParts = imageUrl.split('/')
+      const type = urlParts[3] // listing veya blog
+      const filename = urlParts[4]
+      filepath = join(process.cwd(), 'uploads', type, filename)
+    } else if (imageUrl.startsWith('/uploads/')) {
+      // Eski format: /uploads/listing/123456.jpg (backward compatibility)
+      const urlParts = imageUrl.split('/')
+      const type = urlParts[2] // listing veya blog
+      const filename = urlParts[3]
+      filepath = join(process.cwd(), 'uploads', type, filename)
+    } else {
+      console.error(`Invalid URL format: ${imageUrl}`)
+      return { success: false, error: 'Geçersiz URL formatı' }
+    }
 
     // Dosya var mı kontrol et
     if (!existsSync(filepath)) {
@@ -89,7 +106,7 @@ export async function deleteImageFile(imageUrl: string | null | undefined): Prom
     }
 
     // Güvenlik kontrolü - sadece uploads klasöründeki dosyaları sil
-    if (!filepath.includes(join('public', 'uploads'))) {
+    if (!filepath.includes(join('uploads'))) {
       console.error(`Invalid file path for deletion: ${filepath}`)
       return { success: false, error: 'Geçersiz dosya yolu' }
     }

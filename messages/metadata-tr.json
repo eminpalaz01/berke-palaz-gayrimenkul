@@ -1,0 +1,81 @@
+{
+  "title": {
+    "default": "Berke Palaz Balikesir Gayrimenkul Danismani - Hayallerinizdeki Eve Hos Geldiniz",
+    "template": "%s | Balikesir Gayrimenkul Danismani Berke Palaz"
+  },
+  "description": "Balikesir'de satilik ev, kiralik daire, arsa, ticari gayrimenkul ve yatirim danismanligi hizmetleri. Karesi ve Altieylül bölgelerinde uzman yerel emlak danismani Berke Palaz ile size uygun gayrimenkulü bulun.",
+  "keywords": [
+    "Balikesir emlak",
+    "Balikesir gayrimenkul",
+    "Balikesir satilik ev",
+    "Balikesir kiralik daire",
+    "Karesi satilik ev",
+    "Altieylül satilik ev",
+    "Balikesir arsa satisi",
+    "Balikesir ticari gayrimenkul",
+    "Balikesir konut kiralama",
+    "Balikesir konut satisi",
+    "yerel emlak danismani",
+    "Berke Palaz",
+    "Balikesir yatirim gayrimenkul",
+    "ev alim satim Balikesir",
+    "emlak Balikesir merkez"
+  ],
+  "dc": {
+    "subject": "Gayrimenkul, Emlak, Konut Satışı, Konut Kiralama, Ticari Gayrimenkul",
+    "description": "Balikesir'de satilik, kiralik ve yatirim amaçli gayrimenkul hizmetleri sunan yerel emlak danismani.",
+    "publisher": "Berke Palaz Gayrimenkul Danismani",
+    "contributor": "Berke Palaz",
+    "coverage": "Balikesir, Karesi, Altieylül, Türkiye",
+    "rights": "© 2025 Berke Palaz Gayrimenkul Danismani. Tüm hakları saklıdır."
+  },
+  "openGraph": {
+    "siteName": "Balikesir Emlak - Berke Palaz Gayrimenkul Danismani",
+    "title": "Balikesir Emlak ve Gayrimenkul Hizmetleri - Berke Palaz",
+    "description": "Balikesir merkezde satilik, kiralik ve yatirim amaçli gayrimenkuller için Berke Palaz uzman destegi.",
+    "type": "website",
+    "locale": "tr_TR",
+    "alt": "Berke Palaz Gayrimenkul Logo"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "site": "@berkepalaz",
+    "creator": "@berkepalaz",
+    "title": "Balikesir Emlak & Gayrimenkul Danismani - Berke Palaz",
+    "description": "Balikesir'de size uygun evi, daireyi, arsayi ve ticari mülkü Berke Palaz ile kolayca bulun."
+  },
+  "jsonLd": {
+    "organization": {
+      "name": "Berke Palaz Balikesir Gayrimenkul Danismani",
+      "alternateName": "Berke Palaz",
+      "description": "Balikesir'de satilik, kiralik ve yatirim amaçli gayrimenkul hizmetleri sunan yerel emlak danismani.",
+      "foundingDate": "2023",
+      "areaServed": ["Balikesir", "Karesi", "Altieylül"],
+      "serviceType": [
+        "Konut Satisi",
+        "Konut Kiralama",
+        "Ticari Gayrimenkul",
+        "Arsa Satisi",
+        "Yatirim Danismanligi",
+        "Emlak Degerleme",
+        "Mülk Yönetimi"
+      ]
+    },
+    "person": {
+      "name": "Berke Palaz",
+      "jobTitle": "Gayrimenkul Danismani",
+      "worksFor": "Berke Palaz Gayrimenkul",
+      "knowsAbout": [
+        "Balikesir Emlak",
+        "Konut Satisi",
+        "Yatirim Gayrimenkul",
+        "Arsa Satisi"
+      ]
+    },
+    "website": {
+      "name": "Balikesir Gayrimenkul - Berke Palaz",
+      "description": "Balikesir'de satilik ev, kiralik daire ve yatirim gayrimenkulleri.",
+      "inLanguage": "tr-TR"
+    }
+  }
+}

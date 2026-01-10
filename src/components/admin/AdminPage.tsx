@@ -29,7 +29,6 @@ import { AddBlogModal } from "./AddBlogModal"
 import { ViewListingModal } from "./ViewListingModal"
 import { ViewBlogModal } from "./ViewBlogModal"
 import { ChangePasswordModal } from "./ChangePasswordModal"
-import { ConfigManagement } from "./ConfigManagement"
 
 interface AdminPageProps {
   onLogout?: () => void
@@ -678,8 +677,6 @@ export function AdminPage({ onLogout }: AdminPageProps) {
               </div>
             </div>
 
-            {/* Config Management */}
-            <ConfigManagement />
           </div>
         )
       default:
