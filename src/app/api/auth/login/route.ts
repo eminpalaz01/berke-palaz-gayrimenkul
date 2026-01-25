@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { checkRateLimit, resetRateLimit, RateLimitPresets } from '@/lib/rate-limit'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json()
     const { username, password } = body
@@ -72,3 +73,5 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+export const POST = withApiSecurity(handler, SecurityPresets.PUBLIC_READ_ONLY)

@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse, BlogPost, UpdateBlogPostDto } from '@/types/api'
 import { verifyAdminAuth } from '@/lib/auth-helper'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
 // GET /api/admin/blog/[id] - Get a single blog post
-export async function GET(
+async function getHandler(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -48,7 +49,7 @@ export async function GET(
 }
 
 // PATCH /api/admin/blog/[id] - Update a blog post
-export async function PATCH(
+async function patchHandler(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -104,7 +105,7 @@ export async function PATCH(
 }
 
 // DELETE /api/admin/blog/[id] - Delete a blog post
-export async function DELETE(
+async function deleteHandler(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -142,4 +143,31 @@ export async function DELETE(
     }
     return NextResponse.json(response, { status: 500 })
   }
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return withApiSecurity(async (req: NextRequest) => {
+    return getHandler(req, { params })
+  }, SecurityPresets.PUBLIC_READ_ONLY)(request)
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return withApiSecurity(async (req: NextRequest) => {
+    return patchHandler(req, { params })
+  }, SecurityPresets.PUBLIC_READ_ONLY)(request)
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return withApiSecurity(async (req: NextRequest) => {
+    return deleteHandler(req, { params })
+  }, SecurityPresets.PUBLIC_READ_ONLY)(request)
 }

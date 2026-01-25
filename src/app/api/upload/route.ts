@@ -6,6 +6,7 @@ import sharp from 'sharp'
 import crypto from 'crypto'
 import { fileTypeFromBuffer } from 'file-type'
 import { verifyAdminAuth } from '@/lib/auth-helper'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024 // 20MB
 const MAX_IMAGE_PIXELS = 40_000_000 // ~40MP (pixel bomb koruması)
@@ -60,7 +61,7 @@ async function cleanupTempFile(filepath: string): Promise<void> {
   }
 }
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   // 🔐 Admin authentication check
   const auth = await verifyAdminAuth(request)
   if (!auth.authenticated) {
@@ -168,3 +169,5 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+export const POST = withApiSecurity(handler, SecurityPresets.PUBLIC_READ_ONLY)

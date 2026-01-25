@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 // İzin verilen dosya tipleri
 const ALLOWED_TYPES = ['listing', 'blog'] as const
@@ -36,7 +37,7 @@ function getCacheHeaders() {
   }
 }
 
-export async function GET(
+async function handler(
   request: NextRequest,
   { params }: { params: Promise<{ type: string; filename: string }> }
 ) {
@@ -82,4 +83,13 @@ export async function GET(
     console.error('File serving error:', error)
     return new NextResponse('Internal server error', { status: 500 })
   }
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ type: string; filename: string }> }
+) {
+  return withApiSecurity(async (req: NextRequest) => {
+    return handler(req, { params })
+  }, SecurityPresets.PUBLIC_READ_ONLY)(request)
 }

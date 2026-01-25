@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse, Listing, CreateListingDto } from '@/types/api'
 import { verifyAdminAuth } from '@/lib/auth-helper'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 // GET /api/admin/listings - Get all listings with optional filters
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   // Check authentication
   const auth = await verifyAdminAuth(request)
   if (!auth.authenticated) {
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
 }
 
 // POST /api/admin/listings - Create a new listing
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   // Check authentication
   const auth = await verifyAdminAuth(request)
   if (!auth.authenticated) {
@@ -97,3 +98,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response, { status: 500 })
   }
 }
+
+export const GET = withApiSecurity(getHandler, SecurityPresets.PUBLIC_READ_ONLY)
+export const POST = withApiSecurity(postHandler, SecurityPresets.PUBLIC_READ_ONLY)

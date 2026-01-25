@@ -4,6 +4,7 @@ import { readdir, unlink, stat } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { db } from '@/lib/db'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 /**
  * Cleanup orphaned files - Veritabanında referansı olmayan dosyaları temizler
@@ -94,7 +95,7 @@ async function findOrphanedFiles(): Promise<OrphanedFile[]> {
 }
 
 // GET - Dry run, sadece rapor göster
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   const auth = await verifyAdminAuth(request)
   if (!auth.authenticated) {
     return NextResponse.json(
@@ -139,7 +140,7 @@ export async function GET(request: NextRequest) {
 }
 
 // POST - Gerçekten sil
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const auth = await verifyAdminAuth(request)
   if (!auth.authenticated) {
     return NextResponse.json(
@@ -186,3 +187,6 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+export const GET = withApiSecurity(getHandler, SecurityPresets.PUBLIC_READ_ONLY)
+export const POST = withApiSecurity(postHandler, SecurityPresets.PUBLIC_READ_ONLY)

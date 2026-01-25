@@ -1,12 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { loadConfigFromDB } from '@/lib/config-service';
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security';
 
 /**
  * GET /api/config
  * Public endpoint to retrieve application configuration from database
  * Cached for 5 minutes via config-service
  */
-export async function GET() {
+async function handler(request: NextRequest) {
   try {
     const config = await loadConfigFromDB();
     
@@ -52,3 +53,5 @@ export async function GET() {
     );
   }
 }
+
+export const GET = withApiSecurity(handler, SecurityPresets.PUBLIC_READ_ONLY)

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse } from '@/types/api'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
 // POST /api/track-view - Track page view
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     console.log('📊 [Track View] API called')
     
@@ -44,3 +45,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response, { status: 500 })
   }
 }
+
+export const POST = withApiSecurity(handler, SecurityPresets.PUBLIC_API)
