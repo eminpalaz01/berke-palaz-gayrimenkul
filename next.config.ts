@@ -5,10 +5,14 @@ const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 const isStaticExport = process.env.NEXT_PUBLIC_OUTPUT === 'export'
 const ignoreTsErrors = process.env.NEXT_PUBLIC_IGNORE_TS_ERRORS === 'true';
+const ignoreDuringBuilds = process.env.NEXT_PUBLIC_IGNORE_ESLINT_ERRORS === 'true';
 
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: ignoreTsErrors,
+  },
+  eslint: {
+    ignoreDuringBuilds: ignoreDuringBuilds,
   },
   output: isStaticExport ? 'export' : undefined, // dynamic veya SSR olabilir
   images: isStaticExport ? { unoptimized: true } : undefined, // Sadece static export'ta ekle

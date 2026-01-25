@@ -10,15 +10,39 @@ interface RateLimitEntry {
 
 const rateLimitStore = new Map<string, RateLimitEntry>()
 
+// Maximum number of entries to prevent memory bloat
+const MAX_ENTRIES = 10000
+
 // Cleanup old entries every 5 minutes
-setInterval(() => {
+const cleanupInterval = setInterval(() => {
   const now = Date.now()
+  const keysToDelete: string[] = []
+  
   for (const [key, entry] of rateLimitStore.entries()) {
     if (entry.resetTime < now) {
-      rateLimitStore.delete(key)
+      keysToDelete.push(key)
     }
   }
+  
+  keysToDelete.forEach(key => rateLimitStore.delete(key))
+  
+  // If still too many entries, remove oldest ones
+  if (rateLimitStore.size > MAX_ENTRIES) {
+    const entries = Array.from(rateLimitStore.entries())
+      .sort((a, b) => a[1].resetTime - b[1].resetTime)
+    
+    const toRemove = entries.slice(0, rateLimitStore.size - MAX_ENTRIES)
+    toRemove.forEach(([key]) => rateLimitStore.delete(key))
+  }
 }, 5 * 60 * 1000)
+
+// Cleanup on process exit
+if (typeof process !== 'undefined') {
+  process.on('exit', () => {
+    clearInterval(cleanupInterval)
+    rateLimitStore.clear()
+  })
+}
 
 export interface RateLimitConfig {
   maxAttempts: number
