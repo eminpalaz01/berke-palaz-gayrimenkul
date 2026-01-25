@@ -109,3 +109,17 @@ model ViewTracking {
   @@index([timestamp])
   @@map("view_tracking")
 }
+
+// Config model for storing application configuration
+model Config {
+  id        String   @id @default(cuid())
+  key       String   @unique // e.g., 'site.url', 'company.name.tr', 'social.instagramUrl'
+  value     String   @db.Text // JSON value stored as text
+  category  String   // e.g., 'site', 'company', 'social', 'maps', 'business', 'stats', 'features', 'analytics', 'seo', 'location'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([category])
+  @@map("configs")
+}

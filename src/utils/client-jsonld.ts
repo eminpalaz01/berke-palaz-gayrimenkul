@@ -1,12 +1,11 @@
 'use client';
 
 import { validateLocale } from '@/hooks/locale-utils';
-import { mapLocaleToRegion } from '@/utils/locale-mapping';
 import { RuntimeConfig } from '@/utils/runtime-config';
-import { APP_CONFIG } from '@/config';
+import { SITE_URL } from '@/config';
 
 // JSON-LD Types
-export type JsonLdType = 'Organization' | 'LocalBusiness' | 'WebSite' | 'BreadcrumbList';
+export type JsonLdType = 'Organization' | 'Organization:RealEstateAgent' | 'LocalBusiness' | 'WebSite' | 'BreadcrumbList';
 
 type BreadcrumbItem = {
   name: string;
@@ -95,6 +94,23 @@ function getAllCompanyNames(runtimeConfig: RuntimeConfig) {
   }));
 }
 
+function getSameAsLinks(social: RuntimeConfig['social']): string[] {
+  if (!social) return [];
+
+  const links: (string | undefined)[] = [
+    social.instagramUrl,
+    social.youtubeUrl,
+    social.facebookUrl,
+    social.twitterUrl,
+    social.linkedinUrl,
+    social.whatsappNumber
+      ? `https://wa.me/${social.whatsappNumber.replace(/\D/g, '')}`
+      : undefined
+  ];
+
+  return links.filter((link): link is string => Boolean(link));
+}
+
 /**
  * Generates JSON-LD structured data with proper multilingual support (client-side version)
  */
@@ -104,7 +120,7 @@ export function generateClientJsonLd(
   runtimeConfig: RuntimeConfig,
   data?: Record<string, unknown>
 ) {
-  const siteUrl = runtimeConfig.site.url;
+  const siteUrl = SITE_URL;
   const validatedLocale = validateLocale(locale);
   const commonData = { '@context': 'https://schema.org' };
   const typeArray = Array.isArray(types) ? types : [types];
@@ -122,9 +138,11 @@ export function generateClientJsonLd(
     switch (type) {
       case 'Organization': {
         const localizedAddress = getLocalizedAddress(validatedLocale, runtimeConfig);
+
         return {
           ...commonData,
-          '@type': 'Organization',
+          '@id': `${siteUrl}/#organization`,
+          '@type': ['Organization'],
           name: allCompanyNames,
           description: [
             { '@value': getDescription(validatedLocale), '@language': validatedLocale }
@@ -134,6 +152,7 @@ export function generateClientJsonLd(
           image: `${siteUrl}/images/og-image.jpg`,
           telephone: runtimeConfig.company.phone,
           email: runtimeConfig.company.email,
+
           address: {
             '@type': 'PostalAddress',
             streetAddress: localizedAddress.streetAddress,
@@ -141,18 +160,83 @@ export function generateClientJsonLd(
             postalCode: localizedAddress.postalCode,
             addressCountry: localizedAddress.addressCountry
           },
+
           geo: {
             '@type': 'GeoCoordinates',
             latitude: runtimeConfig.company.coordinates.latitude,
             longitude: runtimeConfig.company.coordinates.longitude
           },
+
           openingHoursSpecification: [{
             '@type': 'OpeningHoursSpecification',
             dayOfWeek: runtimeConfig.workingHours.days,
             opens: runtimeConfig.workingHours.opens,
             closes: runtimeConfig.workingHours.closes
           }],
-          priceRange: APP_CONFIG.business.priceRange,
+
+          areaServed: {
+            '@type': 'AdministrativeArea',
+            name: localizedAddress.addressLocality
+          },
+
+          knowsLanguage: supportedLanguages,
+          priceRange: '₺₺₺',
+
+          sameAs: getSameAsLinks(runtimeConfig.social),
+
+          inLanguage: [validatedLocale],
+          ...data
+        };
+      }
+
+      case 'Organization:RealEstateAgent': {
+        const localizedAddress = getLocalizedAddress(validatedLocale, runtimeConfig);
+
+        return {
+          ...commonData,
+          '@id': `${siteUrl}/#organization`,
+          '@type': ['Organization', 'RealEstateAgent'],
+          name: allCompanyNames,
+          description: [
+            { '@value': getDescription(validatedLocale), '@language': validatedLocale }
+          ],
+          url: siteUrl,
+          logo: `${siteUrl}/images/logo.png`,
+          image: `${siteUrl}/images/og-image.jpg`,
+          telephone: runtimeConfig.company.phone,
+          email: runtimeConfig.company.email,
+
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: localizedAddress.streetAddress,
+            addressLocality: localizedAddress.addressLocality,
+            postalCode: localizedAddress.postalCode,
+            addressCountry: localizedAddress.addressCountry
+          },
+
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: runtimeConfig.company.coordinates.latitude,
+            longitude: runtimeConfig.company.coordinates.longitude
+          },
+
+          openingHoursSpecification: [{
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: runtimeConfig.workingHours.days,
+            opens: runtimeConfig.workingHours.opens,
+            closes: runtimeConfig.workingHours.closes
+          }],
+
+          areaServed: {
+            '@type': 'AdministrativeArea',
+            name: localizedAddress.addressLocality
+          },
+
+          knowsLanguage: supportedLanguages,
+          priceRange: '₺₺₺',
+
+          sameAs: getSameAsLinks(runtimeConfig.social),
+
           inLanguage: [validatedLocale],
           ...data
         };
@@ -160,9 +244,11 @@ export function generateClientJsonLd(
       
       case 'LocalBusiness': {
         const localizedAddress = getLocalizedAddress(validatedLocale, runtimeConfig);
+
         return {
           ...commonData,
-          '@type': 'LocalBusiness',
+          '@id': `${siteUrl}/#localbusiness`,
+          '@type': 'RealEstateAgent',
           name: allCompanyNames,
           description: [
             { '@value': getDescription(validatedLocale), '@language': validatedLocale }
@@ -170,6 +256,7 @@ export function generateClientJsonLd(
           url: siteUrl,
           telephone: runtimeConfig.company.phone,
           email: runtimeConfig.company.email,
+
           address: {
             '@type': 'PostalAddress',
             streetAddress: localizedAddress.streetAddress,
@@ -177,18 +264,26 @@ export function generateClientJsonLd(
             postalCode: localizedAddress.postalCode,
             addressCountry: localizedAddress.addressCountry
           },
+
           geo: {
             '@type': 'GeoCoordinates',
             latitude: runtimeConfig.company.coordinates.latitude,
             longitude: runtimeConfig.company.coordinates.longitude
           },
+
           openingHoursSpecification: [{
             '@type': 'OpeningHoursSpecification',
             dayOfWeek: runtimeConfig.workingHours.days,
             opens: runtimeConfig.workingHours.opens,
             closes: runtimeConfig.workingHours.closes
           }],
-          priceRange: APP_CONFIG.business.priceRange,
+
+          areaServed: {
+            '@type': 'AdministrativeArea',
+            name: localizedAddress.addressLocality
+          },
+
+          priceRange: '₺₺₺',
           inLanguage: [validatedLocale],
           ...data
         };
@@ -197,12 +292,16 @@ export function generateClientJsonLd(
       case 'WebSite':
         return {
           ...commonData,
+          '@id': `${siteUrl}/#website`,
           '@type': 'WebSite',
           url: siteUrl,
           name: allCompanyNames,
           description: [
             { '@value': getDescription(validatedLocale), '@language': validatedLocale }
           ],
+          publisher: {
+            '@id': `${siteUrl}/#organization`
+          },
           potentialAction: {
             '@type': 'SearchAction',
             target: `${siteUrl}/search?q={search_term_string}`,

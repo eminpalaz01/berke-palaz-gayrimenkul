@@ -17,6 +17,9 @@
 /.next/
 /out/
 /public/uploads/
+/.clinerules/
+/.vscode/
+
 
 # production
 /build
@@ -50,7 +53,8 @@ next-env.d.ts
 /public/configs/*/
 
 # uploads (keep folder structure, ignore uploaded files)
-/public/uploads/**/*
-!/public/uploads/.gitkeep
-!/public/uploads/listing/.gitkeep
-!/public/uploads/blog/.gitkeep
+# Root uploads klasörü (public dışında - güvenlik için)
+/uploads/**/*
+!/uploads/.gitkeep
+!/uploads/listing/.gitkeep
+!/uploads/blog/.gitkeep

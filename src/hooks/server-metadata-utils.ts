@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { locales } from '@/i18n';
 import {
-  APP_CONFIG,
+  SITE_URL,
   type SupportedLocale
 } from '@/config';
 import { validateLocale } from '@/hooks/locale-utils';
@@ -9,6 +9,7 @@ import { pathnames } from '@/routes';
 import { loadMetadataConfig } from '@/utils/metadata-config';
 import { mapLocaleToRegion, getAllAlternateLocaleRegions } from '@/utils/locale-mapping';
 import { loadServerRuntimeConfig } from '@/utils/server-config';
+import { DEFAULT_LOCALE } from '@/constants/locales';
 
 /**
  * Server-side metadata generation that uses static config as fallback
@@ -18,9 +19,8 @@ import { loadServerRuntimeConfig } from '@/utils/server-config';
 /**
  * Generates alternates (hreflang) and canonical URLs for a page
  */
-export function generatePageAlternates(canonicalPath: string, currentLocale: SupportedLocale): Metadata['alternates'] {
-  const serverConfig = loadServerRuntimeConfig();
-  const siteUrl = serverConfig.site.url;
+export async function generatePageAlternates(canonicalPath: string, currentLocale: SupportedLocale): Promise<Metadata['alternates']> {
+  const siteUrl = SITE_URL;
   
   const alternates: { canonical: string; languages: Record<string, string> } = {
     canonical: '',
@@ -41,31 +41,31 @@ export function generatePageAlternates(canonicalPath: string, currentLocale: Sup
 
   // Set x-default to default locale
   const defaultPathConfig = pathnames[canonicalPath];
-  const defaultLocalizedPath = defaultPathConfig?.[APP_CONFIG.locales.default as keyof typeof defaultPathConfig] || canonicalPath;
-  alternates.languages['x-default'] = `${siteUrl}/${APP_CONFIG.locales.default}${defaultLocalizedPath}`;
+  const defaultLocalizedPath = defaultPathConfig?.[DEFAULT_LOCALE as keyof typeof defaultPathConfig] || canonicalPath;
+  alternates.languages['x-default'] = `${siteUrl}/${DEFAULT_LOCALE}${defaultLocalizedPath}`;
 
   return alternates;
 }
 
 /**
- * Get localized company name from static config
- */
-function getStaticCompanyName(locale: string): string {
-  const serverConfig = loadServerRuntimeConfig();
-  const nameKey = locale as keyof typeof serverConfig.company.name;
-  return serverConfig.company.name[nameKey] || serverConfig.company.name.tr;
-}
-
-/**
  * Generates metadata for layout (root) pages - Server-side only version
  */
-export function generateLayoutMetadata(locale: string): Metadata {
-  const serverConfig = loadServerRuntimeConfig();
-  const siteUrl = serverConfig.site.url;
+export async function generateLayoutMetadata(locale: string): Promise<Metadata> {
+  const siteUrl = SITE_URL;
   const validatedLocale = validateLocale(locale);
-  const alternates = generatePageAlternates('/', validatedLocale);
+  const alternates = await generatePageAlternates('/', validatedLocale);
   const metadataConfig = loadMetadataConfig();
   const localeConfig = metadataConfig[validatedLocale as keyof typeof metadataConfig];
+  
+  // Load server config once
+  const serverConfig = await loadServerRuntimeConfig();
+  
+  // Extract needed data from server config
+  const nameKey = validatedLocale as keyof typeof serverConfig.company.name;
+  const companyName = serverConfig.company.name[nameKey] || serverConfig.company.name.tr;
+  const locationConfig = serverConfig.location || {};
+  const seoConfig = serverConfig.seo || {};
+  const businessConfig = serverConfig.business || {};
   
   // Get alternate locale regions for og:locale:alternate
   const alternateRegions = getAllAlternateLocaleRegions(validatedLocale);
@@ -76,11 +76,11 @@ export function generateLayoutMetadata(locale: string): Metadata {
     'color-scheme': 'light dark',
     'supported-color-schemes': 'light dark',
     'DC.title': localeConfig?.title?.default || 'Default Title',
-    'DC.creator': getStaticCompanyName(validatedLocale),
+    'DC.creator': companyName,
     'DC.subject': localeConfig?.dc?.subject || 'Default Subject',
     'DC.description': localeConfig?.dc?.description || 'Default DC Description',
-    'DC.publisher': localeConfig?.dc?.publisher || getStaticCompanyName(validatedLocale),
-    'DC.contributor': localeConfig?.dc?.contributor || getStaticCompanyName(validatedLocale),
+    'DC.publisher': localeConfig?.dc?.publisher || companyName,
+    'DC.contributor': localeConfig?.dc?.contributor || companyName,
     'DC.date': new Date().toISOString(),
     'DC.type': 'Text',
     'DC.format': 'text/html',
@@ -92,17 +92,17 @@ export function generateLayoutMetadata(locale: string): Metadata {
   };
 
   // Add location info conditionally
-  if (APP_CONFIG.location.region) {
-    otherMetaTags['geo.region'] = APP_CONFIG.location.region;
+  if (locationConfig?.region) {
+    otherMetaTags['geo.region'] = locationConfig.region;
   }
-  if (APP_CONFIG.location.placename) {
-    otherMetaTags['geo.placename'] = APP_CONFIG.location.placename;
+  if (locationConfig?.placename) {
+    otherMetaTags['geo.placename'] = locationConfig.placename;
   }
-  if (APP_CONFIG.location.position) {
-    otherMetaTags['geo.position'] = APP_CONFIG.location.position;
+  if (locationConfig?.position) {
+    otherMetaTags['geo.position'] = locationConfig.position;
   }
-  if (APP_CONFIG.location.icbm) {
-    otherMetaTags['ICBM'] = APP_CONFIG.location.icbm;
+  if (locationConfig?.icbm) {
+    otherMetaTags['ICBM'] = locationConfig.icbm;
   }
 
   // Add og:locale:alternate for each alternate region
@@ -117,10 +117,10 @@ export function generateLayoutMetadata(locale: string): Metadata {
     },
     description: localeConfig?.description || 'Default description',
     keywords: localeConfig?.keywords || ['default', 'keywords'],
-    verification: { google: APP_CONFIG.seo.googleVerification || '' },
-    authors: [{ name: getStaticCompanyName(validatedLocale), url: siteUrl }],
-    creator: getStaticCompanyName(validatedLocale),
-    publisher: getStaticCompanyName(validatedLocale),
+    verification: { google: seoConfig?.googleVerification || '' },
+    authors: [{ name: companyName, url: siteUrl }],
+    creator: companyName,
+    publisher: companyName,
     metadataBase: new URL(siteUrl),
     alternates,
     formatDetection: { email: false, address: false, telephone: false },
@@ -137,7 +137,7 @@ export function generateLayoutMetadata(locale: string): Metadata {
       url: typeof alternates?.canonical === 'string' ? alternates.canonical : undefined,
       title: localeConfig?.openGraph?.title || 'Default OG Title',
       description: localeConfig?.openGraph?.description || 'Default OG Description',
-      siteName: getStaticCompanyName(validatedLocale),
+      siteName: companyName,
       images: [{
         url: `${siteUrl}/images/og-image.jpg`,
         width: 1200,
@@ -148,7 +148,7 @@ export function generateLayoutMetadata(locale: string): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      site: APP_CONFIG.seo.twitterHandle,
+      site: seoConfig?.twitterHandle,
       creator: localeConfig?.twitter?.creator || "@yourcompany",
       title: localeConfig?.twitter?.title || 'Default Twitter Title',
       description: localeConfig?.twitter?.description || 'Default Twitter Description',
@@ -167,9 +167,9 @@ export function generateLayoutMetadata(locale: string): Metadata {
         "max-snippet": -1,
       },
     },
-    category: APP_CONFIG.business.category,
-    classification: APP_CONFIG.business.classification,
-    applicationName: getStaticCompanyName(validatedLocale),
+    category: businessConfig?.category,
+    classification: businessConfig?.classification,
+    applicationName: companyName,
     referrer: 'origin-when-cross-origin',
     other: otherMetaTags
   };
@@ -178,7 +178,7 @@ export function generateLayoutMetadata(locale: string): Metadata {
 /**
  * Generates metadata for individual pages - Server-side only version
  */
-export function generatePageMetadata(options: {
+export async function generatePageMetadata(options: {
   title: string;
   description: string;
   locale: string;
@@ -190,7 +190,7 @@ export function generatePageMetadata(options: {
   modifiedTime?: string;
   section?: string;
   tags?: string[];
-}): Metadata {
+}): Promise<Metadata> {
   const { 
     title, 
     description, 
@@ -205,16 +205,20 @@ export function generatePageMetadata(options: {
     tags
   } = options;
   
-  const serverConfig = loadServerRuntimeConfig();
-  const siteUrl = serverConfig.site.url;
+  const siteUrl = SITE_URL;
   const validatedLocale = validateLocale(locale);
-  const alternates = generatePageAlternates(path, validatedLocale);
+  const alternates = await generatePageAlternates(path, validatedLocale);
   const ogImage = image || `${siteUrl}/images/og-image.jpg`;
+  
+  // Load server config once
+  const serverConfig = await loadServerRuntimeConfig();
+  const nameKey = validatedLocale as keyof typeof serverConfig.company.name;
+  const companyName = serverConfig.company.name[nameKey] || serverConfig.company.name.tr;
   
   // Get alternate locale regions for og:locale:alternate
   const alternateRegions = getAllAlternateLocaleRegions(validatedLocale);
   const otherMetaTags: Record<string, string | string[]> = {
-    'article:author': getStaticCompanyName(validatedLocale),
+    'article:author': companyName,
     'article:publisher': siteUrl,
   };
   
@@ -235,7 +239,7 @@ export function generatePageMetadata(options: {
       title,
       description,
       url: typeof alternates?.canonical === 'string' ? alternates.canonical : undefined,
-      siteName: getStaticCompanyName(validatedLocale),
+      siteName: companyName,
       images: [{
         url: ogImage,
         width: 1200,

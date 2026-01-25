@@ -3,6 +3,8 @@
 import { Modal } from "@/components/ui/Modal"
 import { BlogPost } from "@/types/api"
 import { User, Tag } from "lucide-react"
+import { sanitizeHtml } from "@/utils/sanitize-html"
+import { useMemo } from "react"
 
 interface BlogDetailModalProps {
   post: BlogPost | null
@@ -11,6 +13,11 @@ interface BlogDetailModalProps {
 }
 
 export function BlogDetailModal({ post, isOpen, onClose }: BlogDetailModalProps) {
+  // ✅ HTML içeriğini sanitize et (XSS koruması)
+  const sanitizedContent = useMemo(() => {
+    return post ? sanitizeHtml(post.content) : ''
+  }, [post])
+
   if (!post) return null
 
   return (
@@ -82,7 +89,7 @@ export function BlogDetailModal({ post, isOpen, onClose }: BlogDetailModalProps)
           <div className="bg-gray-50 dark:bg-slate-700 p-6 rounded-lg">
             <div 
               className="prose dark:prose-invert max-w-none text-gray-700 dark:text-slate-300"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             />
           </div>
         </div>

@@ -26,7 +26,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
   const { locale } = await params;
   return (
     <>
-      <JsonLdComponent locale={locale} types = {['Organization']} />
+      <JsonLdComponent locale={locale} types = {['Organization:RealEstateAgent']} />
       <AboutPage />
     </>
   )

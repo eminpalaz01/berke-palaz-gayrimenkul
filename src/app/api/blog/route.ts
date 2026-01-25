@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse, BlogPost } from '@/types/api'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 // GET /api/blog - Get all published blog posts with optional filters
-export async function GET(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get('search') || undefined
@@ -38,3 +39,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response, { status: 500 })
   }
 }
+
+export const GET = withApiSecurity(handler, SecurityPresets.PUBLIC_READ_ONLY)

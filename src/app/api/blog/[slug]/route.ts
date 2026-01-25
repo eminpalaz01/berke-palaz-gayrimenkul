@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse, BlogPost } from '@/types/api'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -10,6 +11,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  return withApiSecurity(async (req: NextRequest) => {
   try {
     const { slug } = await params
     const post = await db.blog.findBySlug(slug)
@@ -42,4 +44,5 @@ export async function GET(
     }
     return NextResponse.json(response, { status: 500 })
   }
+  }, SecurityPresets.PUBLIC_READ_ONLY)(request)
 }

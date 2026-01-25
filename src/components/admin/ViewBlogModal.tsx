@@ -3,6 +3,8 @@
 import { Modal } from "@/components/ui/Modal"
 import { BlogPost } from "@/types/api"
 import { Calendar, Eye, User, Tag, Clock } from "lucide-react"
+import { sanitizeHtml } from "@/utils/sanitize-html"
+import { useMemo } from "react"
 
 interface ViewBlogModalProps {
   post: BlogPost
@@ -11,6 +13,11 @@ interface ViewBlogModalProps {
 }
 
 export function ViewBlogModal({ post, isOpen, onClose }: ViewBlogModalProps) {
+  // ✅ HTML içeriğini sanitize et (XSS koruması)
+  const sanitizedContent = useMemo(() => {
+    return sanitizeHtml(post.content)
+  }, [post.content])
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('tr-TR', {
       day: 'numeric',
@@ -109,7 +116,7 @@ export function ViewBlogModal({ post, isOpen, onClose }: ViewBlogModalProps) {
           <div className="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg max-h-96 overflow-y-auto">
             <div 
               className="prose dark:prose-invert max-w-none text-gray-700 dark:text-slate-300"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             />
           </div>
         </div>

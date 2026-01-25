@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { ApiResponse, DashboardStats, Listing, BlogPost } from '@/types/api'
 import { verifyAdminAuth } from '@/lib/auth-helper'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 // GET /api/admin/stats - Get dashboard statistics
-export async function GET(request: NextRequest) {
+async function handler(request: NextRequest) {
   // Check authentication
   const auth = await verifyAdminAuth(request)
   if (!auth.authenticated) {
@@ -76,3 +77,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response, { status: 500 })
   }
 }
+
+export const GET = withApiSecurity(handler, SecurityPresets.PUBLIC_READ_ONLY)

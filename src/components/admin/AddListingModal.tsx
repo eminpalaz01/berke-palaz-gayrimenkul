@@ -17,6 +17,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
   const [uploadingImages, setUploadingImages] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>("")
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]) // Track uploaded files for cleanup
   const [formData, setFormData] = useState<CreateListingDto>({
     title: "",
     description: "",
@@ -35,11 +36,58 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
     locale: "tr"
   })
 
+  // Cleanup uploaded files when modal closes without saving
+  const cleanupUploadedFiles = async () => {
+    if (uploadedFiles.length === 0) return
+
+    console.log('Cleaning up uploaded files:', uploadedFiles)
+    
+    for (const fileUrl of uploadedFiles) {
+      try {
+        await fetch(`/api/upload/delete?url=${encodeURIComponent(fileUrl)}`, {
+          method: 'DELETE',
+        })
+        console.log('Cleaned up:', fileUrl)
+      } catch (error) {
+        console.error('Failed to cleanup:', fileUrl, error)
+      }
+    }
+  }
+
+  // Handle modal close
+  const handleClose = async () => {
+    if (!loading) {
+      await cleanupUploadedFiles()
+      // Reset state
+      setImagePreview("")
+      setImagePreviews([])
+      setUploadedFiles([])
+      setFormData({
+        title: "",
+        description: "",
+        price: 0,
+        currency: "TRY",
+        location: "",
+        type: "sale",
+        propertyType: "apartment",
+        area: 0,
+        rooms: 0,
+        bathrooms: 0,
+        hall: 0,
+        coverImage: "",
+        images: [],
+        status: "active",
+        locale: "tr"
+      })
+      onClose()
+    }
+  }
+
   // Handle ESC key press and prevent body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen && !loading) {
-        onClose()
+        handleClose()
       }
     }
 
@@ -52,7 +100,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
       document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = 'unset'
     }
-  }, [isOpen, onClose, loading])
+  }, [isOpen, loading])
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -74,6 +122,8 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
       if (result.success && result.data?.url) {
         setImagePreview(result.data.url)
         setFormData({ ...formData, coverImage: result.data.url })
+        // Track uploaded file for cleanup
+        setUploadedFiles(prev => [...prev, result.data.url])
       } else {
         console.error('Upload failed:', result.error)
         alert('Resim yüklenirken bir hata oluştu: ' + (result.error || 'Bilinmeyen hata'))
@@ -91,6 +141,8 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
     setLoading(true)
     try {
       await onSave(formData)
+      // Clear uploaded files tracking on successful save (don't cleanup, they're now in DB)
+      setUploadedFiles([])
       onClose()
     } catch (error) {
       console.error('Error saving listing:', error)
@@ -103,7 +155,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget && !loading) {
-      onClose()
+      handleClose()
     }
   }
 
@@ -116,7 +168,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
         <div className="sticky top-0 bg-white dark:bg-slate-800 border-b dark:border-slate-700 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold dark:text-white">Yeni İlan Ekle</h2>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             disabled={loading}
             className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -140,7 +192,19 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                   />
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={async () => {
+                      // Delete the file from server
+                      if (imagePreview) {
+                        try {
+                          await fetch(`/api/upload/delete?url=${encodeURIComponent(imagePreview)}`, {
+                            method: 'DELETE',
+                          })
+                          // Remove from tracking
+                          setUploadedFiles(prev => prev.filter(url => url !== imagePreview))
+                        } catch (error) {
+                          console.error('Failed to delete image:', error)
+                        }
+                      }
                       setImagePreview("")
                       setFormData({ ...formData, coverImage: "" })
                     }}
@@ -419,6 +483,8 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                         }
                       }
 
+                      // Track uploaded files for cleanup
+                      setUploadedFiles(prev => [...prev, ...uploadedUrls])
                       setImagePreviews([...imagePreviews, ...uploadedUrls])
                       setFormData({ ...formData, images: [...(formData.images || []), ...uploadedUrls] })
                     } catch (error) {
@@ -445,7 +511,20 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
                       />
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={async () => {
+                          const imageUrl = imagePreviews[index]
+                          // Delete the file from server
+                          if (imageUrl) {
+                            try {
+                              await fetch(`/api/upload/delete?url=${encodeURIComponent(imageUrl)}`, {
+                                method: 'DELETE',
+                              })
+                              // Remove from tracking
+                              setUploadedFiles(prev => prev.filter(url => url !== imageUrl))
+                            } catch (error) {
+                              console.error('Failed to delete image:', error)
+                            }
+                          }
                           const newPreviews = imagePreviews.filter((_, i) => i !== index)
                           const newImages = (formData.images || []).filter((_, i) => i !== index)
                           setImagePreviews(newPreviews)
@@ -468,7 +547,7 @@ export function AddListingModal({ isOpen, onClose, onSave }: AddListingModalProp
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={loading}
             >
               İptal

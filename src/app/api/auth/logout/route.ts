@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const token = request.cookies.get('admin_token')?.value
 
@@ -26,3 +27,5 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+export const POST = withApiSecurity(handler, SecurityPresets.PUBLIC_READ_ONLY)

@@ -1,8 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { deleteImageFile } from '@/lib/upload-helper'
+import { verifyAdminAuth } from '@/lib/auth-helper'
+import { withApiSecurity, SecurityPresets } from '@/lib/api-security'
 
 // DELETE /api/upload/delete - Resim silme
-export async function DELETE(request: NextRequest) {
+async function handler(request: NextRequest) {
+  // 🔐 Admin authentication check
+  const auth = await verifyAdminAuth(request)
+  if (!auth.authenticated) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
+  }
+
   try {
     const { searchParams } = new URL(request.url)
     const url = searchParams.get('url')
@@ -34,3 +45,5 @@ export async function DELETE(request: NextRequest) {
     )
   }
 }
+
+export const DELETE = withApiSecurity(handler, SecurityPresets.PUBLIC_READ_ONLY)

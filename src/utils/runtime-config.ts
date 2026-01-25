@@ -47,14 +47,6 @@ interface Office {
 
 // Runtime configuration types
 export interface RuntimeConfig {
-  site: {
-    url: string;
-    domain: string;
-  };
-  locales: {
-    supported: string[];
-    default: string;
-  };
   company: {
     name: LocalizedContent;
     officeName?: LocalizedContent;
@@ -125,6 +117,29 @@ export interface RuntimeConfig {
       };
     };
   };
+  location?: {
+    region?: string;
+    placename?: string;
+    position?: string;
+    icbm?: string;
+  };
+  seo?: {
+    keywords?: string[];
+    author?: string;
+    robots?: string;
+    twitterHandle?: string;
+    googleVerification?: string;
+  };
+  business?: {
+    type?: string;
+    classification?: string;
+    priceRange?: string;
+    category?: string;
+    services?: string[];
+    areas?: string[];
+    established?: string;
+    licenseNumber?: string;
+  };
 }
 
 // Cache for loaded config
@@ -132,25 +147,7 @@ let configCache: RuntimeConfig | null = null;
 let configPromise: Promise<RuntimeConfig> | null = null;
 
 /**
- * Determine which config file to load based on environment or company
- */
-function getConfigPath(): string {
-  // Priority 1: Direct config path from environment variable
-  if (process.env.NEXT_PUBLIC_CONFIG_PATH) {
-    const configPath = process.env.NEXT_PUBLIC_CONFIG_PATH;
-    // Ensure path starts with /configs/ and ends with config.json
-    if (configPath.startsWith('/')) {
-      return configPath;
-    } else {
-      return `/configs/${configPath}/config.json`;
-    }
-  }
-  // Default to generic config
-  return '/configs/config.json';
-}
-
-/**
- * Load runtime configuration from JSON file
+ * Load runtime configuration from API endpoint (which reads from database)
  * Uses caching to avoid multiple requests
  */
 export async function loadRuntimeConfig(): Promise<RuntimeConfig> {
@@ -167,13 +164,10 @@ export async function loadRuntimeConfig(): Promise<RuntimeConfig> {
   // Create new promise to load config
   configPromise = (async () => {
     try {
-      // Determine which config file to load
-      const configPath = getConfigPath();
-      console.log('Loading config from:', configPath);
-      
-      const response = await fetch(configPath);
+      // Load config from API endpoint that reads from database
+      const response = await fetch('/api/config');
       if (!response.ok) {
-        throw new Error(`Failed to load config from ${configPath}`);
+        throw new Error(`Failed to load config from API`);
       }
 
       const config: RuntimeConfig = await response.json();
@@ -183,18 +177,10 @@ export async function loadRuntimeConfig(): Promise<RuntimeConfig> {
       
       return config;
     } catch (error) {
-      console.error('Failed to load runtime config:', error);
+      console.error('Failed to load runtime config from API:', error);
       
       // Return fallback config
       const fallbackConfig: RuntimeConfig = {
-        site: {
-          url: 'http://localhost:3000',
-          domain: 'localhost'
-        },
-        locales: {
-          supported: ['tr', 'en'],
-          default: 'tr'
-        },
         company: {
           name: {
             tr: 'Şirket Adı',
@@ -383,14 +369,6 @@ export function getRuntimeConfig(): RuntimeConfig {
   // For build-time usage, we need to provide a default config
   // This will be replaced at runtime when the actual config is loaded
   const defaultConfig: RuntimeConfig = {
-    site: {
-      url: process.env.NODE_ENV === 'production' ? 'https://yoursite.com' : 'http://localhost:3000',
-      domain: process.env.NODE_ENV === 'production' ? 'yoursite.com' : 'localhost:3000'
-    },
-    locales: {
-      supported: ['tr', 'en'],
-      default: 'tr'
-    },
     company: {
       name: {
         tr: 'Şirket Adı',

@@ -3,6 +3,7 @@ export interface RouteConfig {
   tr: string;
   changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
   priority: number;
+  excludeFromRobots?: boolean;
 }
 
 export const routes: Record<string, RouteConfig> = {
@@ -43,19 +44,22 @@ export const routes: Record<string, RouteConfig> = {
         en: '/privacy-policy', 
         tr: '/gizlilik-politikasi', 
         changefreq: 'yearly', 
-        priority: 0.3 
+        priority: 0.3,
+        excludeFromRobots: true
       },
       '/terms-of-service': { 
         en: '/terms-of-service', 
         tr: '/kullanim-kosullari', 
         changefreq: 'yearly', 
-        priority: 0.3 
+        priority: 0.3,
+        excludeFromRobots: true
       },
       '/cookie-policy': { 
         en: '/cookie-policy', 
         tr: '/cerez-politikasi', 
         changefreq: 'yearly', 
-        priority: 0.3 
+        priority: 0.3,
+        excludeFromRobots: true
       }
 };
 
@@ -77,6 +81,10 @@ export const noLocaleRoutes = [
     '/contact',
     '/blog',
     '/listings',
+  ];
+
+// Legal pages - excluded from sitemap
+export const legalRoutes = [
     '/privacy-policy',
     '/terms-of-service',
     '/cookie-policy',
